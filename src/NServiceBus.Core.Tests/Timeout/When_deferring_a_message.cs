@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Timeout;
     using NServiceBus.Transports;
     using NServiceBus.Unicast;
     using NUnit.Framework;
+    using SendOptions = NServiceBus.SendOptions;
 
     public class When_deferring_a_message
     {
@@ -46,7 +46,7 @@
             var sender = new FakeMessageSender();
             deferrer.MessageSender = sender;
 
-            deferrer.Invoke(new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, new SendMessageOptions("Destination"), MessageIntentEnum.Send, null, null, new OptionExtensionContext())), () => { });
+            deferrer.Invoke(new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, new SendMessageOptions("Destination"), null, null, new SendOptions())), () => { });
 
             Assert.AreEqual(1, sender.Messages.Count);
         }

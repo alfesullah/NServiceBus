@@ -3,11 +3,11 @@ namespace NServiceBus.Core.Tests.DataBus
     using System;
     using System.IO;
     using NServiceBus.DataBus;
-    using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Unicast;
     using NUnit.Framework;
     using Conventions = NServiceBus.Conventions;
+    using SendOptions = NServiceBus.SendOptions;
 
     [TestFixture]
     class When_applying_the_databus_message_mutator_to_outgoing_messages
@@ -20,7 +20,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-            var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint"), MessageIntentEnum.Send, null, message, new OptionExtensionContext());
+            var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint"), null, message, new SendOptions());
             
             var fakeDatabus = new FakeDataBus();
            
@@ -43,7 +43,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-           var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint") { TimeToBeReceived = TimeSpan.FromMinutes(1) },MessageIntentEnum.Send, null, message, new OptionExtensionContext());
+           var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint") { TimeToBeReceived = TimeSpan.FromMinutes(1) }, null, message, new SendOptions());
 
            var fakeDatabus = new FakeDataBus();
            

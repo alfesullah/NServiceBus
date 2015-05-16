@@ -2,11 +2,11 @@ namespace NServiceBus.Core.Tests.DataBus
 {
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
-    using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Unicast;
     using NUnit.Framework;
     using Conventions = NServiceBus.Conventions;
+    using SendOptions = NServiceBus.SendOptions;
 
     [TestFixture]
     class When_applying_the_databus_message_mutator_to_null_properties 
@@ -14,7 +14,7 @@ namespace NServiceBus.Core.Tests.DataBus
         [Test]
         public void Should_not_blow_up()
         {
-            var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint"),MessageIntentEnum.Send, null, new MessageWithNullDataBusProperty(),new OptionExtensionContext());
+            var context = new OutgoingContext(null,new SendMessageOptions("MyEndpoint"), null, new MessageWithNullDataBusProperty(),new SendOptions());
             var sendBehavior = new DataBusSendBehavior
             {
                 DataBus = null,

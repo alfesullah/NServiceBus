@@ -23,7 +23,7 @@
             if (context.TryGet(TransportReceiveContext.IncomingPhysicalMessageKey, out incomingMessage))
             {
                 //flow the the saga id of the calling saga (if any) to outgoing message in order to support autocorrelation
-                if (context.Intent == MessageIntentEnum.Reply)
+                if (context.IsReply())
                 {
                     string sagaId;
 

@@ -614,6 +614,14 @@ namespace NServiceBus
     {
         public ReplyOptions() { }
     }
+    public class static RoutingContextExtensions
+    {
+        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
+        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
+        public static bool IsReply(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
+        public static bool IsReply(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
+        public static bool IsSend(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
+    }
     public abstract class SatelliteBehavior : NServiceBus.PhysicalMessageProcessingStageBehavior
     {
         protected SatelliteBehavior() { }
@@ -1713,10 +1721,9 @@ namespace NServiceBus.Pipeline.Contexts
     }
     public class OutgoingContext : NServiceBus.Pipeline.BehaviorContext
     {
-        public OutgoingContext(NServiceBus.Pipeline.BehaviorContext parentContext, NServiceBus.Unicast.DeliveryMessageOptions deliveryMessageOptions, NServiceBus.MessageIntentEnum intent, System.Type messageType, object messageInstance, NServiceBus.Extensibility.OptionExtensionContext extensionContext) { }
+        public OutgoingContext(NServiceBus.Pipeline.BehaviorContext parentContext, NServiceBus.Unicast.DeliveryMessageOptions deliveryMessageOptions, System.Type messageType, object messageInstance, NServiceBus.Extensibility.ExtendableOptions options) { }
         public NServiceBus.Unicast.DeliveryMessageOptions DeliveryMessageOptions { get; }
         public NServiceBus.Extensibility.OptionExtensionContext Extensions { get; }
-        public NServiceBus.MessageIntentEnum Intent { get; }
         public object MessageInstance { get; set; }
         public System.Type MessageType { get; set; }
     }
@@ -1729,7 +1736,6 @@ namespace NServiceBus.Pipeline.Contexts
             public byte[] Body { get; set; }
             public NServiceBus.Unicast.DeliveryMessageOptions DeliveryMessageOptions { get; }
             public NServiceBus.Extensibility.OptionExtensionContext Extensions { get; }
-            public NServiceBus.MessageIntentEnum Intent { get; }
             public System.Type MessageType { get; }
         }
     }

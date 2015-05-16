@@ -8,7 +8,6 @@ namespace NServiceBus
     /// </summary>
     public class SendOptions:ExtendableOptions
     {
-        internal MessageIntentEnum Intent = MessageIntentEnum.Send;
 
         /// <summary>
         ///     Creates an instance of <see cref="SendOptions" />.

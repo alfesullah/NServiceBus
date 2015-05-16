@@ -24,7 +24,6 @@
                 Body = body;
                 DeliveryMessageOptions = parentContext.DeliveryMessageOptions;
                 MessageType = parentContext.MessageType;
-                Intent = parentContext.Intent;
                 Extensions = parentContext.Extensions;
             }
 
@@ -42,11 +41,6 @@
             /// A <see cref="byte"/> array containing the serialized contents of the outgoing message.
             /// </summary>
             public byte[] Body { get; set; }
-
-            /// <summary>
-            /// The intent of this message
-            /// </summary>
-            public MessageIntentEnum Intent { get; private set; }
 
             /// <summary>
             /// Place for extensions to store their data

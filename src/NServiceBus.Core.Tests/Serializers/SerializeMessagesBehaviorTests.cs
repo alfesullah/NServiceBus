@@ -3,13 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Serialization;
     using NServiceBus.Unicast;
     using NServiceBus.Unicast.Messages;
     using NUnit.Framework;
     using Conventions = NServiceBus.Conventions;
+    using SendOptions = NServiceBus.SendOptions;
 
     public class SerializeMessagesBehaviorTests
     {
@@ -22,7 +22,7 @@
 
             var behavior = new SerializeMessagesBehavior(new FakeSerializer("myContentType"),registry);
 
-            var context = new OutgoingContext(null, new SendMessageOptions("test"), MessageIntentEnum.Send, typeof(MyMessage), null, new OptionExtensionContext());
+            var context = new OutgoingContext(null, new SendMessageOptions("test"), typeof(MyMessage), null, new SendOptions());
 
             behavior.Invoke(context, c =>
             {

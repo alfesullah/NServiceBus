@@ -22,7 +22,7 @@ namespace NServiceBus
             {
                 var options = context.DeliveryMessageOptions.ToTransportOperationOptions();
 
-                if (context.Intent == MessageIntentEnum.Publish)
+                if (context.IsPublish())
                 {
                     options["Operation"] = "Publish";
                     options["EventType"] = context.MessageType.AssemblyQualifiedName;

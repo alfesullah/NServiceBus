@@ -136,8 +136,8 @@
     <Compile Include="MessageMutator\MutateOutgoingMessagesContext.cs" />
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
-    <Compile Include="MessagingBestPractices\BestPracticeEnforcement.cs" />
-    <Compile Include="MessagingBestPractices\OptionExtensions.cs" />
+    <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
+    <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
     <Compile Include="Pipeline\Contexts\OutgoingContext.cs" />
     <Compile Include="Monitoring\PerformanceCounterInstance.cs" />
     <Compile Include="Pipeline\Contexts\PhysicalMessageProcessingStageBehavior.cs" />
@@ -151,6 +151,7 @@
     <Compile Include="ReplyOptions.cs" />
     <Compile Include="Satellites\IAdvancedSatellite.cs" />
     <Compile Include="Satellites\ISatellite.cs" />
+    <Compile Include="Routing\RoutingContextExtensions.cs" />
     <Compile Include="Satellites\SatelliteBehavior.cs" />
     <Compile Include="SendLocalOptions.cs" />
     <Compile Include="SendOptions.cs" />
@@ -436,7 +437,7 @@
     <Compile Include="Pipeline\Contexts\LogicalMessagesProcessingStageBehavior.cs" />
     <Compile Include="Pipeline\PipelineBase.cs" />
     <Compile Include="Pipeline\Contexts\RootContext.cs" />
-    <Compile Include="MessagingBestPractices\EnforceBestPracticesBehavior.cs" />
+    <Compile Include="Routing\MessagingBestPractices\EnforceBestPracticesBehavior.cs" />
     <Compile Include="Sagas\ActiveSagaInstance.cs" />
     <Compile Include="Sagas\SagaPersistenceBehavior.cs" />
     <Compile Include="Unicast\Messages\LogicalMessageFactory.cs" />
@@ -588,7 +589,7 @@
     <Compile Include="Unicast\MessageEventArgs.cs" />
     <Compile Include="Unicast\Messages\MessageMetadataRegistry.cs" />
     <Compile Include="Unicast\Messages\MessageMetadata.cs" />
-    <Compile Include="MessagingBestPractices\Validations.cs" />
+    <Compile Include="Routing\MessagingBestPractices\Validations.cs" />
     <Compile Include="Monitoring\CriticalTime\CriticalTimeCalculator.cs" />
     <Compile Include="Monitoring\SLA\EstimatedTimeToSLABreachCalculator.cs" />
     <Compile Include="Audit\AttachCausationHeadersBehavior.cs" />

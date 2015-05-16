@@ -24,7 +24,18 @@
 
             if (!context.Extensions.TryGet(out options) || options.Enabled)
             {
-                Verify(context.MessageType, context.Intent);       
+                if (context.IsReply())
+                {
+                    validations.AssertIsValidForReply(context.MessageType);
+                }
+                if (context.IsPublish())
+                {
+                    validations.AssertIsValidForPubSub(context.MessageType);
+                }
+                if (context.IsSend())
+                {
+                    validations.AssertIsValidForSend(context.MessageType);
+                }
             }
             
             next();

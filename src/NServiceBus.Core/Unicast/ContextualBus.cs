@@ -117,10 +117,9 @@ namespace NServiceBus.Unicast
             var outgoingContext = new OutgoingContext(
                 incomingContext,
                 deliveryOptions,
-                MessageIntentEnum.Publish,
                 messageType,
                 message,
-                options.Extensions);
+                options);
 
 
             foreach (var header in headers)
@@ -225,7 +224,7 @@ namespace NServiceBus.Unicast
         {
             var sendOptions = new SendMessageOptions(MessageBeingProcessed.ReplyToAddress);
 
-            SendMessage(MessageIntentEnum.Reply, sendOptions, message.GetType(), message, options.Extensions);
+            SendMessage(sendOptions, message.GetType(), message, options);
         }
 
         /// <summary>
@@ -288,7 +287,7 @@ namespace NServiceBus.Unicast
 
             var sendOptions = new SendMessageOptions(destination, deliverAt, delayDeliveryFor);
 
-            SendMessage(options.Intent, sendOptions, messageType, message, options.Extensions);
+            SendMessage(sendOptions, messageType, message, options);
         }
 
         public void SendLocal<T>(Action<T> messageConstructor, SendLocalOptions options)
@@ -320,7 +319,7 @@ namespace NServiceBus.Unicast
 
             var sendOptions = new SendMessageOptions(destination, deliverAt, delayDeliveryFor);
 
-            SendMessage(MessageIntentEnum.Send, sendOptions, message.GetType(), message, options.Extensions);
+            SendMessage(sendOptions, message.GetType(), message, options);
         }
 
         List<string> GetAtLeastOneAddressForMessageType(Type messageType)
@@ -350,7 +349,7 @@ namespace NServiceBus.Unicast
 
       
 
-        void SendMessage(MessageIntentEnum intent, SendMessageOptions sendOptions, Type messageType, object message, OptionExtensionContext context)
+        void SendMessage(SendMessageOptions sendOptions, Type messageType, object message, ExtendableOptions options)
         {
             var headers = new Dictionary<string, string>();
 
@@ -364,10 +363,9 @@ namespace NServiceBus.Unicast
             var outgoingContext = new OutgoingContext(
                 incomingContext,
                 sendOptions,
-                intent,
                 messageType,
                 message,
-                context);
+                options);
 
             foreach (var header in headers)
             {

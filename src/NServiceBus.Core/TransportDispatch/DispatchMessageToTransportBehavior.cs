@@ -26,7 +26,19 @@
         {
             var state = context.Extensions.GetOrCreate<State>();
 
-            state.Headers[Headers.MessageIntent] = context.Intent.ToString();
+            var intent = MessageIntentEnum.Send;
+
+            if (context.IsReply())
+            {
+                intent = MessageIntentEnum.Reply;
+            }
+
+            if (context.IsPublish())
+            {
+                intent = MessageIntentEnum.Publish;
+            }
+
+            state.Headers[Headers.MessageIntent] = intent.ToString();
 
             return new OutgoingMessage(state.MessageId, state.Headers, context.Body);
         }
@@ -35,7 +47,7 @@
         {
             var message = GetOutgoingMessage(context);
 
-            if (context.Intent == MessageIntentEnum.Publish)
+            if (context.IsPublish())
             {
                 NativePublish(new TransportPublishOptions(context.MessageType, context.DeliveryMessageOptions.TimeToBeReceived, context.DeliveryMessageOptions.NonDurable ?? false), message);
             }
