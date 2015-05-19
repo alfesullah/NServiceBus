@@ -150,18 +150,19 @@ namespace NServiceBus.Saga
         /// <summary>
         /// Sends the <paramref name="message"/> using the bus to the endpoint that caused this saga to start.
         /// </summary>
-        protected virtual void ReplyToOriginator(object message)
+        protected void ReplyToOriginator(object message)
         {
             if (string.IsNullOrEmpty(Entity.Originator))
             {
                 throw new Exception("Entity.Originator cannot be null. Perhaps the sender is a SendOnly endpoint.");
             }
 
-            var options = new SendOptions(Entity.Originator);
+            var options = new ReplyOptions();
 
+            options.SetDestination(Entity.Originator);
             options.SetCorrelationId(Entity.OriginalMessageId);
 
-            Bus.Send(message, options);
+            Bus.Reply(message, options);
         }
 
         /// <summary>

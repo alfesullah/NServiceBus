@@ -42,11 +42,11 @@
         [Test]
         public void Should_use_utc_when_comparing()
         {
-            var deferrer = new DispatchMessageToTransportBehavior();
+            var dispatcher = new DispatchMessageToTransportTerminator();
             var sender = new FakeMessageSender();
-            deferrer.MessageSender = sender;
+            dispatcher.MessageSender = sender;
 
-            deferrer.Invoke(new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, new SendMessageOptions("Destination"), null, null, new SendOptions())), () => { });
+            dispatcher.Terminate(new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, new SendMessageOptions(), null, null, new SendOptions())));
 
             Assert.AreEqual(1, sender.Messages.Count);
         }

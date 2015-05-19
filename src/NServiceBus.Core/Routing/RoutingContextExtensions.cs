@@ -1,7 +1,9 @@
 ﻿namespace NServiceBus
 {
+    using System.Collections.Generic;
     using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Transports;
 
     /// <summary>
     /// 
@@ -55,6 +57,68 @@
         public static bool IsReply(this PhysicalOutgoingContextStageBehavior.Context context)
         {
             return context.Get<ExtendableOptions>() is ReplyOptions;
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class RoutingOptionExtensions
+    {
+        /// <summary>
+        /// Allows a specific physical address to be used to route this message
+        /// </summary>
+        /// <param name="option">Option beeing extended</param>
+        /// <param name="destination">The destination address</param>
+        public static void SetDestination(this SendOptions option,string destination)
+        {
+            Guard.AgainstNullAndEmpty(destination,"destination");
+
+            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+                .Destination = destination;
+        }
+
+        /// <summary>
+        /// Allows a specific physical address to be used to route this message
+        /// </summary>
+        /// <param name="option">Option beeing extended</param>
+        /// <param name="destination">The destination address</param>
+        public static void SetDestination(this ReplyOptions option, string destination)
+        {
+            Guard.AgainstNullAndEmpty(destination, "destination");
+
+            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+                .Destination = destination;
+        }
+
+        /// <summary>
+        /// Routes this message to the local endpoint instance
+        /// </summary>
+        /// <param name="option">Context beeing extended</param>
+        public static void RouteToLocalEndpointInstance(this SendOptions option)
+        {
+            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+                .RouteToLocalInstance = true;
+        }
+    }
+
+    abstract class RoutingStrategy
+    {
+        public void Dehydrate(Dictionary<string, string> options)
+        {
+            
+
+        }
+
+        public abstract void Dispatch(OutgoingMessage message);
+    }
+
+    class RoutingStrategyFactory
+    {
+        public RoutingStrategy Create(Dictionary<string, string> options)
+        {
+            return null;
         }
     }
 }

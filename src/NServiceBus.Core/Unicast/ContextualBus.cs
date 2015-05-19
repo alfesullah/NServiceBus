@@ -222,9 +222,7 @@ namespace NServiceBus.Unicast
         /// </summary>
         public void Reply(object message,NServiceBus.ReplyOptions options)
         {
-            var sendOptions = new SendMessageOptions(MessageBeingProcessed.ReplyToAddress);
-
-            SendMessage(sendOptions, message.GetType(), message, options);
+            SendMessage(new SendMessageOptions(), message.GetType(), message, options);
         }
 
         /// <summary>
@@ -260,13 +258,7 @@ namespace NServiceBus.Unicast
         public void Send(object message, NServiceBus.SendOptions options)
         {
             var messageType = message.GetType();
-            var destination = options.Destination;
-
-            if (string.IsNullOrEmpty(destination))
-            {
-                destination = GetDestinationForSend(messageType);
-            }
-
+   
             TimeSpan? delayDeliveryFor = null;
             if (options.Delay.HasValue)
             {
@@ -285,7 +277,7 @@ namespace NServiceBus.Unicast
                 AssertIsValidForPostponedDelivery(message.GetType());
             }
 
-            var sendOptions = new SendMessageOptions(destination, deliverAt, delayDeliveryFor);
+            var sendOptions = new SendMessageOptions(deliverAt, delayDeliveryFor);
 
             SendMessage(sendOptions, messageType, message, options);
         }
@@ -297,29 +289,11 @@ namespace NServiceBus.Unicast
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            var destination = sendLocalAddress;
+            var sendOptions = new NServiceBus.SendOptions(options.At,options.Delay);
 
-            TimeSpan? delayDeliveryFor = null;
-            if (options.Delay.HasValue)
-            {
-                delayDeliveryFor = options.Delay;
-            }
+            sendOptions.RouteToLocalEndpointInstance();
 
-            DateTime? deliverAt = null;
-            if (options.At.HasValue)
-            {
-                deliverAt = options.At;
-            }
-
-            var postponedDeliveryWasRequested = (deliverAt != null) || (delayDeliveryFor != null);
-            if (postponedDeliveryWasRequested)
-            {
-                AssertIsValidForPostponedDelivery(message.GetType());
-            }
-
-            var sendOptions = new SendMessageOptions(destination, deliverAt, delayDeliveryFor);
-
-            SendMessage(sendOptions, message.GetType(), message, options);
+            Send(message, sendOptions);
         }
 
         List<string> GetAtLeastOneAddressForMessageType(Type messageType)
@@ -335,20 +309,7 @@ namespace NServiceBus.Unicast
             return addresses;
         }
 
-        string GetDestinationForSend(Type messageType)
-        {
-            var destinations = GetAtLeastOneAddressForMessageType(messageType);
-
-            if (destinations.Count > 1)
-            {
-                throw new InvalidOperationException("Sends can only target one address.");
-            }
-
-            return destinations.SingleOrDefault();
-        }
-
       
-
         void SendMessage(SendMessageOptions sendOptions, Type messageType, object message, ExtendableOptions options)
         {
             var headers = new Dictionary<string, string>();
@@ -382,7 +343,7 @@ namespace NServiceBus.Unicast
             headers.Add(Headers.OriginatingHostId, hostInformation.HostId.ToString("N"));
         }
 
-        private void ApplyReplyToAddress(Dictionary<string, string> headers)
+        void ApplyReplyToAddress(Dictionary<string, string> headers)
         {
             string replyToAddress = null;
 

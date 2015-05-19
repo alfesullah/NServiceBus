@@ -1,19 +1,13 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline.Contexts;
-    using NServiceBus.Unicast;
+    using NServiceBus.Transports;
 
     class OutboxSendBehavior : PhysicalOutgoingContextStageBehavior
     {
-        DispatchMessageToTransportBehavior dispatchMessageToTransportBehavior;
-
-        public OutboxSendBehavior(DispatchMessageToTransportBehavior dispatchMessageToTransportBehavior)
-        {
-            this.dispatchMessageToTransportBehavior = dispatchMessageToTransportBehavior;
-        }
-
         public override void Invoke(Context context, Action next)
         {
             OutboxMessage currentOutboxMessage;
@@ -22,40 +16,55 @@ namespace NServiceBus
             {
                 var options = context.DeliveryMessageOptions.ToTransportOperationOptions();
 
-                if (context.IsPublish())
-                {
-                    options["Operation"] = "Publish";
-                    options["EventType"] = context.MessageType.AssemblyQualifiedName;
-                }
-                else
-                {
-                    var sendOptions = (SendMessageOptions)context.DeliveryMessageOptions;
-         
-                    options["Operation"] = "Send";
-                    options["Destination"] = sendOptions.Destination;
-          
-                    if (sendOptions.DelayDeliveryFor.HasValue)
-                    {
-                        options["DelayDeliveryFor"] = sendOptions.DelayDeliveryFor.Value.ToString();
-                    }
+                var routingStrategy = context.Get<RoutingStrategy>();
 
-                    if (sendOptions.DeliverAt.HasValue)
-                    {
-                        options["DeliverAt"] = DateTimeExtensions.ToWireFormattedString(sendOptions.DeliverAt.Value);
-                    }
+                routingStrategy.Dehydrate(options);
 
-                }
+                context.Set<RoutingStrategy>(new OutboxRoutingStrategy(currentOutboxMessage, options));
+                //if (context.IsPublish())
+                //{
+                //    options["Operation"] = "Publish";
+                //    options["EventType"] = context.MessageType.AssemblyQualifiedName;
+                //}
+                //else
+                //{
+                //    var sendOptions = (SendMessageOptions)context.DeliveryMessageOptions;
 
-                var messageToSend = dispatchMessageToTransportBehavior.GetOutgoingMessage(context);
+                //    options["Operation"] = "Send";
+                //    options["Destination"] = "todo";
 
-                currentOutboxMessage.TransportOperations.Add(new TransportOperation(messageToSend.MessageId, options, messageToSend.Body, messageToSend.Headers)); 
+                //    if (sendOptions.DelayDeliveryFor.HasValue)
+                //    {
+                //        options["DelayDeliveryFor"] = sendOptions.DelayDeliveryFor.Value.ToString();
+                //    }
+
+                //    if (sendOptions.DeliverAt.HasValue)
+                //    {
+                //        options["DeliverAt"] = DateTimeExtensions.ToWireFormattedString(sendOptions.DeliverAt.Value);
+                //    }
+
+                //}
+
             }
-            else
-            {
-                dispatchMessageToTransportBehavior.InvokeNative(context);
 
-                next();
-            }
+            next();
+        }
+    }
+
+    class OutboxRoutingStrategy : RoutingStrategy
+    {
+        OutboxMessage currentOutboxMessage;
+        Dictionary<string, string> options;
+
+        public OutboxRoutingStrategy(OutboxMessage currentOutboxMessage, Dictionary<string, string> options)
+        {
+            this.currentOutboxMessage = currentOutboxMessage;
+            this.options = options;
+        }
+
+        public override void Dispatch(OutgoingMessage message)
+        {
+            currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));
         }
     }
 }

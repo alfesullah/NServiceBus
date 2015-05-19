@@ -18,7 +18,7 @@
         {
             Guard.AgainstNullAndEmpty(key,"key");
 
-            context.Extensions.GetOrCreate<DispatchMessageToTransportBehavior.State>()
+            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
                 .Headers[key] = value;
         }
 
@@ -32,7 +32,7 @@
         {
             Guard.AgainstNullAndEmpty(key, "key");
             
-            context.Extensions.GetOrCreate<DispatchMessageToTransportBehavior.State>()
+            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
                 .Headers[key] = value;
         }
 
@@ -46,7 +46,7 @@
         {
             Guard.AgainstNullAndEmpty(key, "key");
             
-            context.Extensions.GetOrCreate<DispatchMessageToTransportBehavior.State>()
+            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
                 .Headers[key] = value;
         }
     }

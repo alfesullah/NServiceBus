@@ -136,6 +136,7 @@
     <Compile Include="MessageMutator\MutateOutgoingMessagesContext.cs" />
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
+    <Compile Include="Pipeline\PipelineTerminator.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
     <Compile Include="Pipeline\Contexts\OutgoingContext.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="ReplyOptions.cs" />
     <Compile Include="Satellites\IAdvancedSatellite.cs" />
     <Compile Include="Satellites\ISatellite.cs" />
+    <Compile Include="Routing\RouteMessageBehavior.cs" />
     <Compile Include="Routing\RoutingContextExtensions.cs" />
     <Compile Include="Satellites\SatelliteBehavior.cs" />
     <Compile Include="SendLocalOptions.cs" />
@@ -431,7 +433,7 @@
     <Compile Include="Unicast\Behaviors\MessageHandler.cs" />
     <Compile Include="Unicast\Behaviors\ChildContainerBehavior.cs" />
     <Compile Include="Unicast\Behaviors\SerializeMessagesBehavior.cs" />
-    <Compile Include="TransportDispatch\DispatchMessageToTransportBehavior.cs" />
+    <Compile Include="TransportDispatch\DispatchMessageToTransportTerminator.cs" />
     <Compile Include="MessageMutator\MutateOutgoingMessageBehavior.cs" />
     <Compile Include="MessageMutator\MutateOutgoingPhysicalMessageBehavior.cs" />
     <Compile Include="Pipeline\Contexts\LogicalMessagesProcessingStageBehavior.cs" />

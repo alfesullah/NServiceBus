@@ -44,7 +44,7 @@ namespace NServiceBus.Outbox
                     deliverAt = DateTimeExtensions.ToUtcDateTime(deliverAtString);
                 }
 
-                result = new SendMessageOptions(options["Destination"], deliverAt, delayDeliveryFor);
+                result = new SendMessageOptions(deliverAt, delayDeliveryFor);
             }
             else
             {

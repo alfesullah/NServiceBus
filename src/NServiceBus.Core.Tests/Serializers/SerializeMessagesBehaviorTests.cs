@@ -22,14 +22,14 @@
 
             var behavior = new SerializeMessagesBehavior(new FakeSerializer("myContentType"),registry);
 
-            var context = new OutgoingContext(null, new SendMessageOptions("test"), typeof(MyMessage), null, new SendOptions());
+            var context = new OutgoingContext(null, new SendMessageOptions(), typeof(MyMessage), null, new SendOptions());
 
             behavior.Invoke(context, c =>
             {
                 
             });
 
-            Assert.AreEqual("myContentType", context.Extensions.GetOrCreate<DispatchMessageToTransportBehavior.State>().Headers[Headers.ContentType]);
+            Assert.AreEqual("myContentType", context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>().Headers[Headers.ContentType]);
         }
 
         public class FakeSerializer : IMessageSerializer

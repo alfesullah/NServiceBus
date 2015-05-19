@@ -3,12 +3,11 @@
     using System;
     using System.Configuration;
     using System.ServiceProcess;
-    using Logging;
+    using NServiceBus.Logging;
     using NServiceBus.Outbox;
-    using Persistence;
-    using Pipeline;
-    using Transports;
-    using Unicast.Transport;
+    using NServiceBus.Persistence;
+    using NServiceBus.Transports;
+    using NServiceBus.Unicast.Transport;
 
     /// <summary>
     /// Configure the Outbox.
@@ -77,13 +76,12 @@ The reason you need to do this is because we need to ensure that you have read a
 
             context.MainPipeline.Register<OutboxDeduplicationBehavior.OutboxDeduplicationRegistration>();
             context.MainPipeline.Register<OutboxRecordBehavior.OutboxRecorderRegistration>();
-            context.MainPipeline.Replace(WellKnownStep.DispatchMessageToTransport, typeof(OutboxSendBehavior), "Sending behavior with a delay sending until all business transactions are committed to the outbox storage");
+            context.MainPipeline.Register("OutboxSendBehavior", typeof(OutboxSendBehavior), "Makes sure that the outgoing message is stored in the outbox instead of beeing dispatched to the transport");
 
             context.Container.ConfigureComponent(
                 b => new OutboxDeduplicationBehavior(b.Build<IOutboxStorage>(),
-                    b.Build<DispatchMessageToTransportBehavior>(), 
-                    b.Build<DefaultMessageAuditer>(),
-                    new TransactionSettings(context.Settings)), 
+                    new TransactionSettings(context.Settings),
+                    b.Build<RoutingStrategyFactory>()), 
                 DependencyLifecycle.InstancePerCall);
 
             //make the audit use the outbox as well

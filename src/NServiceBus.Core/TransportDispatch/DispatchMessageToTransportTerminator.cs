@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
     using NServiceBus.Unicast;
     using NServiceBus.Unicast.Queuing;
 
-    class DispatchMessageToTransportBehavior : PhysicalOutgoingContextStageBehavior
+   
+    class DispatchMessageToTransportTerminator : PipelineTerminator<PhysicalOutgoingContextStageBehavior.Context>
     {
         public ISendMessages MessageSender { get; set; }
 
@@ -15,17 +17,10 @@
 
         public IDeferMessages MessageDeferral { get; set; }
 
-        public override void Invoke(Context context, Action next)
-        {
-            InvokeNative(context);
 
-            next();
-        }
-
-        public OutgoingMessage GetOutgoingMessage(Context context)
+        public override void Terminate(PhysicalOutgoingContextStageBehavior.Context context)
         {
             var state = context.Extensions.GetOrCreate<State>();
-
             var intent = MessageIntentEnum.Send;
 
             if (context.IsReply())
@@ -40,23 +35,12 @@
 
             state.Headers[Headers.MessageIntent] = intent.ToString();
 
-            return new OutgoingMessage(state.MessageId, state.Headers, context.Body);
+            var message= new OutgoingMessage(state.MessageId, state.Headers, context.Body);
+
+            context.Get<RoutingStrategy>()
+                .Dispatch(message);
         }
-
-        public void InvokeNative(Context context)
-        {
-            var message = GetOutgoingMessage(context);
-
-            if (context.IsPublish())
-            {
-                NativePublish(new TransportPublishOptions(context.MessageType, context.DeliveryMessageOptions.TimeToBeReceived, context.DeliveryMessageOptions.NonDurable ?? false), message);
-            }
-            else
-            {
-                NativeSendOrDefer(context.DeliveryMessageOptions, message);
-            }
-        }
-
+      
         public void NativePublish(TransportPublishOptions publishOptions, OutgoingMessage message)
         {
             SetTransportHeaders(publishOptions.TimeToBeReceived, publishOptions.NonDurable, message);
@@ -79,13 +63,13 @@
             }
         }
 
-        public void NativeSendOrDefer(DeliveryMessageOptions deliveryMessageOptions, OutgoingMessage message)
+        public void NativeSendOrDefer(string destination,DeliveryMessageOptions deliveryMessageOptions, OutgoingMessage message)
         {
             SetTransportHeaders(deliveryMessageOptions.TimeToBeReceived, deliveryMessageOptions.NonDurable, message);
 
             try
             {
-                SendOrDefer(message, deliveryMessageOptions as SendMessageOptions);
+                SendOrDefer(destination,message, deliveryMessageOptions as SendMessageOptions);
             }
             catch (QueueNotFoundException ex)
             {
@@ -117,14 +101,14 @@
             }
         }
 
-        void SendOrDefer(OutgoingMessage message, SendMessageOptions options)
+        void SendOrDefer(string destination,OutgoingMessage message, SendMessageOptions options)
         {
             if ((options.DelayDeliveryFor.HasValue && options.DelayDeliveryFor > TimeSpan.Zero) ||
                 (options.DeliverAt.HasValue && options.DeliverAt.Value.ToUniversalTime() > DateTime.UtcNow))
             {
                 SetIsDeferredHeader(message.Headers);
                 MessageDeferral.Defer(message, new TransportDeferOptions(
-                    options.Destination,
+                    destination,
                     options.DelayDeliveryFor,
                     options.DeliverAt,
                     options.NonDurable ?? true,
@@ -133,7 +117,7 @@
                 return;
             }
 
-            MessageSender.Send(message, new TransportSendOptions(options.Destination,
+            MessageSender.Send(message, new TransportSendOptions(destination,
                                                                     options.TimeToBeReceived,
                                                                     options.NonDurable ?? true,
                                                                     options.EnlistInReceiveTransaction));
@@ -163,5 +147,6 @@
             public Dictionary<string, string> Headers { get; private set; }
             public string MessageId { get; set; }
         }
+
     }
 }

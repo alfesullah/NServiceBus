@@ -10,15 +10,12 @@
 
     class OutboxDeduplicationBehavior : PhysicalMessageProcessingStageBehavior
     {
-    
-        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage, DispatchMessageToTransportBehavior defaultDispatcher, DefaultMessageAuditer defaultAuditer, TransactionSettings transactionSettings)
+        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory)
         {
             this.outboxStorage = outboxStorage;
-            this.defaultDispatcher = defaultDispatcher;
-            this.defaultAuditer = defaultAuditer;
             this.transactionSettings = transactionSettings;
+            this.routingStrategyFactory = routingStrategyFactory;
         }
-
 
         public override void Invoke(Context context, Action next)
         {
@@ -60,32 +57,15 @@
 
                 var message = new OutgoingMessage(transportOperation.MessageId, transportOperation.Headers, transportOperation.Body);
 
-                var operationType = transportOperation.Options["Operation"];
+                var routingStrategy = routingStrategyFactory.Create(transportOperation.Options);
 
-                switch (operationType)
-                {
-                    case "Audit":
-                        defaultAuditer.Audit(new TransportSendOptions(transportOperation.Options["Destination"],null,false,false), message);
-                        break;
-                    case "Send":
-                        defaultDispatcher.NativeSendOrDefer(deliveryOptions, message);
-                        break;
-                    case "Publish":
-                        
-                        var options= new TransportPublishOptions(Type.GetType(transportOperation.Options["EventType"]));
-
-                        defaultDispatcher.NativePublish(options, message);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Unknown operation type: " + operationType);
-                }
+                routingStrategy.Dispatch(message);
             }
         }
 
         IOutboxStorage outboxStorage;
-        DispatchMessageToTransportBehavior defaultDispatcher;
-        DefaultMessageAuditer defaultAuditer;
         TransactionSettings transactionSettings;
+        RoutingStrategyFactory routingStrategyFactory;
 
         public class OutboxDeduplicationRegistration : RegisterStep
         {

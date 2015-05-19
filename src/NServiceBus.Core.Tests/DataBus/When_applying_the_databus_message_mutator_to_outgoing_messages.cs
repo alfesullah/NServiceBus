@@ -20,7 +20,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-            var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint"), null, message, new SendOptions());
+            var context = new OutgoingContext(null, new SendMessageOptions(), null, message, new SendOptions());
             
             var fakeDatabus = new FakeDataBus();
            
@@ -43,7 +43,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-           var context = new OutgoingContext(null, new SendMessageOptions("MyEndpoint") { TimeToBeReceived = TimeSpan.FromMinutes(1) }, null, message, new SendOptions());
+           var context = new OutgoingContext(null, new SendMessageOptions() { TimeToBeReceived = TimeSpan.FromMinutes(1) }, null, message, new SendOptions());
 
            var fakeDatabus = new FakeDataBus();
            

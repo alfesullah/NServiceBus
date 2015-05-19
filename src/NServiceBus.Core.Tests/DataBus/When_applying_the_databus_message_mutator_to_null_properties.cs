@@ -14,7 +14,7 @@ namespace NServiceBus.Core.Tests.DataBus
         [Test]
         public void Should_not_blow_up()
         {
-            var context = new OutgoingContext(null,new SendMessageOptions("MyEndpoint"), null, new MessageWithNullDataBusProperty(),new SendOptions());
+            var context = new OutgoingContext(null,new SendMessageOptions(), null, new MessageWithNullDataBusProperty(),new SendOptions());
             var sendBehavior = new DataBusSendBehavior
             {
                 DataBus = null,

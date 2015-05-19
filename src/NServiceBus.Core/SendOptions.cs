@@ -12,10 +12,9 @@ namespace NServiceBus
         /// <summary>
         ///     Creates an instance of <see cref="SendOptions" />.
         /// </summary>
-        /// <param name="destination">Specifies a specific destination for the message.</param>
         /// <param name="deliverAt">Tells the bus to deliver the message at the given time.</param>
         /// <param name="delayDeliveryFor">Tells the bus to wait the specified amount of time before delivering the message.</param>
-        public SendOptions(string destination = null,DateTime? deliverAt = null, TimeSpan? delayDeliveryFor = null)
+        public SendOptions(DateTime? deliverAt = null, TimeSpan? delayDeliveryFor = null)
         {
             if (deliverAt != null && delayDeliveryFor != null)
             {
@@ -24,10 +23,7 @@ namespace NServiceBus
 
             Delay = delayDeliveryFor;
             At = deliverAt;
-            Destination = destination;
         }
-
-        internal string Destination { get; private set; }
 
         internal TimeSpan? Delay { get; private set; }
 

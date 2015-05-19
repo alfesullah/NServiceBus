@@ -1,8 +1,8 @@
 namespace NServiceBus.Outbox
 {
-    using Pipeline;
-    using Transports;
-    using Unicast;
+    using System.Collections.Generic;
+    using NServiceBus.Pipeline;
+    using NServiceBus.Transports;
 
     class OutboxAwareAuditer
     {
@@ -15,21 +15,23 @@ namespace NServiceBus.Outbox
             this.behaviorContext = behaviorContext;
         }
 
-        public void Audit( SendMessageOptions sendMessageOptions, OutgoingMessage message)
+        public void Audit( string destination, OutgoingMessage message)
         {
             OutboxMessage currentOutboxMessage;
 
             if (behaviorContext.TryGet(out currentOutboxMessage))
             {
-                var options = sendMessageOptions.ToTransportOperationOptions();
+                var options = new Dictionary<string,string>();
 
                 options["Operation"] = "Audit";
+
+                options["Destination"] = destination;
 
                 currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId,options, message.Body, message.Headers));
             }
             else
             {
-                defaultMessageAuditer.Audit(new TransportSendOptions(sendMessageOptions.Destination), message);
+                defaultMessageAuditer.Audit(new TransportSendOptions(destination), message);
             }
         }
     }
