@@ -3,12 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Timeout;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast;
     using NUnit.Framework;
-    using SendOptions = NServiceBus.SendOptions;
 
     public class When_deferring_a_message
     {
@@ -37,18 +34,6 @@
 
             var expireAt = DateTimeExtensions.ToUtcDateTime(sender.Messages.First().Headers[TimeoutManagerHeaders.Expire]);
             Assert.IsTrue(expireAt <= DateTime.UtcNow + delay);
-        }
-
-        [Test]
-        public void Should_use_utc_when_comparing()
-        {
-            var dispatcher = new DispatchMessageToTransportTerminator();
-            var sender = new FakeMessageSender();
-            dispatcher.MessageSender = sender;
-
-            dispatcher.Terminate(new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, new SendMessageOptions(), null, null, new SendOptions())));
-
-            Assert.AreEqual(1, sender.Messages.Count);
         }
 
         class FakeMessageSender : ISendMessages
