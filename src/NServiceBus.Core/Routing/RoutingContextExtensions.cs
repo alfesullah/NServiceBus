@@ -80,11 +80,11 @@
         }
 
         /// <summary>
-        /// Allows a specific physical address to be used to route this message
+        /// Allows the target endpoint instance for this reply to set. If not used the reply will be sent to the `ReplyToAddress` of the incoming message
         /// </summary>
         /// <param name="option">Option beeing extended</param>
-        /// <param name="destination">The destination address</param>
-        public static void SetDestination(this ReplyOptions option, string destination)
+        /// <param name="destination">The new target address</param>
+        public static void OverrideReplyToAddressOfIncomingMessage(this ReplyOptions option, string destination)
         {
             Guard.AgainstNullAndEmpty(destination, "destination");
 

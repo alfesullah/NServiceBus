@@ -159,7 +159,7 @@ namespace NServiceBus.Saga
 
             var options = new ReplyOptions();
 
-            options.SetDestination(Entity.Originator);
+            options.OverrideReplyToAddressOfIncomingMessage(Entity.Originator);
             options.SetCorrelationId(Entity.OriginalMessageId);
 
             Bus.Reply(message, options);
