@@ -12,6 +12,13 @@
         }
         protected internal override void Setup(FeatureConfigurationContext context)
         {
+            context.MainPipeline.Register("DetermineRoutingForMessage", typeof(DetermineRoutingForMessageBehavior), "Determines how the message beeing sent should be routed");
+
+            SetupStaticRouter(context);
+        }
+
+        static void SetupStaticRouter(FeatureConfigurationContext context)
+        {
             var conventions = context.Settings.Get<Conventions>();
 
             var knownMessages = context.Settings.GetAvailableTypes()
@@ -45,10 +52,9 @@
                         router.RegisterMessageRoute(messageType, address);
                     });
                 }
-         
             }
 
-       
+
             context.Container.RegisterSingleton(router);
         }
     }

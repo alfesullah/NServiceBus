@@ -154,6 +154,7 @@
     <Compile Include="Satellites\IAdvancedSatellite.cs" />
     <Compile Include="Satellites\ISatellite.cs" />
     <Compile Include="Routing\RouteMessageBehavior.cs" />
+    <Compile Include="Routing\DetermineRoutingForMessageBehavior.cs" />
     <Compile Include="Routing\RoutingContextExtensions.cs" />
     <Compile Include="Routing\RoutingFeature.cs" />
     <Compile Include="Satellites\SatelliteBehavior.cs" />

@@ -4,7 +4,7 @@ namespace NServiceBus
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
 
-    class RouteMessageBehavior:Behavior<OutgoingContext>
+    class DetermineRoutingForMessageBehavior:Behavior<OutgoingContext>
     {
         //TransportDefinition definition;
 

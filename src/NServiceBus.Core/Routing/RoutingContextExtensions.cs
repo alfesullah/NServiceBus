@@ -75,7 +75,7 @@
         {
             Guard.AgainstNullAndEmpty(destination,"destination");
 
-            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+            option.Extensions.GetOrCreate<DetermineRoutingForMessageBehavior.State>()
                 .Destination = destination;
         }
 
@@ -88,7 +88,7 @@
         {
             Guard.AgainstNullAndEmpty(destination, "destination");
 
-            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+            option.Extensions.GetOrCreate<DetermineRoutingForMessageBehavior.State>()
                 .Destination = destination;
         }
 
@@ -98,7 +98,7 @@
         /// <param name="option">Context beeing extended</param>
         public static void RouteToLocalEndpointInstance(this SendOptions option)
         {
-            option.Extensions.GetOrCreate<RouteMessageBehavior.State>()
+            option.Extensions.GetOrCreate<DetermineRoutingForMessageBehavior.State>()
                 .RouteToLocalInstance = true;
         }
     }
