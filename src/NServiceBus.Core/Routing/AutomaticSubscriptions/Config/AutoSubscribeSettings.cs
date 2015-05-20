@@ -1,5 +1,7 @@
 namespace NServiceBus.AutomaticSubscriptions.Config
 {
+    using NServiceBus.Routing.AutomaticSubscriptions;
+
     /// <summary>
     /// Provides fine grained control over auto subscribe
     /// </summary>

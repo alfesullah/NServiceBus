@@ -232,9 +232,9 @@
     <Compile Include="Address.cs" />
     <Compile Include="AddressMode.cs" />
     <Compile Include="Audit\Audit.cs" />
-    <Compile Include="AutomaticSubscriptions\AutoSubscribe.cs" />
-    <Compile Include="AutomaticSubscriptions\Config\AutoSubscribeSettingsExtensions.cs" />
-    <Compile Include="AutomaticSubscriptions\Config\AutoSubscribeSettings.cs" />
+    <Compile Include="Routing\AutomaticSubscriptions\AutoSubscribe.cs" />
+    <Compile Include="Routing\AutomaticSubscriptions\Config\AutoSubscribeSettingsExtensions.cs" />
+    <Compile Include="Routing\AutomaticSubscriptions\Config\AutoSubscribeSettings.cs" />
     <Compile Include="CompletionResult.cs" />
     <Compile Include="Configure.cs" />
     <Compile Include="Config\AuditConfig.cs" />
@@ -587,7 +587,7 @@
     <Compile Include="Unicast\Queuing\Installers\ForwardReceivedMessagesToQueueCreator.cs" />
     <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\StorageDrivenPublishing.cs" />
     <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\MessageDrivenSubscriptions.cs" />
-    <Compile Include="AutomaticSubscriptions\AutoSubscriptionStrategy.cs" />
+    <Compile Include="Routing\AutomaticSubscriptions\AutoSubscriptionStrategy.cs" />
     <Compile Include="Unicast\MessageContext.cs" />
     <Compile Include="Unicast\MessageEventArgs.cs" />
     <Compile Include="Unicast\Messages\MessageMetadataRegistry.cs" />
@@ -602,7 +602,7 @@
     <Compile Include="Unicast\Queuing\IWantQueueCreated.cs" />
     <Compile Include="Unicast\Queuing\QueueNotFoundException.cs" />
     <Compile Include="Unicast\Queuing\QueuesCreator.cs" />
-    <Compile Include="Unicast\Routing\StaticMessageRouter.cs" />
+    <Compile Include="Routing\StaticMessageRouter.cs" />
     <Compile Include="Unicast\IMessageHandlerRegistry.cs" />
     <Compile Include="Unicast\MessageHandlerRegistry.cs" />
     <Compile Include="Unicast\Subscriptions\SubscriptionEventArgs.cs" />

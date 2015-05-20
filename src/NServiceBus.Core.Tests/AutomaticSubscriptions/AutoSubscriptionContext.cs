@@ -2,10 +2,10 @@ namespace NServiceBus.Core.Tests.AutomaticSubscriptions
 {
     using System;
     using System.Collections.Generic;
-    using NServiceBus.AutomaticSubscriptions;
+    using NServiceBus.Routing.AutomaticSubscriptions;
+    using NServiceBus.Unicast;
+    using NServiceBus.Unicast.Routing;
     using NUnit.Framework;
-    using Unicast;
-    using Unicast.Routing;
     using Conventions = NServiceBus.Conventions;
 
     public class AutoSubscriptionContext

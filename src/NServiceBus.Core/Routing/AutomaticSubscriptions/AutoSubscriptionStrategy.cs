@@ -1,10 +1,10 @@
-﻿namespace NServiceBus.AutomaticSubscriptions
+﻿namespace NServiceBus.Routing.AutomaticSubscriptions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Unicast;
-    using Unicast.Routing;
+    using NServiceBus.Unicast;
+    using NServiceBus.Unicast.Routing;
 
     /// <summary>
     /// The default strategy for auto subscriptions.

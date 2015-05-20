@@ -3,6 +3,7 @@
     using System.Linq;
     using NServiceBus.AutomaticSubscriptions;
     using NServiceBus.Logging;
+    using NServiceBus.Routing.AutomaticSubscriptions;
     using NServiceBus.Transports;
 
     /// <summary>
