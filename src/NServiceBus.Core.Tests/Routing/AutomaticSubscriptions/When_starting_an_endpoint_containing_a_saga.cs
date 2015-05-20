@@ -1,10 +1,10 @@
-namespace NServiceBus.Core.Tests.AutomaticSubscriptions
+namespace NServiceBus.Core.Tests.Routing.AutomaticSubscriptions
 {
     using System;
     using System.Linq;
+    using NServiceBus.Saga;
+    using NServiceBus.Unicast.Tests.Contexts;
     using NUnit.Framework;
-    using Saga;
-    using Unicast.Tests.Contexts;
 
     [TestFixture]
     public class When_starting_an_endpoint_containing_a_saga : AutoSubscriptionContext

@@ -1,9 +1,9 @@
-namespace NServiceBus.Core.Tests.AutomaticSubscriptions
+namespace NServiceBus.Core.Tests.Routing.AutomaticSubscriptions
 {
     using System.Linq;
+    using NServiceBus.Unicast.Routing;
+    using NServiceBus.Unicast.Tests.Contexts;
     using NUnit.Framework;
-    using Unicast.Routing;
-    using Unicast.Tests.Contexts;
 
     [TestFixture]
     public class When_starting_an_endpoint_with_autoSubscribe_turned_on : AutoSubscriptionContext

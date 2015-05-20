@@ -1,10 +1,10 @@
-namespace NServiceBus.Core.Tests.AutomaticSubscriptions
+namespace NServiceBus.Core.Tests.Routing.AutomaticSubscriptions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using NServiceBus.Saga;
     using NUnit.Framework;
-    using Saga;
 
     [TestFixture]
     public class When_autoSubscribing_a_saga_that_handles_a_superclass_event : AutoSubscriptionContext

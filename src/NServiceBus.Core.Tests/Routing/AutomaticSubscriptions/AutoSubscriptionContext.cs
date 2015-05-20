@@ -1,4 +1,4 @@
-namespace NServiceBus.Core.Tests.AutomaticSubscriptions
+namespace NServiceBus.Core.Tests.Routing.AutomaticSubscriptions
 {
     using System;
     using System.Collections.Generic;

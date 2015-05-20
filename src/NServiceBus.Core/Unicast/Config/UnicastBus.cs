@@ -35,7 +35,7 @@ namespace NServiceBus.Features
 
                 if (!s.HasExplicitValue(HostIdSettingsKey))
                 {
-                  s.SetDefault(HostIdSettingsKey, DeterministicGuid.Create(fullPathToStartingExe, RuntimeEnvironment.MachineName));
+                    s.SetDefault(HostIdSettingsKey, DeterministicGuid.Create(fullPathToStartingExe, RuntimeEnvironment.MachineName));
                 }
                 s.SetDefault("NServiceBus.HostInformation.DisplayName", RuntimeEnvironment.MachineName);
                 s.SetDefault("NServiceBus.HostInformation.Properties", new Dictionary<string, string>
@@ -59,10 +59,10 @@ namespace NServiceBus.Features
             context.Container.RegisterSingleton(hostInfo);
             context.MainPipeline.Register<HostInformationBehavior.Registration>();
             context.MainPipeline.Register<AttachCorrelationIdBehavior.Registration>();
-            
+
 
             context.Container.ConfigureComponent<BusNotifications>(DependencyLifecycle.SingleInstance);
-           
+
 
             var concurrencyConfig = context.Settings.Get<IConcurrencyConfig>();
             var throttlingConfig = context.Settings.Get<IThrottlingConfig>();
@@ -100,7 +100,7 @@ namespace NServiceBus.Features
                 var stacker = b.Build<BehaviorContextStacker>();
                 if (stacker.Current != null)
                 {
-                    return CreateContextualBus(hostInfo,b, () => stacker.Current);
+                    return CreateContextualBus(hostInfo, b, () => stacker.Current);
                 }
                 return (IBus)b.Build<IRealBus>();
             }, DependencyLifecycle.InstancePerCall);
@@ -109,12 +109,21 @@ namespace NServiceBus.Features
                 .Where(context.Settings.Get<Conventions>().IsMessageType)
                 .ToList();
 
-            RegisterMessageOwnersAndBusAddress(context, knownMessages);
+            var unicastConfig = context.Settings.GetConfigSection<UnicastBusConfig>();
+
+            if (unicastConfig != null)
+            {
+                if (!string.IsNullOrWhiteSpace(unicastConfig.ForwardReceivedMessagesTo))
+                {
+                    var forwardAddress = unicastConfig.ForwardReceivedMessagesTo;
+                    context.Container.ConfigureProperty<ForwardBehavior>(b => b.ForwardReceivedMessagesTo, forwardAddress);
+                }
+            }
 
             ConfigureMessageRegistry(context, knownMessages);
 
             HardcodedPipelineSteps.RegisterOutgoingCoreBehaviors(context.MainPipeline);
-            
+
             if (context.Settings.GetOrDefault<bool>("Endpoint.SendOnly"))
             {
                 return;
@@ -134,8 +143,8 @@ namespace NServiceBus.Features
             {
                 context.MainPipeline.Register<HandlerTransactionScopeWrapperBehavior.Registration>();
             }
-           
-            context.MainPipeline.Register<EnforceMessageIdBehavior.Registration>();   
+
+            context.MainPipeline.Register<EnforceMessageIdBehavior.Registration>();
         }
 
         Unicast.UnicastBus CreateBus(IBuilder builder, HostInformation hostInfo)
@@ -152,7 +161,7 @@ namespace NServiceBus.Features
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
                 builder.Build<ISendMessages>(),
-                builder.Build<StaticMessageRouter>(),hostInfo)
+                builder.Build<StaticMessageRouter>(), hostInfo)
             {
                 HostInformation = hostInfo
             };
@@ -166,55 +175,13 @@ namespace NServiceBus.Features
                 builder,
                 builder.Build<Configure>(),
                 builder.Build<IManageSubscriptions>(),
-                builder.Build<MessageMetadataRegistry>(), 
+                builder.Build<MessageMetadataRegistry>(),
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
                 builder.Build<ISendMessages>(),
-                builder.Build<StaticMessageRouter>(),hostInfo);
+                builder.Build<StaticMessageRouter>(), hostInfo);
         }
 
-        void RegisterMessageOwnersAndBusAddress(FeatureConfigurationContext context, IEnumerable<Type> knownMessages)
-        {
-            var unicastConfig = context.Settings.GetConfigSection<UnicastBusConfig>();
-            var router = new StaticMessageRouter(knownMessages);
-            
-            context.Container.RegisterSingleton(router);
-
-            if (unicastConfig == null)
-            {
-                return;
-            }
-
-            if (!string.IsNullOrWhiteSpace(unicastConfig.ForwardReceivedMessagesTo))
-            {
-                var forwardAddress = unicastConfig.ForwardReceivedMessagesTo;
-                context.Container.ConfigureProperty<ForwardBehavior>(b => b.ForwardReceivedMessagesTo, forwardAddress);
-            }
-
-            var messageEndpointMappings = unicastConfig.MessageEndpointMappings.Cast<MessageEndpointMapping>()
-                .OrderByDescending(m => m)
-                .ToList();
-
-            foreach (var mapping in messageEndpointMappings)
-            {
-                mapping.Configure((messageType, address) =>
-                {
-                    var conventions = context.Settings.Get<Conventions>();
-                    if (!(conventions.IsMessageType(messageType) || conventions.IsEventType(messageType) || conventions.IsCommandType(messageType)))
-                    {
-                        return;
-                    }
-
-                    if (conventions.IsEventType(messageType))
-                    {
-                        router.RegisterEventRoute(messageType, address);
-                        return;
-                    }
-
-                    router.RegisterMessageRoute(messageType, address);
-                });
-            }
-        }
         void ConfigureMessageRegistry(FeatureConfigurationContext context, IEnumerable<Type> knownMessages)
         {
             var messageRegistry = new MessageMetadataRegistry(!DurableMessagesConfig.GetDurableMessagesEnabled(context.Settings), context.Settings.Get<Conventions>());
