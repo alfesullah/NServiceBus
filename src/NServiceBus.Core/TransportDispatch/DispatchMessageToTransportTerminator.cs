@@ -25,9 +25,10 @@
             state.Headers[Headers.MessageIntent] = intent.ToString();
 
             var message = new OutgoingMessage(state.MessageId, state.Headers, context.Body);
-
+            var deliveryGuarantees = context.Get<DeliveryGuarantees>();
+      
             context.Get<RoutingStrategy>()
-                .Dispatch(message);
+                .Dispatch(message,deliveryGuarantees);
         }
      
         public class State

@@ -76,7 +76,7 @@
             Guard.AgainstNullAndEmpty(destination,"destination");
 
             option.Extensions.GetOrCreate<DetermineRoutingForMessageBehavior.State>()
-                .Destination = destination;
+                .ExplicitDestination = destination;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@
             Guard.AgainstNullAndEmpty(destination, "destination");
 
             option.Extensions.GetOrCreate<DetermineRoutingForMessageBehavior.State>()
-                .Destination = destination;
+                .ExplicitDestination = destination;
         }
 
         /// <summary>
@@ -111,7 +111,24 @@
 
         }
 
-        public abstract void Dispatch(OutgoingMessage message);
+        public abstract void Dispatch(OutgoingMessage message,DeliveryGuarantees requiredDeliveryGuarantees);
+    }
+
+    class DeliveryGuarantees
+    {
+        public bool NonDurable { get; set; }
+        public bool EnlistInReceiveTransaction { get; set; }
+
+        public void Dehydrate(Dictionary<string, string> options)
+        {
+            
+        }
+
+        public void Hydrate(Dictionary<string, string> options)
+        {
+            
+
+        }
     }
 
     class RoutingStrategyFactory

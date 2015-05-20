@@ -15,8 +15,9 @@ namespace NServiceBus
             this.options = options;
         }
 
-        public override void Dispatch(OutgoingMessage message)
+        public override void Dispatch(OutgoingMessage message, DeliveryGuarantees requiredDeliveryGuarantees)
         {
+            requiredDeliveryGuarantees.Dehydrate(options);
             currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));
         }
     }

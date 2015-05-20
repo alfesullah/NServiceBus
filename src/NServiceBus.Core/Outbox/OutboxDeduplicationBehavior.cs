@@ -51,15 +51,18 @@
         {
             foreach (var transportOperation in operations)
             {
-                var deliveryOptions = transportOperation.Options.ToDeliveryOptions();
-
-                deliveryOptions.EnlistInReceiveTransaction = false;
-
                 var message = new OutgoingMessage(transportOperation.MessageId, transportOperation.Headers, transportOperation.Body);
 
                 var routingStrategy = routingStrategyFactory.Create(transportOperation.Options);
 
-                routingStrategy.Dispatch(message);
+                var deliveryGuarantees = new DeliveryGuarantees();
+
+                deliveryGuarantees.Hydrate(transportOperation.Options);
+
+                //we don't need to enlist in receive transaction since the outbox in the downstream endpoint is deduplicating
+                deliveryGuarantees.EnlistInReceiveTransaction = false;
+
+                routingStrategy.Dispatch(message, deliveryGuarantees);
             }
         }
 
