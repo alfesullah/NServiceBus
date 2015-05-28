@@ -72,8 +72,10 @@ namespace NServiceBus.Transports.Msmq
                     context.TryGet(out receiveTransaction);
 
 
-                    var label = GetLabel(message);
-                    if (sendOptions.EnlistInReceiveTransaction && receiveTransaction != null)
+                   
+                    var label = GetLabel(message)
+
+                    if (sendOptions.MimimumConsistencyGuarantee is AtomicWithReceiveOperation && receiveTransaction != null)
                     {
                         q.Send(toSend, label, receiveTransaction);
                     }

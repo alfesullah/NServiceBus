@@ -1,6 +1,7 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Pipeline;
     using NServiceBus.Timeout;
     using NServiceBus.Timeout.Core;
@@ -50,7 +51,7 @@ namespace NServiceBus
             }
 
             TimeoutManager.RemoveTimeout(timeoutId);
-            MessageSender.Send(new OutgoingMessage(message.Id,message.Headers, message.Body), new TransportSendOptions(destination));
+            MessageSender.Send(new OutgoingMessage(message.Id,message.Headers, message.Body), new TransportSendOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
         }
 
         void HandleInternal(TransportMessage message)

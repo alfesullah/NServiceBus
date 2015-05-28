@@ -25,10 +25,11 @@
             state.Headers[Headers.MessageIntent] = intent.ToString();
 
             var message = new OutgoingMessage(state.MessageId, state.Headers, context.Body);
-            var deliveryGuarantees = context.Get<DeliveryGuarantees>();
+            var requiredGuarantee = context.Get<ConsistencyGuarantee>();
+            var deliveryConstraints = new List<DeliveryConstraint>(); //todo
       
             context.Get<RoutingStrategy>()
-                .Dispatch(message,deliveryGuarantees);
+                .Dispatch(message, requiredGuarantee,deliveryConstraints);
         }
      
         public class State

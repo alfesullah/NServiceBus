@@ -1,5 +1,6 @@
 ﻿namespace NServiceBus
 {
+    using System;
     using System.Collections.Generic;
     using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
@@ -105,29 +106,143 @@
 
     abstract class RoutingStrategy
     {
-        public void Dehydrate(Dictionary<string, string> options)
+        public void Deserialize(Dictionary<string, string> options)
         {
             
 
         }
 
-        public abstract void Dispatch(OutgoingMessage message,DeliveryGuarantees requiredDeliveryGuarantees);
+        public abstract void Dispatch(OutgoingMessage message,
+            ConsistencyGuarantee mimimumConsistencyGuarantee,
+            List<DeliveryConstraint> constraints);
     }
 
-    class DeliveryGuarantees
+    /// <summary>
+    /// 
+    /// </summary>
+    public class NoConsistencyRequired : ConsistencyGuarantee
     {
-        public bool NonDurable { get; set; }
-        public bool EnlistInReceiveTransaction { get; set; }
+        
+    }
 
-        public void Dehydrate(Dictionary<string, string> options)
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AtomicWithReceiveOperation : ConsistencyGuarantee
+    {
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class ConsistencyGuarantee
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DiscardIfNotReceivedBefore : DeliveryConstraint
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public TimeSpan MaxTime { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxTime"></param>
+        public DiscardIfNotReceivedBefore(TimeSpan maxTime)
         {
-            
+            MaxTime = maxTime;
         }
 
-        public void Hydrate(Dictionary<string, string> options)
+        internal override bool Deserialize(Dictionary<string, string> options)
         {
-            
+            throw new NotImplementedException();
+        }
 
+        internal override void Serialize(Dictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DelayedDelivery : DeliveryConstraint
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="delay"></param>
+        public DelayedDelivery(TimeSpan delay)
+        {
+            DelayDeliveryWith = delay;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doNotDeliverBefore"></param>
+        public DelayedDelivery(DateTime doNotDeliverBefore)
+        {
+            DoNotDeliverBefore = doNotDeliverBefore;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public TimeSpan? DelayDeliveryWith { get; private set; }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? DoNotDeliverBefore { get; private set; }
+
+        internal override bool Deserialize(Dictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void Serialize(Dictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class DeliveryConstraint
+    {
+        //public bool NonDurable { get; set; }
+       
+        
+        //public TimeSpan? TimeToBeReceived{ get; set; }
+
+
+        internal abstract bool Deserialize(Dictionary<string, string> options);
+
+        internal abstract void Serialize(Dictionary<string, string> options);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class NonDurableDelivery : DeliveryConstraint
+    {
+        internal override bool Deserialize(Dictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void Serialize(Dictionary<string, string> options)
+        {
+            throw new NotImplementedException();
         }
     }
 

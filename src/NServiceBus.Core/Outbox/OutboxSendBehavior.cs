@@ -16,7 +16,7 @@ namespace NServiceBus
 
                 var routingStrategy = context.Get<RoutingStrategy>();
 
-                routingStrategy.Dehydrate(options);
+                routingStrategy.Deserialize(options);
 
                 context.Set<RoutingStrategy>(new OutboxRoutingStrategy(currentOutboxMessage, options));
             }

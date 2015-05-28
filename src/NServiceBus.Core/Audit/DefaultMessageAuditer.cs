@@ -6,7 +6,7 @@ namespace NServiceBus.Transports
 
         public void Audit(TransportSendOptions sendOptions, OutgoingMessage message)
         {
-            MessageSender.Send(message, new TransportSendOptions(sendOptions.Destination));
+            MessageSender.Send(message, sendOptions);
         }
 
         class Initialization : INeedInitialization

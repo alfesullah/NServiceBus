@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Hosting;
     using NServiceBus.Pipeline;
     using NServiceBus.Settings;
@@ -36,8 +37,14 @@
             outgoingMessage.Headers[Headers.ProcessingMachine] = RuntimeEnvironment.MachineName;
             outgoingMessage.Headers[Headers.ProcessingEndpoint] = Settings.EndpointName();
 
+            var constraints = new List<DeliveryConstraint>();
 
-            MessageAuditer.Audit(outgoingMessage, new TransportSendOptions(AuditQueue,TimeToBeReceivedOnForwardedMessages));
+            if (TimeToBeReceivedOnForwardedMessages.HasValue)
+            {
+                constraints.Add(new DiscardIfNotReceivedBefore(TimeToBeReceivedOnForwardedMessages.Value));
+            }
+
+            MessageAuditer.Audit(outgoingMessage, new TransportSendOptions(AuditQueue,new AtomicWithReceiveOperation(),constraints));
         }
 
         public class Registration:RegisterStep

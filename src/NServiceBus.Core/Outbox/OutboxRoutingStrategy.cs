@@ -15,10 +15,10 @@ namespace NServiceBus
             this.options = options;
         }
 
-        public override void Dispatch(OutgoingMessage message, DeliveryGuarantees requiredDeliveryGuarantees)
+        public override void Dispatch(OutgoingMessage message, ConsistencyGuarantee mimimumConsistencyGuarantee, List<DeliveryConstraint> constraints)
         {
-            requiredDeliveryGuarantees.Dehydrate(options);
-            currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));
+            constraints.ForEach(c=>c.Serialize(options));
+            currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));          
         }
     }
 }

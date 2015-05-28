@@ -166,6 +166,7 @@
     <Compile Include="StaticHeaders\CurrentStaticHeaders.cs" />
     <Compile Include="Transports\DequeueInfo.cs" />
     <Compile Include="Transports\Msmq\MsmqLabelGenerator.cs" />
+    <Compile Include="Transports\ICancelDeferredMessages.cs" />
     <Compile Include="Transports\Msmq\MsmqAddress.cs" />
     <Compile Include="Transports\Msmq\MsmqConfigurationExtensions.cs" />
     <Compile Include="Transports\Msmq\MsmqReceiveBehavior.cs" />
@@ -485,7 +486,6 @@
     <Compile Include="Sagas\Sagas.cs" />
     <Compile Include="Settings\SettingsHolder.cs" />
     <Compile Include="Transports\ICreateQueues.cs" />
-    <Compile Include="Transports\IDeferMessages.cs" />
     <Compile Include="Transports\IDequeueMessages.cs" />
     <Compile Include="Transports\IManageSubscriptions.cs" />
     <Compile Include="Transports\IPublishMessages.cs" />

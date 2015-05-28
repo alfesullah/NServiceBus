@@ -8,13 +8,9 @@ namespace NServiceBus
 
     class SecondLevelRetriesBehavior : PhysicalMessageProcessingStageBehavior
     {
-        IDeferMessages deferer;
-        SecondLevelRetryPolicy retryPolicy;
-        BusNotifications notifications;
-
-        public SecondLevelRetriesBehavior(IDeferMessages deferer, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
+        public SecondLevelRetriesBehavior(ISendMessages messageSender, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
         {
-            this.deferer = deferer;
+            this.messageSender = messageSender;
             this.retryPolicy = retryPolicy;
             this.notifications = notifications;
         }
@@ -44,8 +40,14 @@ namespace NServiceBus
                     message.Headers[Headers.Retries] = currentRetry.ToString();
                     message.Headers[RetriesTimestamp] = DateTimeExtensions.ToWireFormattedString(DateTime.UtcNow);
 
-                    deferer.Defer(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body), new TransportDeferOptions(receiveAddress, delay));
+                    var sendOptions = new TransportSendOptions(receiveAddress,new AtomicWithReceiveOperation(), 
+                        new List<DeliveryConstraint>
+                    {
+                        new DelayedDelivery(delay)
+                    });
 
+                    messageSender.Send(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body),sendOptions);
+             
                     notifications.Errors.InvokeMessageHasBeenSentToSecondLevelRetries(currentRetry,message,ex);
 
                     return;
@@ -70,14 +72,14 @@ namespace NServiceBus
                 }
             }
             return 0;
-        }  
-        
+        }
+
+
+        readonly ISendMessages messageSender;
+        readonly SecondLevelRetryPolicy retryPolicy;
+        readonly BusNotifications notifications;
+
         public const string RetriesTimestamp = "NServiceBus.Retries.Timestamp";
-
-
-
-
-
 
         public class Registration : RegisterStep
         {

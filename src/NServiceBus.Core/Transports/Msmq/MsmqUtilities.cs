@@ -204,7 +204,7 @@ namespace NServiceBus
         ///     Converts a TransportMessage to an Msmq message.
         ///     Doesn't set the ResponseQueue of the result.
         /// </summary>
-        public static Message Convert(OutgoingMessage message, TransportSendOptions deliveryOptions)
+        public static Message Convert(OutgoingMessage message, TransportSendOptions sendOptions)
         {
             var result = new Message();
 
@@ -215,11 +215,14 @@ namespace NServiceBus
 
 
             AssignMsmqNativeCorrelationId(message, result);
-            result.Recoverable = !deliveryOptions.NonDurable;
+            result.Recoverable = !sendOptions.DeliveryConstraints.Any(c => c is NonDurableDelivery);
 
-            if (deliveryOptions.TimeToBeReceived.HasValue && deliveryOptions.TimeToBeReceived.Value < MessageQueue.InfiniteTimeout)
+            //todo: add a helper for this
+            var ttbr = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DiscardIfNotReceivedBefore) as DiscardIfNotReceivedBefore;
+
+            if (ttbr != null && ttbr.MaxTime < MessageQueue.InfiniteTimeout)
             {
-                result.TimeToBeReceived = deliveryOptions.TimeToBeReceived.Value;
+                result.TimeToBeReceived = ttbr.MaxTime;
             }
 
             var addCorrIdHeader = !message.Headers.ContainsKey("CorrId");

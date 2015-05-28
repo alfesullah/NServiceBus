@@ -1,11 +1,12 @@
 ﻿namespace NServiceBus.Timeout
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Logging;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
 
-    class TimeoutManagerDeferrer : IDeferMessages
+    class TimeoutManagerDeferrer : ICancelDeferredMessages
     {
         public TimeoutManagerDeferrer(ISendMessages messageSender, string timeoutManagerAddress)
         {
@@ -41,7 +42,7 @@
             
             try
             {
-                messageSender.Send(message, new TransportSendOptions(timeoutManagerAddress, enlistInReceiveTransaction: sendMessageOptions.EnlistInReceiveTransaction));
+                messageSender.Send(message, new TransportSendOptions(timeoutManagerAddress, new AtomicWithReceiveOperation(),new List<DeliveryConstraint>()));
             }
             catch (Exception ex)
             {
@@ -49,15 +50,15 @@
                 throw;
             }
         }
-
-        public void ClearDeferredMessages(string headerKey, string headerValue)
+        public void CancelDeferredMessages(string messageKey)
         {
             var controlMessage = ControlMessageFactory.Create(MessageIntentEnum.Send);
 
-            controlMessage.Headers[headerKey] = headerValue;
+            controlMessage.Headers["$MessageKeyToClear"] = messageKey;
             controlMessage.Headers[TimeoutManagerHeaders.ClearTimeouts] = bool.TrueString;
 
-            messageSender.Send(controlMessage, new TransportSendOptions(timeoutManagerAddress));
+            messageSender.Send(controlMessage, new TransportSendOptions(timeoutManagerAddress, new NoConsistencyRequired(), new List<DeliveryConstraint>()));
+
         }
 
         ISendMessages messageSender;

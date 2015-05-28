@@ -31,7 +31,7 @@ namespace NServiceBus.Outbox
             }
             else
             {
-                defaultMessageAuditer.Audit(new TransportSendOptions(destination), message);
+                defaultMessageAuditer.Audit(new TransportSendOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()), message);
             }
         }
     }

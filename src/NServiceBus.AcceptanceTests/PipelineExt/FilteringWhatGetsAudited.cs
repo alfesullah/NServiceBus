@@ -2,6 +2,7 @@
 namespace NServiceBus.AcceptanceTests.PipelineExt
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.AcceptanceTesting;
     using NServiceBus.AcceptanceTests.EndpointTemplates;
     using NServiceBus.Pipeline;
@@ -95,7 +96,7 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
                     {
                         return;
                     }
-                    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body),new TransportSendOptions("auditspy"));
+                    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body),new TransportSendOptions("auditspy",new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
                 }
 
                 //here we inject our behavior

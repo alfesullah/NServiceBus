@@ -1,6 +1,7 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using NServiceBus.Pipeline;
     using NServiceBus.Timeout.Core;
@@ -22,7 +23,7 @@ namespace NServiceBus
 
             if (TimeoutsPersister.TryRemove(timeoutId, out timeoutData))
             {
-                var sendOptions = new TransportSendOptions(timeoutData.Destination);
+                var sendOptions = new TransportSendOptions(timeoutData.Destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>());
 
                 timeoutData.Headers[Headers.TimeSent] = DateTimeExtensions.ToWireFormattedString(DateTime.UtcNow);
                 timeoutData.Headers["NServiceBus.RelatedToTimeoutId"] = timeoutData.Id;

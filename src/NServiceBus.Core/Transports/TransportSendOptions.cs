@@ -1,6 +1,6 @@
 namespace NServiceBus.Transports
 {
-    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Contains details on how the message should be sent
@@ -11,15 +11,13 @@ namespace NServiceBus.Transports
         /// Creates the send options with the given address
         /// </summary>
         /// <param name="destination">The native address where to sent this message</param>
-        /// <param name="timeToBeReceived">Optional TTBR for the message</param>
-        /// <param name="nonDurable">Message durability, default is `true`</param>
-        /// <param name="enlistInReceiveTransaction">Tells the transport to enlist the send in its native transaction if supported</param>
-        public TransportSendOptions(string destination, TimeSpan? timeToBeReceived = null, bool nonDurable = false, bool enlistInReceiveTransaction = true)
+        /// <param name="mimimumConsistencyGuarantee">The level of consitency that's required for this operation</param>
+        /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
+        public TransportSendOptions(string destination, ConsistencyGuarantee mimimumConsistencyGuarantee, List<DeliveryConstraint> deliveryConstraints)
         {
             Destination = destination;
-            TimeToBeReceived = timeToBeReceived;
-            NonDurable = nonDurable;
-            EnlistInReceiveTransaction = enlistInReceiveTransaction;
+            MimimumConsistencyGuarantee = mimimumConsistencyGuarantee;
+            DeliveryConstraints = deliveryConstraints;
         }
 
         /// <summary>
@@ -28,18 +26,13 @@ namespace NServiceBus.Transports
         public string Destination { get; private set; }
 
         /// <summary>
-        /// Tells if the send operation should be enlisted in the current (if any) receive transaction
+        /// The level of consitency that's required for this operation
         /// </summary>
-        public bool EnlistInReceiveTransaction { get; private set; }
-
+        public ConsistencyGuarantee MimimumConsistencyGuarantee { get; private set; }
+        
         /// <summary>
-        /// Tells if the message should be sent as a non durable message
+        /// The delivery constraints that must be honored by the transport
         /// </summary>
-        public bool NonDurable { get; private set; }
-
-        /// <summary>
-        /// Optional TTBR for this message
-        /// </summary>
-        public TimeSpan? TimeToBeReceived { get; private set; }
+        public IEnumerable<DeliveryConstraint> DeliveryConstraints { get; private set; }
     }
 }

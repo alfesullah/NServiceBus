@@ -1,6 +1,7 @@
 namespace NServiceBus.Timeout.Hosting.Windows
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using NServiceBus.CircuitBreakers;
@@ -98,7 +99,7 @@ namespace NServiceBus.Timeout.Hosting.Windows
 
                     dispatchRequest.Headers["Timeout.Id"] = timeoutData.Item1;
 
-                    MessageSender.Send(dispatchRequest, new TransportSendOptions(DispatcherAddress));
+                    MessageSender.Send(dispatchRequest, new TransportSendOptions(DispatcherAddress, new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
                 }
 
                 lock (lockObject)

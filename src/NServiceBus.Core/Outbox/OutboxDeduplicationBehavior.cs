@@ -55,14 +55,9 @@
 
                 var routingStrategy = routingStrategyFactory.Create(transportOperation.Options);
 
-                var deliveryGuarantees = new DeliveryGuarantees();
-
-                deliveryGuarantees.Hydrate(transportOperation.Options);
-
-                //we don't need to enlist in receive transaction since the outbox in the downstream endpoint is deduplicating
-                deliveryGuarantees.EnlistInReceiveTransaction = false;
-
-                routingStrategy.Dispatch(message, deliveryGuarantees);
+           
+                //todo: deliveryConstraint.Hydrate(transportOperation.Options);
+                routingStrategy.Dispatch(message,new NoConsistencyRequired(), new List<DeliveryConstraint>());
             }
         }
 

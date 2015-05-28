@@ -38,7 +38,7 @@
 
             foreach (var subscriber in subscribers)
             {
-                messageSender.Send(message, new TransportSendOptions(subscriber,publishOptions.TimeToBeReceived,publishOptions.NonDurable,publishOptions.EnlistInReceiveTransaction));
+                messageSender.Send(message, new TransportSendOptions(subscriber,publishOptions.MimimumConsistencyGuarantee,publishOptions.DeliveryConstraints.ToList()));
             }
         }
 

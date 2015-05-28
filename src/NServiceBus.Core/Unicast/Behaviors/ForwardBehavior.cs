@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Pipeline;
     using NServiceBus.Transports;
 
@@ -17,7 +18,8 @@
 
             context.PhysicalMessage.RevertToOriginalBodyIfNeeded();
 
-            MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id,context.PhysicalMessage.Headers,context.PhysicalMessage.Body),new TransportSendOptions(ForwardReceivedMessagesTo));
+            MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id,context.PhysicalMessage.Headers,context.PhysicalMessage.Body),
+                new TransportSendOptions(ForwardReceivedMessagesTo,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
         }
 
         public class Registration : RegisterStep

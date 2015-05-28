@@ -1,6 +1,7 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Hosting;
     using NServiceBus.Logging;
     using NServiceBus.Pipeline;
@@ -40,7 +41,7 @@ namespace NServiceBus
                     message.Headers[Headers.HostId] = hostInformation.HostId.ToString("N");
                     message.Headers[Headers.HostDisplayName] = hostInformation.DisplayName;
 
-                    sender.Send(new OutgoingMessage("msg id",message.Headers,message.Body), new TransportSendOptions(errorQueueAddress));
+                    sender.Send(new OutgoingMessage("msg id",message.Headers,message.Body), new TransportSendOptions(errorQueueAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
 
                     notifications.Errors.InvokeMessageHasBeenSentToErrorQueue(message,exception);
                 }

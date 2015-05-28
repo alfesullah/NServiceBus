@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using NServiceBus.Logging;
     using NServiceBus.Transports;
@@ -45,7 +46,7 @@
 
             var subscriptionMessage = CreateControlMessage(eventType,MessageIntentEnum.Unsubscribe);
    
-            messageSender.Send(subscriptionMessage, new TransportSendOptions(publisherAddress));
+            messageSender.Send(subscriptionMessage, new TransportSendOptions(publisherAddress,new NoConsistencyRequired(),new List<DeliveryConstraint>() ));
         }
 
         OutgoingMessage CreateControlMessage(Type eventType,MessageIntentEnum intent)
@@ -62,7 +63,7 @@
         {
             try
             {
-                messageSender.Send(subscriptionMessage, new TransportSendOptions(destination));
+                messageSender.Send(subscriptionMessage, new TransportSendOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
             }
             catch (QueueNotFoundException ex)
             {

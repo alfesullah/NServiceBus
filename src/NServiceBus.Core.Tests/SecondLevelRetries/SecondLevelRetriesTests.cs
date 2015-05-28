@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using NServiceBus.Faults;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.SecondLevelRetries;
@@ -18,7 +19,7 @@
         {
             var notifications = new BusNotifications();
 
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var delay = TimeSpan.FromSeconds(5);
             var behavior = new SecondLevelRetriesBehavior(deferrer, new FakePolicy(delay), notifications);
             behavior.Initialize(new PipelineInfo("Test", "test-address-for-this-pipeline"));
@@ -41,7 +42,7 @@
         [Test]
         public void ShouldSetTimestampHeaderForFirstRetry()
         {
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var delay = TimeSpan.FromSeconds(5);
             var behavior = new SecondLevelRetriesBehavior(deferrer, new FakePolicy(delay),new BusNotifications());
             behavior.Initialize(new PipelineInfo("Test", "test-address-for-this-pipeline"));
@@ -54,7 +55,7 @@
         [Test]
         public void ShouldSkipRetryIfNoDelayIsReturned()
         {
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var behavior = new SecondLevelRetriesBehavior(deferrer, new FakePolicy(), new BusNotifications());
             behavior.Initialize(new PipelineInfo("Test", "test-address-for-this-pipeline"));
             var context = CreateContext("someid", 1);
@@ -66,7 +67,7 @@
         [Test]
         public void ShouldSkipRetryForDeserializationErrors()
         {
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var behavior = new SecondLevelRetriesBehavior(deferrer, new FakePolicy(TimeSpan.FromSeconds(5)), new BusNotifications());
             behavior.Initialize(new PipelineInfo("Test", "test-address-for-this-pipeline"));
             var context = CreateContext("someid", 1);
@@ -78,7 +79,7 @@
         [Test]
         public void ShouldPullCurrentRetryCountFromHeaders()
         {
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var retryPolicy = new FakePolicy(TimeSpan.FromSeconds(5));
 
             var behavior = new SecondLevelRetriesBehavior(deferrer, retryPolicy, new BusNotifications());
@@ -94,7 +95,7 @@
         [Test]
         public void ShouldDefaultRetryCountToZeroIfNoHeaderIsFound()
         {
-            var deferrer = new FakeMessageDeferrer();
+            var deferrer = new FakeSender();
             var retryPolicy = new FakePolicy(TimeSpan.FromSeconds(5));
             var context = CreateContext("someid", 2);
 
@@ -147,29 +148,25 @@
         }
     }
 
-    class FakeMessageDeferrer : IDeferMessages
+    class FakeSender : ISendMessages
     {
-        public TransportDeferOptions SendMessageOptions { get; private set; }
         public string MessageRoutedTo { get; private set; }
 
         public OutgoingMessage DeferredMessage { get; private set; }
         public TimeSpan Delay { get; private set; }
 
-        public void Defer(OutgoingMessage message, TransportDeferOptions options)
+       
+        public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
         {
-            MessageRoutedTo = options.Destination;
+            MessageRoutedTo = sendOptions.Destination;
             DeferredMessage = message;
-            SendMessageOptions = options;
+          
+            var constraint = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;
 
-            if (options.DelayDeliveryFor.HasValue)
+            if (constraint != null && constraint.DelayDeliveryWith.HasValue)
             {
-                Delay = options.DelayDeliveryFor.Value;
+                Delay = constraint.DelayDeliveryWith.Value;
             }
-        }
-
-        public void ClearDeferredMessages(string headerKey, string headerValue)
-        {
-
         }
     }
 }

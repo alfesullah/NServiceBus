@@ -1,6 +1,7 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
@@ -131,19 +132,16 @@ namespace NServiceBus
     {
         ISendMessages messageSender;
         readonly string destination;
-        readonly TimeSpan? timeToBeReceived;
-
-        public DirectRoutingStrategy(ISendMessages messageSender, string destination, TimeSpan? timeToBeReceived = null)
+       
+        public DirectRoutingStrategy(ISendMessages messageSender, string destination)
         {
             this.messageSender = messageSender;
             this.destination = destination;
-            this.timeToBeReceived = timeToBeReceived;
         }
 
-        public override void Dispatch(OutgoingMessage message, DeliveryGuarantees requiredDeliveryGuarantees)
+        public override void Dispatch(OutgoingMessage message, ConsistencyGuarantee mimimumConsistencyGuarantee, List<DeliveryConstraint> constraints)
         {
-
-            messageSender.Send(message, new TransportSendOptions(destination, timeToBeReceived, requiredDeliveryGuarantees.NonDurable, requiredDeliveryGuarantees.EnlistInReceiveTransaction));
+            messageSender.Send(message, new TransportSendOptions(destination, mimimumConsistencyGuarantee, constraints));         
         }
     }
 
