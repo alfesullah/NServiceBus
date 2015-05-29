@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Hosting;
     using NServiceBus.Pipeline;
     using NServiceBus.Settings;

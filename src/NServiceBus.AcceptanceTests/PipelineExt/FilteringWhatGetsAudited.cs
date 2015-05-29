@@ -5,6 +5,7 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
     using System.Collections.Generic;
     using NServiceBus.AcceptanceTesting;
     using NServiceBus.AcceptanceTests.EndpointTemplates;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;

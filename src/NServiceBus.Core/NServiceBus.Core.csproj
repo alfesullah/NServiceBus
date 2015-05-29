@@ -95,6 +95,7 @@
     <Compile Include="BusConfiguration.cs" />
     <Compile Include="ConfigureHandlerSettings.cs" />
     <Compile Include="Config\MsmqConnectionStringBuilder.cs" />
+    <Compile Include="ConsistencyGuarantees\ConsistencyGuaranteeExtensions.cs" />
     <Compile Include="Container\ContainerCustomizations.cs" />
     <Compile Include="Container\ContainerDefinition.cs" />
     <Compile Include="ConventionsBuilder.cs" />
@@ -138,6 +139,8 @@
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
     <Compile Include="Outbox\OutboxRoutingStrategy.cs" />
     <Compile Include="Pipeline\PipelineTerminator.cs" />
+    <Compile Include="ConsistencyGuarantees\AtomicWithReceiveOperation.cs" />
+    <Compile Include="ConsistencyGuarantees\ConsistencyGuarantee.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
     <Compile Include="Pipeline\Contexts\OutgoingContext.cs" />
@@ -155,6 +158,7 @@
     <Compile Include="Satellites\ISatellite.cs" />
     <Compile Include="Routing\RouteMessageBehavior.cs" />
     <Compile Include="Routing\DetermineRoutingForMessageBehavior.cs" />
+    <Compile Include="ConsistencyGuarantees\NoConsistencyRequired.cs" />
     <Compile Include="Routing\RoutingContextExtensions.cs" />
     <Compile Include="Routing\RoutingFeature.cs" />
     <Compile Include="Satellites\SatelliteBehavior.cs" />

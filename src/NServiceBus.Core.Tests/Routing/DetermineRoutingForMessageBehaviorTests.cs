@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus.Core.Tests.Routing
 {
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
     using NUnit.Framework;

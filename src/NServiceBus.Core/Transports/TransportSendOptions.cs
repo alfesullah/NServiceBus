@@ -1,6 +1,7 @@
 namespace NServiceBus.Transports
 {
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
 
     /// <summary>
     /// Contains details on how the message should be sent

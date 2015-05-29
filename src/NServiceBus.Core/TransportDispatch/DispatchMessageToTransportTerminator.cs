@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
@@ -25,7 +26,9 @@
             state.Headers[Headers.MessageIntent] = intent.ToString();
 
             var message = new OutgoingMessage(state.MessageId, state.Headers, context.Body);
-            var requiredGuarantee = context.Get<ConsistencyGuarantee>();
+            
+            var requiredGuarantee = context.GetConsistencyGuarantee();
+
             var deliveryConstraints = new List<DeliveryConstraint>(); //todo
       
             context.Get<RoutingStrategy>()

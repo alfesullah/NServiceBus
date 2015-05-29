@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
@@ -115,29 +116,6 @@
         public abstract void Dispatch(OutgoingMessage message,
             ConsistencyGuarantee mimimumConsistencyGuarantee,
             List<DeliveryConstraint> constraints);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class NoConsistencyRequired : ConsistencyGuarantee
-    {
-        
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class AtomicWithReceiveOperation : ConsistencyGuarantee
-    {
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public abstract class ConsistencyGuarantee
-    {
     }
 
     /// <summary>

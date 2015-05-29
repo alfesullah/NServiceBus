@@ -4,6 +4,7 @@ namespace NServiceBus.Unicast
     using System.Collections.Generic;
     using System.Linq;
     using Janitor;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Extensibility;
     using NServiceBus.Hosting;
     using NServiceBus.MessageInterfaces;

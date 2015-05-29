@@ -7,6 +7,7 @@
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Transports;
     using NUnit.Framework;
 

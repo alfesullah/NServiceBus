@@ -1,6 +1,7 @@
 namespace NServiceBus.Outbox
 {
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline;
     using NServiceBus.Transports;
 
