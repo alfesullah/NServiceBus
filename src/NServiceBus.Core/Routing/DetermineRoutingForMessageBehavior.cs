@@ -10,10 +10,12 @@ namespace NServiceBus
     class DetermineRoutingForMessageBehavior : Behavior<OutgoingContext>
     {
         readonly ISendMessages sender;
+        readonly string localAddress;
 
-        public DetermineRoutingForMessageBehavior(ISendMessages sender)
+        public DetermineRoutingForMessageBehavior(ISendMessages sender,string localAddress)
         {
             this.sender = sender;
+            this.localAddress = localAddress;
         }
 
         //TransportDefinition definition;
@@ -24,7 +26,21 @@ namespace NServiceBus
 
             if (context.IsSend())
             {
-                var destination = context.Extensions.GetOrCreate<State>().ExplicitDestination;
+                var state = context.Extensions.GetOrCreate<State>();
+
+                var destination = state.ExplicitDestination;
+
+                if (string.IsNullOrEmpty(destination))
+                {
+                    if (state.RouteToLocalInstance)
+                    {
+                        destination = localAddress;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
 
                 routingStrategy = new DirectRoutingStrategy(sender, destination);
             }

@@ -30,9 +30,30 @@
             Assert.AreEqual("destination endpoint",fakeSender.TransportSendOptions.Destination);
         }
 
-        static DetermineRoutingForMessageBehavior InitializeBehavior(ISendMessages sender = null)
+        [Test]
+        public void Should_route_to_local_endpoint_if_requested_so()
         {
-            return new DetermineRoutingForMessageBehavior(sender);
+            var fakeSender = new FakeSender();
+
+            var behavior = InitializeBehavior(fakeSender,"MyLocalAddress");
+            var options = new SendOptions();
+
+            options.RouteToLocalEndpointInstance();
+
+            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+
+            behavior.Invoke(context, () => { });
+
+            var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
+
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
+
+            Assert.AreEqual("MyLocalAddress", fakeSender.TransportSendOptions.Destination);
+        }
+
+        static DetermineRoutingForMessageBehavior InitializeBehavior(ISendMessages sender = null,string localAddress = null)
+        {
+            return new DetermineRoutingForMessageBehavior(sender,localAddress);
         }
 
         class FakeSender:ISendMessages

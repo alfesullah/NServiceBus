@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using NServiceBus.Config;
+    using NServiceBus.Transports;
     using NServiceBus.Unicast.Routing;
 
     class RoutingFeature:Feature
@@ -12,7 +13,9 @@
         }
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            context.MainPipeline.Register("DetermineRoutingForMessage", typeof(DetermineRoutingForMessageBehavior), "Determines how the message beeing sent should be routed");
+            context.MainPipeline.Register("DetermineRoutingForMessage", typeof(DetermineRoutingForMessageBehavior), "Determines how the message being sent should be routed");
+
+            context.Container.ConfigureComponent(b => new DetermineRoutingForMessageBehavior(b.Build<ISendMessages>(),context.Settings.LocalAddress()), DependencyLifecycle.InstancePerCall);
 
             SetupStaticRouter(context);
         }
