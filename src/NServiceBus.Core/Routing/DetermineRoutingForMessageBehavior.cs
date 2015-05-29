@@ -27,6 +27,8 @@ namespace NServiceBus
         {
             RoutingStrategy routingStrategy = null;
 
+            MessageIntentEnum intent = MessageIntentEnum.Send;
+
             if (context.IsSend())
             {
                 var state = context.Extensions.GetOrCreate<State>();
@@ -51,6 +53,8 @@ namespace NServiceBus
                 }
 
                 routingStrategy = new DirectRoutingStrategy(sender, destination);
+                intent = MessageIntentEnum.Send;
+  
             }
             if (context.IsPublish())
             {
@@ -77,18 +81,21 @@ namespace NServiceBus
                 //    }
                 //}
 
-
+                intent = MessageIntentEnum.Publish;
             }
 
             if (context.IsReply())
             {
                 //var sendOptions = new SendMessageOptions(MessageBeingProcessed.ReplyToAddress);
+                intent = MessageIntentEnum.Reply;
             }
 
             if (routingStrategy == null)
             {
                 throw new Exception("No routing strategy could be determined for message");
             }
+
+            context.SetHeader(Headers.MessageIntent,intent.ToString());
 
             context.Set(routingStrategy);
 

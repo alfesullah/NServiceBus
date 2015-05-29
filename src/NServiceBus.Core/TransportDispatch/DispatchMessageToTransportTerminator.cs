@@ -11,19 +11,7 @@
         public override void Terminate(PhysicalOutgoingContextStageBehavior.Context context)
         {
             var state = context.Extensions.GetOrCreate<State>();
-            var intent = MessageIntentEnum.Send;
-
-            if (context.IsReply())
-            {
-                intent = MessageIntentEnum.Reply;
-            }
-
-            if (context.IsPublish())
-            {
-                intent = MessageIntentEnum.Publish;
-            }
-
-            state.Headers[Headers.MessageIntent] = intent.ToString();
+            state.Headers[Headers.MessageId] = state.MessageId;
 
             var message = new OutgoingMessage(state.MessageId, state.Headers, context.Body);
             
