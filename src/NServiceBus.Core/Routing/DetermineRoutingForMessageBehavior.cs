@@ -5,17 +5,20 @@ namespace NServiceBus
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
 
     class DetermineRoutingForMessageBehavior : Behavior<OutgoingContext>
     {
         readonly ISendMessages sender;
         readonly string localAddress;
+        readonly MessageRouter messageRouter;
 
-        public DetermineRoutingForMessageBehavior(ISendMessages sender,string localAddress)
+        public DetermineRoutingForMessageBehavior(ISendMessages sender,string localAddress,MessageRouter messageRouter)
         {
             this.sender = sender;
             this.localAddress = localAddress;
+            this.messageRouter = messageRouter;
         }
 
         //TransportDefinition definition;
@@ -38,7 +41,12 @@ namespace NServiceBus
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        if (!messageRouter.TryGetRoute(context.MessageType, out destination))
+                        {
+                            throw new InvalidOperationException("No destination specified for message: " + context.MessageType);
+                        }
+
+
                     }
                 }
 
@@ -130,7 +138,7 @@ namespace NServiceBus
 
     }
 
-  
+
     class DirectRoutingStrategy : RoutingStrategy
     {
         ISendMessages messageSender;

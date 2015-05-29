@@ -4,7 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using Logging;
+    using NServiceBus.Logging;
 
     /// <summary>
     ///     The default message router

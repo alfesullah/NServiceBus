@@ -1,8 +1,10 @@
 ﻿namespace NServiceBus.Core.Tests.Routing
 {
+    using System;
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
     using NUnit.Framework;
 
@@ -19,15 +21,15 @@
 
             options.SetDestination("destination endpoint");
 
-            var context = new OutgoingContext(null,null,typeof(MyMessage), null,options);
+            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
 
-            behavior.Invoke(context,()=>{});
+            behavior.Invoke(context, () => { });
 
             var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
 
-            routingStrategy.Dispatch(new OutgoingMessage("some id",new Dictionary<string, string>(),null ),new NoConsistencyRequired(), new List<DeliveryConstraint>());
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
 
-            Assert.AreEqual("destination endpoint",fakeSender.TransportSendOptions.Destination);
+            Assert.AreEqual("destination endpoint", fakeSender.TransportSendOptions.Destination);
         }
 
         [Test]
@@ -35,7 +37,7 @@
         {
             var fakeSender = new FakeSender();
 
-            var behavior = InitializeBehavior(fakeSender,"MyLocalAddress");
+            var behavior = InitializeBehavior(fakeSender, "MyLocalAddress");
             var options = new SendOptions();
 
             options.RouteToLocalEndpointInstance();
@@ -51,12 +53,33 @@
             Assert.AreEqual("MyLocalAddress", fakeSender.TransportSendOptions.Destination);
         }
 
-        static DetermineRoutingForMessageBehavior InitializeBehavior(ISendMessages sender = null,string localAddress = null)
+        [Test]
+        public void Should_route_using_the_mappings_if_no_destination_is_set()
         {
-            return new DetermineRoutingForMessageBehavior(sender,localAddress);
+            var fakeSender = new FakeSender();
+
+            var router = new FakeRouter();
+
+            var behavior = InitializeBehavior(fakeSender, router: router);
+            var options = new SendOptions();
+
+            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+
+            behavior.Invoke(context, () => { });
+
+            var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
+
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
+
+            Assert.AreEqual("MappedDestination", fakeSender.TransportSendOptions.Destination);
         }
 
-        class FakeSender:ISendMessages
+        static DetermineRoutingForMessageBehavior InitializeBehavior(ISendMessages sender = null, string localAddress = null, MessageRouter router = null)
+        {
+            return new DetermineRoutingForMessageBehavior(sender, localAddress, router);
+        }
+
+        class FakeSender : ISendMessages
         {
             public TransportSendOptions TransportSendOptions { get; set; }
 
@@ -68,5 +91,22 @@
 
         class MyMessage
         { }
+        class FakeRouter : MessageRouter
+        {
+            public override bool TryGetRoute(Type messageType, out string destination)
+            {
+                if (messageType == typeof(MyMessage))
+                {
+                    destination= "MappedDestination";
+
+                    return true;
+                }
+
+                destination = null;
+                return false;
+            }
+        }
     }
+
+
 }

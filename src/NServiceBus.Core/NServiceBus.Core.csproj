@@ -141,6 +141,7 @@
     <Compile Include="Pipeline\PipelineTerminator.cs" />
     <Compile Include="ConsistencyGuarantees\AtomicWithReceiveOperation.cs" />
     <Compile Include="ConsistencyGuarantees\ConsistencyGuarantee.cs" />
+    <Compile Include="Routing\MessageRouter.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
     <Compile Include="Pipeline\Contexts\OutgoingContext.cs" />
