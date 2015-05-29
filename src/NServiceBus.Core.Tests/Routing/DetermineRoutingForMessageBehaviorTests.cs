@@ -13,7 +13,7 @@
         {
             var fakeSender = new FakeSender();
 
-            var behavior = InitializeBehavior(sender:fakeSender);
+            var behavior = InitializeBehavior(fakeSender);
             var options = new SendOptions();
 
             options.SetDestination("destination endpoint");
@@ -31,8 +31,7 @@
 
         static DetermineRoutingForMessageBehavior InitializeBehavior(ISendMessages sender = null)
         {
-            var apiFactory = new TransportApiFactory(sender);
-            return new DetermineRoutingForMessageBehavior(apiFactory);
+            return new DetermineRoutingForMessageBehavior(sender);
         }
 
         class FakeSender:ISendMessages

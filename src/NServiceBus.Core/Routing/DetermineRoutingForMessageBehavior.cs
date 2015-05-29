@@ -8,11 +8,11 @@ namespace NServiceBus
 
     class DetermineRoutingForMessageBehavior : Behavior<OutgoingContext>
     {
-        readonly TransportApiFactory transportApiFactory;
+        readonly ISendMessages sender;
 
-        public DetermineRoutingForMessageBehavior(TransportApiFactory transportApiFactory)
+        public DetermineRoutingForMessageBehavior(ISendMessages sender)
         {
-            this.transportApiFactory = transportApiFactory;
+            this.sender = sender;
         }
 
         //TransportDefinition definition;
@@ -25,7 +25,7 @@ namespace NServiceBus
             {
                 var destination = context.Extensions.GetOrCreate<State>().ExplicitDestination;
 
-                routingStrategy = new DirectRoutingStrategy(transportApiFactory.GetSender(), destination);
+                routingStrategy = new DirectRoutingStrategy(sender, destination);
             }
             if (context.IsPublish())
             {
@@ -113,21 +113,7 @@ namespace NServiceBus
 
     }
 
-    class TransportApiFactory
-    {
-        readonly ISendMessages sender;
-
-        public TransportApiFactory(ISendMessages sender)
-        {
-            this.sender = sender;
-        }
-
-        public ISendMessages GetSender()
-        {
-            return sender;
-        }
-    }
-
+  
     class DirectRoutingStrategy : RoutingStrategy
     {
         ISendMessages messageSender;
