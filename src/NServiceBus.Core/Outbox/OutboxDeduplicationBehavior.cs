@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Transactions;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
     using NServiceBus.Transports;

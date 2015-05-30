@@ -3,6 +3,7 @@ namespace NServiceBus
     using System;
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
@@ -157,7 +158,7 @@ namespace NServiceBus
             this.destination = destination;
         }
 
-        public override void Dispatch(OutgoingMessage message, ConsistencyGuarantee mimimumConsistencyGuarantee, List<DeliveryConstraint> constraints)
+        public override void Dispatch(OutgoingMessage message, ConsistencyGuarantee mimimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints)
         {
             messageSender.Send(message, new TransportSendOptions(destination, mimimumConsistencyGuarantee, constraints));         
         }

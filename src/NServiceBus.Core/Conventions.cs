@@ -10,7 +10,7 @@
     /// <summary>
     ///     Message convention definitions.
     /// </summary>
-    public class Conventions
+    public partial class Conventions
     {
         internal IEnumerable<DataBusPropertyInfo> GetDataBusProperties(object message)
         {
@@ -34,15 +34,7 @@
             return value;
         }
 
-        /// <summary>
-        ///     Returns the time to be received for a give <paramref name="messageType" />.
-        /// </summary>
-        public TimeSpan GetTimeToBeReceived(Type messageType)
-        {
-            Guard.AgainstNull(messageType, "messageType");
-            return TimeToBeReceivedAction(messageType);
-        }
-
+      
         /// <summary>
         ///     Returns true if the given type is a message type.
         /// </summary>
@@ -228,14 +220,6 @@
         List<Func<Type, bool>> IsSystemMessageActions = new List<Func<Type, bool>>();
         ConventionCache MessagesConventionCache = new ConventionCache();
 
-        internal Func<Type, TimeSpan> TimeToBeReceivedAction = t =>
-        {
-            var attributes = t.GetCustomAttributes(typeof(TimeToBeReceivedAttribute), true)
-                .Select(s => s as TimeToBeReceivedAttribute)
-                .ToList();
-
-            return attributes.Count > 0 ? attributes.Last().TimeToBeReceived : TimeSpan.MaxValue;
-        };
 
         class ConventionCache
         {

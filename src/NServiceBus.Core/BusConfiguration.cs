@@ -42,6 +42,8 @@ namespace NServiceBus
             Settings.SetDefault("Transactions.DefaultTimeout", TransactionManager.DefaultTimeout);
             Settings.SetDefault("Transactions.SuppressDistributedTransactions", false);
             Settings.SetDefault("Transactions.DoNotWrapHandlersExecutionInATransactionScope", false);
+
+            conventionsBuilder = new ConventionsBuilder(Settings);
         }
 
         /// <summary>
@@ -267,7 +269,7 @@ namespace NServiceBus
         }
 
         IConfigurationSource configurationSourceToUse;
-        ConventionsBuilder conventionsBuilder = new ConventionsBuilder();
+        ConventionsBuilder conventionsBuilder;
         List<Action<IConfigureComponents>> registrations = new List<Action<IConfigureComponents>>();
         IContainer customBuilder;
         string endpointName;

@@ -111,6 +111,7 @@
     <Compile Include="DataBus\DataBusExtentions.cs" />
     <Compile Include="DataBus\FileShareDataBus.cs" />
     <Compile Include="DataBus\UseDataBusExtensions.cs" />
+    <Compile Include="DeliveryConstraints\DeliveryConstraintContextExtensions.cs" />
     <Compile Include="Encryption\DecryptBehavior.cs" />
     <Compile Include="Encryption\EncryptBehavior.cs" />
     <Compile Include="Encryption\EncryptedValue.cs" />
@@ -138,9 +139,16 @@
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
     <Compile Include="Outbox\OutboxRoutingStrategy.cs" />
+    <Compile Include="Performance\TimeToBeReceived\ApplyTimeToBeReceivedBehavior.cs" />
+    <Compile Include="Performance\TimeToBeReceived\TimeToBeReceived.cs" />
+    <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedConventionExtensions.cs" />
+    <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedMappings.cs" />
+    <Compile Include="Performance\TimeToBeReceived\UserDefinedTimeToBeReceivedConvention.cs" />
     <Compile Include="Pipeline\PipelineTerminator.cs" />
     <Compile Include="ConsistencyGuarantees\AtomicWithReceiveOperation.cs" />
     <Compile Include="ConsistencyGuarantees\ConsistencyGuarantee.cs" />
+    <Compile Include="Performance\TimeToBeReceived\DiscardIfNotReceivedBefore.cs" />
+    <Compile Include="DeliveryConstraints\DeliveryConstraint.cs" />
     <Compile Include="Routing\MessageRouter.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
@@ -427,7 +435,7 @@
     <Compile Include="Settings\TransactionSettingsExtentions.cs" />
     <Compile Include="Support\RuntimeEnvironment.cs" />
     <Compile Include="Timeout\TimeoutManagerBasedDeferral.cs" />
-    <Compile Include="TimeToBeReceivedAttribute.cs" />
+    <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttribute.cs" />
     <Compile Include="Transports\ConfigureTransport.cs" />
     <Compile Include="Audit\DefaultMessageAuditer.cs" />
     <Compile Include="Audit\IAuditMessages.cs" />

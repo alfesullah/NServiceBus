@@ -4,6 +4,7 @@ namespace NServiceBus
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Timeout.Core;
     using NServiceBus.Timeout.Hosting.Windows;

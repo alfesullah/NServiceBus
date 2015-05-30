@@ -3,6 +3,7 @@ namespace NServiceBus.Transports
     using System;
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
 
     /// <summary>
     /// Contains details on how the message should be published

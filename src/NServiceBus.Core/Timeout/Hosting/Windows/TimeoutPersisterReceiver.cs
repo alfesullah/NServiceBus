@@ -6,6 +6,7 @@ namespace NServiceBus.Timeout.Hosting.Windows
     using System.Threading.Tasks;
     using NServiceBus.CircuitBreakers;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Logging;
     using NServiceBus.Timeout.Core;
     using NServiceBus.Transports;

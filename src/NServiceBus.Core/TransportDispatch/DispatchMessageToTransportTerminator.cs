@@ -17,7 +17,7 @@
             
             var requiredGuarantee = context.GetConsistencyGuarantee();
 
-            var deliveryConstraints = new List<DeliveryConstraint>(); //todo
+            var deliveryConstraints = context.GetDeliveryConstraints();
       
             context.Get<RoutingStrategy>()
                 .Dispatch(message, requiredGuarantee,deliveryConstraints);

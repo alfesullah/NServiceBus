@@ -5,6 +5,7 @@ namespace NServiceBus.Unicast
     using System.Linq;
     using Janitor;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Extensibility;
     using NServiceBus.Hosting;
     using NServiceBus.MessageInterfaces;
@@ -191,15 +192,6 @@ namespace NServiceBus.Unicast
             }
         }
 
-        void AssertIsValidForPostponedDelivery(Type messageType)
-        {
-            if (configure.container.HasComponent<Validations>())
-            {
-                 builder.Build<Validations>()
-                    .AssertIsValidForPostponedDelivery(messageType);
-            }
-        }
-
         void AssertIsValidForPubSub(Type messageType)
         {
             //we don't have any extension points for subscribe/unsubscribe but this does the trick for now
@@ -270,12 +262,6 @@ namespace NServiceBus.Unicast
             if (options.At.HasValue)
             {
                 deliverAt = options.At;
-            }
-
-            var postponedDeliveryWasRequested = (deliverAt != null) || (delayDeliveryFor != null);
-            if (postponedDeliveryWasRequested)
-            {
-                AssertIsValidForPostponedDelivery(message.GetType());
             }
 
             var sendOptions = new SendMessageOptions(deliverAt, delayDeliveryFor);
@@ -393,14 +379,6 @@ namespace NServiceBus.Unicast
         void ApplyDefaultDeliveryOptionsIfNeeded(DeliveryMessageOptions options, Type messageType)
         {
             var messageDefinitions = messageMetadataRegistry.GetMessageMetadata(messageType);
-
-            if (!options.TimeToBeReceived.HasValue)
-            {
-                if (messageDefinitions.TimeToBeReceived < TimeSpan.MaxValue)
-                {
-                    options.TimeToBeReceived = messageDefinitions.TimeToBeReceived;
-                }
-            }
 
             if (!options.NonDurable.HasValue)
             {

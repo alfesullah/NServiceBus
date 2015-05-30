@@ -10,11 +10,7 @@ namespace NServiceBus.Outbox
         {
             var result = new Dictionary<string, string>();
 
-            if (options.TimeToBeReceived.HasValue)
-            {
-                result["TimeToBeReceived"] = options.TimeToBeReceived.ToString();
-            }
-
+         
             if (options.NonDurable.HasValue && options.NonDurable.Value)
             {
                 result["NonDurable"] = true.ToString();

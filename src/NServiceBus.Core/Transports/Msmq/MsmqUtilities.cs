@@ -10,6 +10,7 @@ namespace NServiceBus
     using System.Text;
     using System.Xml;
     using NServiceBus.Logging;
+    using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Support;
     using NServiceBus.Transports;
     using NServiceBus.Transports.Msmq;

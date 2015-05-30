@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
@@ -115,38 +116,9 @@
 
         public abstract void Dispatch(OutgoingMessage message,
             ConsistencyGuarantee mimimumConsistencyGuarantee,
-            List<DeliveryConstraint> constraints);
+            IEnumerable<DeliveryConstraint> constraints);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public class DiscardIfNotReceivedBefore : DeliveryConstraint
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan MaxTime { get; private set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maxTime"></param>
-        public DiscardIfNotReceivedBefore(TimeSpan maxTime)
-        {
-            MaxTime = maxTime;
-        }
-
-        internal override bool Deserialize(Dictionary<string, string> options)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override void Serialize(Dictionary<string, string> options)
-        {
-            throw new NotImplementedException();
-        }
-    }
     /// <summary>
     /// 
     /// </summary>
@@ -190,22 +162,6 @@
         {
             throw new NotImplementedException();
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public abstract class DeliveryConstraint
-    {
-        //public bool NonDurable { get; set; }
-       
-        
-        //public TimeSpan? TimeToBeReceived{ get; set; }
-
-
-        internal abstract bool Deserialize(Dictionary<string, string> options);
-
-        internal abstract void Serialize(Dictionary<string, string> options);
     }
 
     /// <summary>

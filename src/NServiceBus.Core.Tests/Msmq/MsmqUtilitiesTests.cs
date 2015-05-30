@@ -8,6 +8,8 @@
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Transports;
     using NUnit.Framework;
 

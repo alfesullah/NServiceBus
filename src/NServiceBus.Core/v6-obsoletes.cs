@@ -454,6 +454,39 @@ namespace NServiceBus.Unicast
             throw new NotImplementedException();
         }
     }
+
+    
+}
+
+
+namespace NServiceBus.Unicast.Messages
+{
+    using System;
+
+    public partial class MessageMetadata
+    {
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "You can access TTBR via the DeliveryConstraints collection on the outgoing context")]
+        public TimeSpan TimeToBeReceived
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+}
+
+namespace NServiceBus
+{
+    using System;
+
+    public partial class Conventions
+    {
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer an extension point")]
+        public TimeSpan GetTimeToBeReceived(Type messageType)
+        {
+            throw new NotImplementedException();
+        }
+        
+    }
+
 }
 
 namespace NServiceBus
