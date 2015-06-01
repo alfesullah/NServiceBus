@@ -1,5 +1,7 @@
 ﻿namespace NServiceBus.Features
 {
+    using NServiceBus.Routing.Publishing;
+
     /// <summary>
     /// Adds support for pub/sub using a external subscription storage. This brings pub/sub to transport that lacks native support.
     /// </summary>
@@ -14,7 +16,7 @@
         /// </summary>
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            context.Container.ConfigureComponent<Unicast.Publishing.StorageDrivenPublisher>(DependencyLifecycle.InstancePerCall);
+            context.Container.ConfigureComponent<StorageDrivenPublisher>(DependencyLifecycle.InstancePerCall);
         }
     }
 }

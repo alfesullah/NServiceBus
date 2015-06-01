@@ -1,21 +1,18 @@
-﻿namespace NServiceBus.Unicast.Publishing
+﻿namespace NServiceBus.Routing.Publishing
 {
     using System.Linq;
-    using Messages;
-    using Pipeline;
-    using Subscriptions;
-    using Subscriptions.MessageDrivenSubscriptions;
-    using Transports;
-
+    using NServiceBus.Transports;
+    using NServiceBus.Unicast.Messages;
+    using NServiceBus.Unicast.Subscriptions;
+    using NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions;
 
     class StorageDrivenPublisher:IPublishMessages
     {
-        public StorageDrivenPublisher(ISubscriptionStorage subscriptionStorage, ISendMessages messageSender, MessageMetadataRegistry messageMetadataRegistry, BehaviorContext context)
+        public StorageDrivenPublisher(ISubscriptionStorage subscriptionStorage, ISendMessages messageSender, MessageMetadataRegistry messageMetadataRegistry)
         {
             this.subscriptionStorage = subscriptionStorage;
             this.messageSender = messageSender;
             this.messageMetadataRegistry = messageMetadataRegistry;
-            this.context = context;
         }
 
 
@@ -30,11 +27,11 @@
 
             if (!subscribers.Any())
             {
-                context.Set("NoSubscribersFoundForMessage",true);
+                publishOptions.Context.Set("NoSubscribersFoundForMessage", true);
                 return;
             }
 
-            context.Set("SubscribersForEvent", subscribers);
+            publishOptions.Context.Set("SubscribersForEvent", subscribers);
 
             foreach (var subscriber in subscribers)
             {
@@ -48,6 +45,5 @@
         ISubscriptionStorage subscriptionStorage;
         ISendMessages messageSender;
         MessageMetadataRegistry messageMetadataRegistry;
-        BehaviorContext context;
     }
 }
