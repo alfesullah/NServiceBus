@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;

@@ -20,7 +20,12 @@
                 }
             }
         }
-        
+
+        public bool HasEntries
+        {
+            get { return mappings.Any(); }
+        }
+
         public bool TryGetTimeToBeReceived(Type messageType, out TimeSpan timeToBeReceived)
         {
             return mappings.TryGetValue(messageType, out timeToBeReceived);

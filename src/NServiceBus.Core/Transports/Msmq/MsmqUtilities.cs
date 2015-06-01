@@ -9,6 +9,7 @@ namespace NServiceBus
     using System.Net.NetworkInformation;
     using System.Text;
     using System.Xml;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Logging;
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Support;

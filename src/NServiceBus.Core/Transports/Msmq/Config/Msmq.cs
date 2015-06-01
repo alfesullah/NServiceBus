@@ -1,10 +1,11 @@
 namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.Configuration.AdvanceExtensibility;
     using NServiceBus.Features;
+    using NServiceBus.Transports;
     using NServiceBus.Transports.Msmq;
-    using Transports;
 
     /// <summary>
     /// Transport definition for MSMQ
@@ -49,6 +50,18 @@ namespace NServiceBus
             var msmqAddress = MsmqAddress.Parse(address);
 
             return msmqAddress.ToString(qualifier);
+        }
+        /// <summary>
+        /// The list of constraints supported by the MSMQ transport
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<Type> GetSupportedDeliveryConstraints()
+        {
+            return new List<Type>();
+            //return new[]
+            //{
+            //    typeof(DiscardIfNotReceivedBefore)
+            //};
         }
     }
 }

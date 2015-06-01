@@ -1,10 +1,11 @@
-namespace NServiceBus
+namespace NServiceBus.DeliveryConstraints
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Features;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Transports;
 
     static class DeliveryConstraintContextExtensions
     {
@@ -39,11 +40,16 @@ namespace NServiceBus
             return new List<DeliveryConstraint>();
         }
 
-        public static bool TryGet<T>(this IEnumerable<DeliveryConstraint> list,out T constraint) where T : class
+        public static bool TryGet<T>(this IEnumerable<DeliveryConstraint> list, out T constraint) where T : DeliveryConstraint
         {
             constraint = list.SingleOrDefault(c => c is T) as T;
 
             return constraint != null;
+        }
+
+        public static bool TransportSupportsRestriction<T>(this FeatureConfigurationContext context) where T:DeliveryConstraint
+        {
+            return context.Settings.Get<TransportDefinition>().GetSupportedDeliveryConstraints().Any(t => t == typeof(T));
         }
     }
 }

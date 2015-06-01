@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
