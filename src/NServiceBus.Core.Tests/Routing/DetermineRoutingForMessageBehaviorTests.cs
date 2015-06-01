@@ -28,7 +28,7 @@
 
             var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
 
-            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>(),null);
 
             Assert.AreEqual("destination endpoint", fakeSender.TransportSendOptions.Destination);
         }
@@ -49,7 +49,7 @@
 
             var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
 
-            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>(), null);
 
             Assert.AreEqual("MyLocalAddress", fakeSender.TransportSendOptions.Destination);
         }
@@ -70,7 +70,7 @@
 
             var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
 
-            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>());
+            routingStrategy.Dispatch(new OutgoingMessage("some id", new Dictionary<string, string>(), null), new NoConsistencyRequired(), new List<DeliveryConstraint>(), null);
 
             Assert.AreEqual("MappedDestination", fakeSender.TransportSendOptions.Destination);
         }

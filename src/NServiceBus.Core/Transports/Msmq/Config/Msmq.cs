@@ -4,6 +4,7 @@ namespace NServiceBus
     using System.Collections.Generic;
     using NServiceBus.Configuration.AdvanceExtensibility;
     using NServiceBus.Features;
+    using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Transports;
     using NServiceBus.Transports.Msmq;
 
@@ -57,11 +58,10 @@ namespace NServiceBus
         /// <returns></returns>
         public override IEnumerable<Type> GetSupportedDeliveryConstraints()
         {
-            return new List<Type>();
-            //return new[]
-            //{
-            //    typeof(DiscardIfNotReceivedBefore)
-            //};
+            return new[]
+            {
+                typeof(DiscardIfNotReceivedBefore)
+            };
         }
     }
 }

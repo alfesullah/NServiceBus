@@ -5,6 +5,7 @@
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Extensibility;
+    using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Transports;
 
@@ -115,8 +116,9 @@
         }
 
         public abstract void Dispatch(OutgoingMessage message,
-            ConsistencyGuarantee mimimumConsistencyGuarantee,
-            IEnumerable<DeliveryConstraint> constraints);
+            ConsistencyGuarantee minimumConsistencyGuarantee,
+            IEnumerable<DeliveryConstraint> constraints,
+            BehaviorContext currentContext);
     }
 
     /// <summary>

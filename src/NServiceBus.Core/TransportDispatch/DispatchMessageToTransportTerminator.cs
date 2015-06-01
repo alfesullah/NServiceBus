@@ -21,7 +21,7 @@
             var deliveryConstraints = context.GetDeliveryConstraints();
       
             context.Get<RoutingStrategy>()
-                .Dispatch(message, requiredGuarantee,deliveryConstraints);
+                .Dispatch(message, requiredGuarantee,deliveryConstraints,context);
         }
      
         public class State

@@ -44,12 +44,12 @@
                 }
             }
 
-            DispatchOperationToTransport(outboxMessage.TransportOperations);
+            DispatchOperationToTransport(outboxMessage.TransportOperations,context);
 
             outboxStorage.SetAsDispatched(messageId);
         }
 
-        void DispatchOperationToTransport(IEnumerable<TransportOperation> operations)
+        void DispatchOperationToTransport(IEnumerable<TransportOperation> operations, Context context)
         {
             foreach (var transportOperation in operations)
             {
@@ -59,7 +59,7 @@
 
            
                 //todo: deliveryConstraint.Hydrate(transportOperation.Options);
-                routingStrategy.Dispatch(message,new NoConsistencyRequired(), new List<DeliveryConstraint>());
+                routingStrategy.Dispatch(message,new NoConsistencyRequired(), new List<DeliveryConstraint>(),context);
             }
         }
 

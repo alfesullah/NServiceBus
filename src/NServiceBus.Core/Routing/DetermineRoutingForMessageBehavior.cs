@@ -1,9 +1,6 @@
 namespace NServiceBus
 {
     using System;
-    using System.Collections.Generic;
-    using NServiceBus.ConsistencyGuarantees;
-    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
@@ -21,8 +18,6 @@ namespace NServiceBus
             this.localAddress = localAddress;
             this.messageRouter = messageRouter;
         }
-
-        //TransportDefinition definition;
 
         public override void Invoke(OutgoingContext context, Action next)
         {
@@ -48,8 +43,6 @@ namespace NServiceBus
                         {
                             throw new InvalidOperationException("No destination specified for message: " + context.MessageType);
                         }
-
-
                     }
                 }
 
@@ -146,23 +139,6 @@ namespace NServiceBus
 
     }
 
-
-    class DirectRoutingStrategy : RoutingStrategy
-    {
-        ISendMessages messageSender;
-        readonly string destination;
-       
-        public DirectRoutingStrategy(ISendMessages messageSender, string destination)
-        {
-            this.messageSender = messageSender;
-            this.destination = destination;
-        }
-
-        public override void Dispatch(OutgoingMessage message, ConsistencyGuarantee mimimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints)
-        {
-            messageSender.Send(message, new TransportSendOptions(destination, mimimumConsistencyGuarantee, constraints));         
-        }
-    }
 
     //public void NativePublish(TransportPublishOptions publishOptions, OutgoingMessage message)
     // {

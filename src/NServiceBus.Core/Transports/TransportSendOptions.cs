@@ -3,6 +3,8 @@ namespace NServiceBus.Transports
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Pipeline;
+    using NServiceBus.Pipeline.Contexts;
 
     /// <summary>
     /// Contains details on how the message should be sent
@@ -15,11 +17,18 @@ namespace NServiceBus.Transports
         /// <param name="destination">The native address where to sent this message</param>
         /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
-        public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints)
+        /// <param name="context">The pipeline context if present</param>
+        public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints,BehaviorContext context = null)
         {
             Destination = destination;
             MinimumConsistencyGuarantee = minimumConsistencyGuarantee;
             DeliveryConstraints = deliveryConstraints;
+            Context = context;
+
+            if (context == null)
+            {
+                Context = new RootContext(null);
+            }
         }
 
         /// <summary>
@@ -36,5 +45,10 @@ namespace NServiceBus.Transports
         /// The delivery constraints that must be honored by the transport
         /// </summary>
         public IEnumerable<DeliveryConstraint> DeliveryConstraints { get; private set; }
+
+        /// <summary>
+        /// Access to the behavior context
+        /// </summary>
+        public BehaviorContext Context { get; private set; }
     }
 }

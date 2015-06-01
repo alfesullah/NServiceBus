@@ -149,6 +149,7 @@
     <Compile Include="ConsistencyGuarantees\ConsistencyGuarantee.cs" />
     <Compile Include="Performance\TimeToBeReceived\DiscardIfNotReceivedBefore.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraint.cs" />
+    <Compile Include="Routing\DirectRoutingStrategy.cs" />
     <Compile Include="Routing\MessageRouter.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
