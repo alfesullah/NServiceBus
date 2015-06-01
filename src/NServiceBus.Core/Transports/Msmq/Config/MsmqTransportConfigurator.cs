@@ -60,8 +60,6 @@
             new CheckMachineNameForComplianceWithDtcLimitation()
             .Check();
 
-            context.Container.ConfigureComponent<MsmqUnitOfWork>(DependencyLifecycle.SingleInstance);
-
             var endpointIsTransactional = context.Settings.Get<bool>("Transactions.Enabled");
             var doNotUseDTCTransactions = context.Settings.Get<bool>("Transactions.SuppressDistributedTransactions");
             Func<IReadOnlyDictionary<string, string>, string> getMessageLabel;

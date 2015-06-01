@@ -507,3 +507,28 @@ namespace NServiceBus
     }
 }
 
+
+namespace NServiceBus.Transports.Msmq
+{
+    using System;
+    using System.Messaging;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "The msmq transaction is now available via the pipeline context")]
+    public class MsmqUnitOfWork : IDisposable
+    {
+        public MessageQueueTransaction Transaction
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasActiveTransaction()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
