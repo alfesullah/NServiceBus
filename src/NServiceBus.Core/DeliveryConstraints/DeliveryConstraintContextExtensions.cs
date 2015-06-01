@@ -38,5 +38,12 @@ namespace NServiceBus
 
             return new List<DeliveryConstraint>();
         }
+
+        public static bool TryGet<T>(this IEnumerable<DeliveryConstraint> list,out T constraint) where T : class
+        {
+            constraint = list.SingleOrDefault(c => c is T) as T;
+
+            return constraint != null;
+        }
     }
 }

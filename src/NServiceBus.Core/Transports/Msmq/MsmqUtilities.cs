@@ -218,12 +218,11 @@ namespace NServiceBus
             AssignMsmqNativeCorrelationId(message, result);
             result.Recoverable = !sendOptions.DeliveryConstraints.Any(c => c is NonDurableDelivery);
 
-            //todo: add a helper for this
-            var ttbr = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DiscardIfNotReceivedBefore) as DiscardIfNotReceivedBefore;
+            DiscardIfNotReceivedBefore timeToBeReceived;
 
-            if (ttbr != null && ttbr.MaxTime < MessageQueue.InfiniteTimeout)
+            if (sendOptions.DeliveryConstraints.TryGet(out timeToBeReceived) && timeToBeReceived.MaxTime < MessageQueue.InfiniteTimeout)
             {
-                result.TimeToBeReceived = ttbr.MaxTime;
+                result.TimeToBeReceived = timeToBeReceived.MaxTime;
             }
 
             var addCorrIdHeader = !message.Headers.ContainsKey("CorrId");
