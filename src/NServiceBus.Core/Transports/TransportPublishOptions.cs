@@ -4,6 +4,7 @@ namespace NServiceBus.Transports
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Pipeline;
 
     /// <summary>
     /// Contains details on how the message should be published
@@ -14,13 +15,15 @@ namespace NServiceBus.Transports
         /// Creates the send options with the given address
         /// </summary>
         /// <param name="eventType">The type of event being published</param>
-        /// <param name="mimimumConsistencyGuarantee">The level of consitency that's required for this operation</param>
+        /// <param name="minimumConsistencyGuarantee">The level of consitency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
-        public TransportPublishOptions(Type eventType, ConsistencyGuarantee mimimumConsistencyGuarantee, List<DeliveryConstraint> deliveryConstraints)
+        /// <param name="context">The current pipeline context if one is present</param>
+        public TransportPublishOptions(Type eventType, ConsistencyGuarantee minimumConsistencyGuarantee, List<DeliveryConstraint> deliveryConstraints,BehaviorContext context)
         {
             EventType = eventType;
-            MimimumConsistencyGuarantee = mimimumConsistencyGuarantee;
+            MinimumConsistencyGuarantee = minimumConsistencyGuarantee;
             DeliveryConstraints = deliveryConstraints;
+            Context = context;
         }
 
         /// <summary>
@@ -31,11 +34,16 @@ namespace NServiceBus.Transports
         /// <summary>
         /// The level of consitency that's required for this operation
         /// </summary>
-        public ConsistencyGuarantee MimimumConsistencyGuarantee { get; private set; }
+        public ConsistencyGuarantee MinimumConsistencyGuarantee { get; private set; }
 
         /// <summary>
         /// The delivery constraints that must be honored by the transport
         /// </summary>
         public IEnumerable<DeliveryConstraint> DeliveryConstraints { get; private set; }
+
+        /// <summary>
+        /// Access to the current pipeline context
+        /// </summary>
+        public BehaviorContext Context { get; private set; }
     }
 }
