@@ -10,7 +10,7 @@ namespace NServiceBus.Transports
     /// <summary>
     /// Contains details on how the message should be sent
     /// </summary>
-    public class TransportSendOptions
+    public class DispatchOptions
     {
         /// <summary>
         /// Creates the send options with the given routing strategy
@@ -19,7 +19,7 @@ namespace NServiceBus.Transports
         /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
         /// <param name="context">The pipeline context if present</param>
-        public TransportSendOptions(RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
+        public DispatchOptions(RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
         {
             RoutingStrategy = routingStrategy;
             MinimumConsistencyGuarantee = minimumConsistencyGuarantee;
@@ -39,7 +39,7 @@ namespace NServiceBus.Transports
         /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
         /// <param name="context">The pipeline context if present</param>
-        public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
+        public DispatchOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
             : this(new DirectToTargetDestination(destination), minimumConsistencyGuarantee,deliveryConstraints,context)
         {
           

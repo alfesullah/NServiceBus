@@ -200,7 +200,7 @@
     <Compile Include="Transports\IncomingMessage.cs" />
     <Compile Include="Transports\TransportDeferOptions.cs" />
     <Compile Include="Transports\TransportPublishOptions.cs" />
-    <Compile Include="Transports\TransportSendOptions.cs" />
+    <Compile Include="Transports\DispatchOptions.cs" />
     <Compile Include="TransportDispatch\HeaderExtensions.cs" />
     <Compile Include="TransportDispatch\MessageIdExtensions.cs" />
     <Compile Include="Unicast\Behaviors\SagaInvocationResult.cs" />
@@ -510,7 +510,7 @@
     <Compile Include="Transports\ICreateQueues.cs" />
     <Compile Include="Transports\IDequeueMessages.cs" />
     <Compile Include="Transports\IManageSubscriptions.cs" />
-    <Compile Include="Transports\ISendMessages.cs" />
+    <Compile Include="Transports\IDispatchMessages.cs" />
     <Compile Include="Transports\TransportDefinition.cs" />
     <Compile Include="Transports\Msmq\Config\Msmq.cs" />
     <Compile Include="Transports\Msmq\Config\MsmqSettings.cs" />

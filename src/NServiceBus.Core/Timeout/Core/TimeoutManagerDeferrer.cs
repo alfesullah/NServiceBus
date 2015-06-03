@@ -10,7 +10,7 @@
 
     class TimeoutManagerDeferrer : ICancelDeferredMessages
     {
-        public TimeoutManagerDeferrer(ISendMessages messageSender, string timeoutManagerAddress)
+        public TimeoutManagerDeferrer(IDispatchMessages messageSender, string timeoutManagerAddress)
         {
             this.messageSender = messageSender;
             this.timeoutManagerAddress = timeoutManagerAddress;
@@ -44,7 +44,7 @@
             
             try
             {
-                messageSender.Send(message, new TransportSendOptions(timeoutManagerAddress, new AtomicWithReceiveOperation(),new List<DeliveryConstraint>()));
+                messageSender.Dispatch(message, new DispatchOptions(timeoutManagerAddress, new AtomicWithReceiveOperation(),new List<DeliveryConstraint>()));
             }
             catch (Exception ex)
             {
@@ -59,11 +59,11 @@
             controlMessage.Headers["$MessageKeyToClear"] = messageKey;
             controlMessage.Headers[TimeoutManagerHeaders.ClearTimeouts] = bool.TrueString;
 
-            messageSender.Send(controlMessage, new TransportSendOptions(timeoutManagerAddress, new NoConsistencyRequired(), new List<DeliveryConstraint>()));
+            messageSender.Dispatch(controlMessage, new DispatchOptions(timeoutManagerAddress, new NoConsistencyRequired(), new List<DeliveryConstraint>()));
 
         }
 
-        ISendMessages messageSender;
+        IDispatchMessages messageSender;
         string timeoutManagerAddress;
      
         static ILog Log = LogManager.GetLogger<TimeoutManagerDeferrer>();

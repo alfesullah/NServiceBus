@@ -10,7 +10,7 @@ namespace NServiceBus.Timeout.Core
     {
         public IPersistTimeouts TimeoutsPersister { get; set; }
 
-        public ISendMessages MessageSender { get; set; }
+        public IDispatchMessages MessageSender { get; set; }
 
         public Action<TimeoutData> TimeoutPushed;
 
@@ -18,10 +18,10 @@ namespace NServiceBus.Timeout.Core
         {
             if (timeout.Time.AddSeconds(-1) <= DateTime.UtcNow)
             {
-                var sendOptions = new TransportSendOptions(timeout.Destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>());
+                var sendOptions = new DispatchOptions(timeout.Destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>());
                 var message = new OutgoingMessage(timeout.Headers[Headers.MessageId],timeout.Headers, timeout.State);
 
-                MessageSender.Send(message, sendOptions);
+                MessageSender.Dispatch(message, sendOptions);
                 return;
             }
 

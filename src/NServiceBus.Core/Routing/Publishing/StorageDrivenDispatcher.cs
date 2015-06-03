@@ -19,7 +19,7 @@
         }
 
 
-        public override void Dispatch(ISendMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
+        public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
         {
             var eventType = ((ToAllSubscribers)routingStrategy).EventType;
 
@@ -42,7 +42,7 @@
 
             foreach (var subscriber in subscribers)
             {
-                dispatcher.Send(message, new TransportSendOptions(subscriber,
+                dispatcher.Dispatch(message, new DispatchOptions(subscriber,
                     minimumConsistencyGuarantee,
                    currentConstraints,
                     currentContext));

@@ -11,7 +11,7 @@ namespace NServiceBus
 
     class TimeoutMessageProcessorBehavior : SatelliteBehavior
     {
-        public ISendMessages MessageSender { get; set; }
+        public IDispatchMessages MessageSender { get; set; }
 
         public string InputAddress { get; set; }
 
@@ -53,7 +53,7 @@ namespace NServiceBus
             }
 
             TimeoutManager.RemoveTimeout(timeoutId);
-            MessageSender.Send(new OutgoingMessage(message.Id,message.Headers, message.Body), new TransportSendOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+            MessageSender.Dispatch(new OutgoingMessage(message.Id,message.Headers, message.Body), new DispatchOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
         }
 
         void HandleInternal(TransportMessage message)

@@ -13,9 +13,9 @@
     class SubscriptionManager : IManageSubscriptions
     {
         string replyToAddress;
-        ISendMessages messageSender;
+        IDispatchMessages messageSender;
 
-        public SubscriptionManager(string replyToAddress,ISendMessages messageSender)
+        public SubscriptionManager(string replyToAddress,IDispatchMessages messageSender)
         {
             this.replyToAddress = replyToAddress;
             this.messageSender = messageSender;
@@ -48,7 +48,7 @@
 
             var subscriptionMessage = CreateControlMessage(eventType,MessageIntentEnum.Unsubscribe);
    
-            messageSender.Send(subscriptionMessage, new TransportSendOptions(publisherAddress,new NoConsistencyRequired(),new List<DeliveryConstraint>() ));
+            messageSender.Dispatch(subscriptionMessage, new DispatchOptions(publisherAddress,new NoConsistencyRequired(),new List<DeliveryConstraint>() ));
         }
 
         OutgoingMessage CreateControlMessage(Type eventType,MessageIntentEnum intent)
@@ -65,7 +65,7 @@
         {
             try
             {
-                messageSender.Send(subscriptionMessage, new TransportSendOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+                messageSender.Dispatch(subscriptionMessage, new DispatchOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
             }
             catch (QueueNotFoundException ex)
             {

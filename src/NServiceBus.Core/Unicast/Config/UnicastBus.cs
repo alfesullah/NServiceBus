@@ -160,7 +160,7 @@ namespace NServiceBus.Features
                 builder.Build<MessageMetadataRegistry>(),
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
-                builder.Build<ISendMessages>(),
+                builder.Build<IDispatchMessages>(),
                 builder.Build<StaticMessageRouter>(), hostInfo)
             {
                 HostInformation = hostInfo
@@ -178,7 +178,7 @@ namespace NServiceBus.Features
                 builder.Build<MessageMetadataRegistry>(),
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
-                builder.Build<ISendMessages>(),
+                builder.Build<IDispatchMessages>(),
                 builder.Build<StaticMessageRouter>(), hostInfo);
         }
 

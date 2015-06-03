@@ -2,11 +2,11 @@ namespace NServiceBus.Transports
 {
     class DefaultMessageAuditer
     {
-        public ISendMessages MessageSender { get; set; }
+        public IDispatchMessages MessageSender { get; set; }
 
-        public void Audit(TransportSendOptions sendOptions, OutgoingMessage message)
+        public void Audit(DispatchOptions sendOptions, OutgoingMessage message)
         {
-            MessageSender.Send(message, sendOptions);
+            MessageSender.Dispatch(message, sendOptions);
         }
 
         class Initialization : INeedInitialization

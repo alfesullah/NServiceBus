@@ -14,7 +14,7 @@ namespace NServiceBus.Transports
             this.builder = builder;
         }
 
-        public void Audit(OutgoingMessage message,TransportSendOptions sendOptions)
+        public void Audit(OutgoingMessage message,DispatchOptions sendOptions)
         {
             ((dynamic)builder.Build(AuditerImplType)).Audit(sendOptions, message);
         }

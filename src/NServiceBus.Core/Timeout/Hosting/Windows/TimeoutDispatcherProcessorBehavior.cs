@@ -12,7 +12,7 @@ namespace NServiceBus
 
     class TimeoutDispatcherProcessorBehavior : SatelliteBehavior
     {
-        public ISendMessages MessageSender { get; set; }
+        public IDispatchMessages MessageSender { get; set; }
         public IPersistTimeouts TimeoutsPersister { get; set; }
         public TimeoutPersisterReceiver TimeoutPersisterReceiver { get; set; }
         public Configure Configure { get; set; }
@@ -25,12 +25,12 @@ namespace NServiceBus
 
             if (TimeoutsPersister.TryRemove(timeoutId, out timeoutData))
             {
-                var sendOptions = new TransportSendOptions(timeoutData.Destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>());
+                var sendOptions = new DispatchOptions(timeoutData.Destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>());
 
                 timeoutData.Headers[Headers.TimeSent] = DateTimeExtensions.ToWireFormattedString(DateTime.UtcNow);
                 timeoutData.Headers["NServiceBus.RelatedToTimeoutId"] = timeoutData.Id;
 
-                MessageSender.Send(new OutgoingMessage(message.Id,timeoutData.Headers, timeoutData.State), sendOptions);
+                MessageSender.Dispatch(new OutgoingMessage(message.Id,timeoutData.Headers, timeoutData.State), sendOptions);
             }
 
             return true;

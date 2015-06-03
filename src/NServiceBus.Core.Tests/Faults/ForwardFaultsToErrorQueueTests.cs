@@ -135,17 +135,17 @@ namespace NServiceBus.Core.Tests
 
             public bool ErrorRaised { get; private set; }
         }
-        public class FakeSender : ISendMessages
+        public class FakeSender : IDispatchMessages
         {
             public OutgoingMessage MessageSent { get; set; }
 
             public string  Destination { get; set; }
             public bool ThrowOnSend { get; set; }
 
-            public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
+            public void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions)
             {
                 MessageSent = message;
-                Destination = ((DirectToTargetDestination)sendOptions.RoutingStrategy).Destination;
+                Destination = ((DirectToTargetDestination)dispatchOptions.RoutingStrategy).Destination;
 
                 if (ThrowOnSend)
                 {

@@ -21,7 +21,7 @@
         {
             var timeoutManagerAddress = GetTimeoutManagerAddress(context);
 
-            context.Container.ConfigureComponent(b =>new TimeoutManagerDeferrer(b.Build<ISendMessages>(), timeoutManagerAddress), 
+            context.Container.ConfigureComponent(b =>new TimeoutManagerDeferrer(b.Build<IDispatchMessages>(), timeoutManagerAddress), 
                 DependencyLifecycle.InstancePerCall);
         }
 

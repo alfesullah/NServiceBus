@@ -15,7 +15,7 @@ namespace NServiceBus.Timeout.Hosting.Windows
     class TimeoutPersisterReceiver : IDisposable
     {
         public IPersistTimeouts TimeoutsPersister { get; set; }
-        public ISendMessages MessageSender { get; set; }
+        public IDispatchMessages MessageSender { get; set; }
         public int SecondsToSleepBetweenPolls { get; set; }
         public DefaultTimeoutManager TimeoutManager { get; set; }
         public CriticalError CriticalError { get; set; }
@@ -101,7 +101,7 @@ namespace NServiceBus.Timeout.Hosting.Windows
 
                     dispatchRequest.Headers["Timeout.Id"] = timeoutData.Item1;
 
-                    MessageSender.Send(dispatchRequest, new TransportSendOptions(DispatcherAddress, new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+                    MessageSender.Dispatch(dispatchRequest, new DispatchOptions(DispatcherAddress, new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
                 }
 
                 lock (lockObject)

@@ -10,9 +10,9 @@ namespace NServiceBus.Transports.Msmq
     using NServiceBus.Unicast.Queuing;
 
     /// <summary>
-    /// Default MSMQ <see cref="ISendMessages"/> implementation.
+    /// Default MSMQ <see cref="IDispatchMessages"/> implementation.
     /// </summary>
-    public class MsmqMessageSender : ISendMessages
+    public class MsmqMessageSender : IDispatchMessages
     {
         /// <summary>
         /// Creates a new sender.
@@ -32,16 +32,16 @@ namespace NServiceBus.Transports.Msmq
         /// <summary>
         /// Sends the given <paramref name="message"/>
         /// </summary>
-        public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
+        public void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions)
         {
             Guard.AgainstNull(message, "message");
-            Guard.AgainstNull(sendOptions, "sendOptions");
+            Guard.AgainstNull(dispatchOptions, "sendOptions");
             
-            var routingStrategy = sendOptions.RoutingStrategy as DirectToTargetDestination;
+            var routingStrategy = dispatchOptions.RoutingStrategy as DirectToTargetDestination;
 
             if (routingStrategy == null)
             {
-                throw new Exception("The MSMQ transport only supports the `DirectRoutingStrategy`, strategy required " + sendOptions.RoutingStrategy.GetType().Name);
+                throw new Exception("The MSMQ transport only supports the `DirectRoutingStrategy`, strategy required " + dispatchOptions.RoutingStrategy.GetType().Name);
             }
 
             var destination = routingStrategy.Destination;
@@ -51,7 +51,7 @@ namespace NServiceBus.Transports.Msmq
             try
             {
                 using (var q = new MessageQueue(queuePath, false, settings.UseConnectionCache, QueueAccessMode.Send))
-                using (var toSend = MsmqUtilities.Convert(message, sendOptions))
+                using (var toSend = MsmqUtilities.Convert(message,dispatchOptions))
                 {
                     toSend.UseDeadLetterQueue = settings.UseDeadLetterQueue;
                     toSend.UseJournalQueue = settings.UseJournalQueue;
@@ -66,7 +66,7 @@ namespace NServiceBus.Transports.Msmq
                     }
 
                     MessageQueueTransaction receiveTransaction;
-                    sendOptions.Context.TryGet(out receiveTransaction);
+                    dispatchOptions.Context.TryGet(out receiveTransaction);
 
 
                    

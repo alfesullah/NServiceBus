@@ -20,7 +20,7 @@ namespace NServiceBus
             this.options = options;
         }
 
-        public override void Dispatch(ISendMessages dispatcher,OutgoingMessage message,
+        public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message,
             RoutingStrategy routingStrategy,
             ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,

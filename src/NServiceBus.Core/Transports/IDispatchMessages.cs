@@ -1,13 +1,13 @@
 namespace NServiceBus.Transports
 {
     /// <summary>
-    /// Abstraction of the capability to send messages.
+    /// Abstraction of the capability to dispatch messages.
     /// </summary>
-    public interface ISendMessages
+    public interface IDispatchMessages
     {
         /// <summary>
         /// Sends the given <paramref name="message"/>
         /// </summary>
-        void Send(OutgoingMessage message, TransportSendOptions sendOptions);
+        void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions);
     }
 }

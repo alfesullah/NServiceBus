@@ -84,7 +84,7 @@ The reason you need to do this is because we need to ensure that you have read a
                     b.Build<IOutboxStorage>(),
                     new TransactionSettings(context.Settings),
                     b.Build<RoutingStrategyFactory>(),
-                    b.Build<ISendMessages>()), 
+                    b.Build<IDispatchMessages>()), 
                 DependencyLifecycle.InstancePerCall);
 
             //make the audit use the outbox as well

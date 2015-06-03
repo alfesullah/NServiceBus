@@ -10,9 +10,9 @@
 
     class DispatchMessageToTransportTerminator : PipelineTerminator<PhysicalOutgoingContextStageBehavior.Context>
     {
-        readonly ISendMessages messageSender;
+        readonly IDispatchMessages messageSender;
 
-        public DispatchMessageToTransportTerminator(ISendMessages messageSender)
+        public DispatchMessageToTransportTerminator(IDispatchMessages messageSender)
         {
             this.messageSender = messageSender;
         }
@@ -55,15 +55,15 @@
     class DefaultDispatchStrategy : DispatchStrategy
     {
         
-        public override void Dispatch(ISendMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
+        public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
         {
-            dispatcher.Send(message, new TransportSendOptions(routingStrategy, minimumConsistencyGuarantee, constraints, currentContext));
+            dispatcher.Dispatch(message, new DispatchOptions(routingStrategy, minimumConsistencyGuarantee, constraints, currentContext));
         }
     }
 
     abstract class DispatchStrategy
     {
-        public abstract void Dispatch(ISendMessages dispatcher,OutgoingMessage message,
+        public abstract void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message,
             RoutingStrategy routingStrategy,
             ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,

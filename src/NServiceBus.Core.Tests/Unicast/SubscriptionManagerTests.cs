@@ -22,7 +22,7 @@
             Assert.AreEqual(typeof(TestEvent).AssemblyQualifiedName,sender.MessageSent.Headers[Headers.SubscriptionMessageType] );
         }
 
-        class FakeSender:ISendMessages
+        class FakeSender:IDispatchMessages
         {
             public FakeSender()
             {
@@ -32,15 +32,15 @@
 
             public OutgoingMessage MessageSent { get; private set; }
 
-            public TransportSendOptions SendOptions { get; private set; }
+            public DispatchOptions SendOptions { get; private set; }
 
             public AutoResetEvent MessageAvailable { get; private set; }
 
-            public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
+            public void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions)
             {
                 MessageSent = message;
 
-                SendOptions = sendOptions;
+                SendOptions = dispatchOptions;
 
                 MessageAvailable.Set();
             }

@@ -13,7 +13,7 @@
 
     class OutboxDeduplicationBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory, ISendMessages dispatcher)
+        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory, IDispatchMessages dispatcher)
         {
             this.outboxStorage = outboxStorage;
             this.transactionSettings = transactionSettings;
@@ -67,7 +67,7 @@
             }
         }
 
-        ISendMessages dispatcher;
+        IDispatchMessages dispatcher;
         IOutboxStorage outboxStorage;
         TransactionSettings transactionSettings;
         RoutingStrategyFactory routingStrategyFactory;

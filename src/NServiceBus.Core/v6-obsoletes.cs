@@ -569,3 +569,40 @@ namespace NServiceBus.Features
         }
     }
 }
+
+namespace NServiceBus.Transports
+{
+    using Unicast;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
+    public interface IDeferMessages
+    {
+        void Defer(TransportMessage message, SendOptions sendOptions);
+
+
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "ICancelDeferredMessages")]
+        void ClearDeferredMessages(string headerKey, string headerValue);
+    }
+}
+
+namespace NServiceBus.Transports
+{
+    using Unicast;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
+    public interface IPublishMessages
+    {
+        void Publish(TransportMessage message, PublishOptions publishOptions);
+    }
+}
+
+namespace NServiceBus.Transports
+{
+    using Unicast;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
+    public interface ISendMessages
+    {
+        void Send(TransportMessage message, SendOptions sendOptions);
+    }
+}

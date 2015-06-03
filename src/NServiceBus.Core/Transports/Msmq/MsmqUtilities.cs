@@ -206,7 +206,7 @@ namespace NServiceBus
         ///     Converts a TransportMessage to an Msmq message.
         ///     Doesn't set the ResponseQueue of the result.
         /// </summary>
-        public static Message Convert(OutgoingMessage message, TransportSendOptions sendOptions)
+        public static Message Convert(OutgoingMessage message, DispatchOptions sendOptions)
         {
             var result = new Message();
 

@@ -149,7 +149,7 @@
         }
     }
 
-    class FakeSender : ISendMessages
+    class FakeSender : IDispatchMessages
     {
         public string MessageRoutedTo { get; private set; }
 
@@ -157,12 +157,12 @@
         public TimeSpan Delay { get; private set; }
 
        
-        public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
+        public void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions)
         {
-            MessageRoutedTo = ((DirectToTargetDestination)sendOptions.RoutingStrategy).Destination;
+            MessageRoutedTo = ((DirectToTargetDestination)dispatchOptions.RoutingStrategy).Destination;
             DeferredMessage = message;
           
-            var constraint = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;
+            var constraint = dispatchOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;
 
             if (constraint != null && constraint.DelayDeliveryWith.HasValue)
             {

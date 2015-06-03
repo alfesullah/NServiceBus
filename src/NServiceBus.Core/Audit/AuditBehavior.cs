@@ -47,7 +47,7 @@
                 constraints.Add(new DiscardIfNotReceivedBefore(TimeToBeReceivedOnForwardedMessages.Value));
             }
 
-            MessageAuditer.Audit(outgoingMessage, new TransportSendOptions(AuditQueue,new AtomicWithReceiveOperation(),constraints));
+            MessageAuditer.Audit(outgoingMessage, new DispatchOptions(AuditQueue,new AtomicWithReceiveOperation(),constraints));
         }
 
         public class Registration:RegisterStep

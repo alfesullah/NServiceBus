@@ -20,7 +20,7 @@ namespace NServiceBus.Features
 
             context.Container.ConfigureComponent(b => new MoveFaultsToErrorQueueBehavior(
                 b.Build<CriticalError>(),
-                b.Build<ISendMessages>(),
+                b.Build<IDispatchMessages>(),
                 b.Build<HostInformation>(),
                 b.Build<BusNotifications>(), 
                 errorQueue.ToString()), DependencyLifecycle.InstancePerCall);

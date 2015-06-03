@@ -36,13 +36,13 @@
             Assert.IsTrue(expireAt <= DateTime.UtcNow + delay);
         }
 
-        class FakeMessageSender : ISendMessages
+        class FakeMessageSender : IDispatchMessages
         {
 
             public List<OutgoingMessage> Messages = new List<OutgoingMessage>();
 
 
-            public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
+            public void Dispatch(OutgoingMessage message, DispatchOptions dispatchOptions)
             {
                 Messages.Add(message);
             }

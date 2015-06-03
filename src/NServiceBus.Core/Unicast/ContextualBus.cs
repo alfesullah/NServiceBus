@@ -33,7 +33,7 @@ namespace NServiceBus.Unicast
         IManageSubscriptions subscriptionManager;
         MessageMetadataRegistry messageMetadataRegistry;
         TransportDefinition transportDefinition;
-        ISendMessages messageSender;
+        IDispatchMessages messageSender;
         StaticMessageRouter messageRouter;
         HostInformation hostInformation;
         PipelineBase<OutgoingContext> outgoingPipeline;
@@ -43,7 +43,7 @@ namespace NServiceBus.Unicast
 
 
         public ContextualBus(Func<BehaviorContext> contextGetter, IMessageMapper messageMapper, IBuilder builder, Configure configure, IManageSubscriptions subscriptionManager,
-            MessageMetadataRegistry messageMetadataRegistry, ReadOnlySettings settings, TransportDefinition transportDefinition, ISendMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
+            MessageMetadataRegistry messageMetadataRegistry, ReadOnlySettings settings, TransportDefinition transportDefinition, IDispatchMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
         {
             this.messageMapper = messageMapper;
             this.contextGetter = contextGetter;
@@ -228,7 +228,7 @@ namespace NServiceBus.Unicast
                 return;
             }
 
-            messageSender.Send(new OutgoingMessage(MessageBeingProcessed.Id, MessageBeingProcessed.Headers, MessageBeingProcessed.Body), new TransportSendOptions(sendLocalAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+            messageSender.Dispatch(new OutgoingMessage(MessageBeingProcessed.Id, MessageBeingProcessed.Headers, MessageBeingProcessed.Body), new DispatchOptions(sendLocalAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
 
             incomingContext.handleCurrentMessageLaterWasCalled = true;
 
@@ -240,7 +240,7 @@ namespace NServiceBus.Unicast
         /// </summary>
         public void ForwardCurrentMessageTo(string destination)
         {
-            messageSender.Send(new OutgoingMessage(MessageBeingProcessed.Id, MessageBeingProcessed.Headers, MessageBeingProcessed.Body), new TransportSendOptions(destination, new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+            messageSender.Dispatch(new OutgoingMessage(MessageBeingProcessed.Id, MessageBeingProcessed.Headers, MessageBeingProcessed.Body), new DispatchOptions(destination, new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
         }
 
         public void Send<T>(Action<T> messageConstructor, NServiceBus.SendOptions options)

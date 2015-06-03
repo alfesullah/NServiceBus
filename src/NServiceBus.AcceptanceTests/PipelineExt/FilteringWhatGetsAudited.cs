@@ -98,7 +98,7 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
                     {
                         return;
                     }
-                    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body),new TransportSendOptions("auditspy",new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+                    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body),new DispatchOptions("auditspy",new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
                 }
 
                 //here we inject our behavior

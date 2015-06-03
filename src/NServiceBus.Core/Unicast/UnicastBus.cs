@@ -44,7 +44,7 @@ namespace NServiceBus.Unicast
             MessageMetadataRegistry messageMetadataRegistry,
             ReadOnlySettings settings,
             TransportDefinition transportDefinition,
-            ISendMessages messageSender,
+            IDispatchMessages messageSender,
             StaticMessageRouter messageRouter,
             HostInformation hostInformation)
         {

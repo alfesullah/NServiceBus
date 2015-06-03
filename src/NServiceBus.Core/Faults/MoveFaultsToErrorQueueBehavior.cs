@@ -11,7 +11,7 @@ namespace NServiceBus
 
     class MoveFaultsToErrorQueueBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public MoveFaultsToErrorQueueBehavior(CriticalError criticalError, ISendMessages sender, HostInformation hostInformation, BusNotifications notifications, string errorQueueAddress)
+        public MoveFaultsToErrorQueueBehavior(CriticalError criticalError, IDispatchMessages sender, HostInformation hostInformation, BusNotifications notifications, string errorQueueAddress)
         {
             this.criticalError = criticalError;
             this.sender = sender;
@@ -43,7 +43,7 @@ namespace NServiceBus
                     message.Headers[Headers.HostId] = hostInformation.HostId.ToString("N");
                     message.Headers[Headers.HostDisplayName] = hostInformation.DisplayName;
 
-                    sender.Send(new OutgoingMessage("msg id",message.Headers,message.Body), new TransportSendOptions(errorQueueAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+                    sender.Dispatch(new OutgoingMessage("msg id",message.Headers,message.Body), new DispatchOptions(errorQueueAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
 
                     notifications.Errors.InvokeMessageHasBeenSentToErrorQueue(message,exception);
                 }
@@ -56,7 +56,7 @@ namespace NServiceBus
         }
 
         CriticalError criticalError;
-        ISendMessages sender;
+        IDispatchMessages sender;
         HostInformation hostInformation;
         BusNotifications notifications;
         string errorQueueAddress;
