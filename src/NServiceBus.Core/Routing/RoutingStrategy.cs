@@ -1,4 +1,4 @@
-﻿namespace NServiceBus
+﻿namespace NServiceBus.Routing
 {
     /// <summary>
     /// Represents different ways how the transport should route a given message    

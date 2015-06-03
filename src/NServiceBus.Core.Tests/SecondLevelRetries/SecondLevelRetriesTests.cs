@@ -6,6 +6,7 @@
     using System.Linq;
     using NServiceBus.Faults;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.SecondLevelRetries;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
@@ -158,7 +159,7 @@
        
         public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
         {
-            MessageRoutedTo = ((DirectRoutingStrategy)sendOptions.RoutingStrategy).Destination;
+            MessageRoutedTo = ((DirectToTargetDestination)sendOptions.RoutingStrategy).Destination;
             DeferredMessage = message;
           
             var constraint = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;

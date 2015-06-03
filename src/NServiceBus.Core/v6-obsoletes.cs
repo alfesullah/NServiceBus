@@ -548,3 +548,24 @@ namespace NServiceBus.Unicast
 
     }
 }
+
+namespace NServiceBus.Features
+{
+    using System;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer used, safe to remove")]
+    public class StorageDrivenPublishing : Feature
+    {
+        internal StorageDrivenPublishing()
+        {
+        }
+
+        /// <summary>
+        /// See <see cref="Feature.Setup"/>
+        /// </summary>
+        protected internal override void Setup(FeatureConfigurationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

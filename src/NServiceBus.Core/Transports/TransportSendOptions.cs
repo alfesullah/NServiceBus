@@ -5,6 +5,7 @@ namespace NServiceBus.Transports
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
 
     /// <summary>
     /// Contains details on how the message should be sent
@@ -39,7 +40,7 @@ namespace NServiceBus.Transports
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
         /// <param name="context">The pipeline context if present</param>
         public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
-            : this(new DirectRoutingStrategy(destination), minimumConsistencyGuarantee,deliveryConstraints,context)
+            : this(new DirectToTargetDestination(destination), minimumConsistencyGuarantee,deliveryConstraints,context)
         {
           
         }

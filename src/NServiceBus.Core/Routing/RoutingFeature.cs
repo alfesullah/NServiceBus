@@ -4,9 +4,11 @@
     using System.Linq;
     using NServiceBus.Config;
     using NServiceBus.Routing;
+    using NServiceBus.Routing.Publishing;
+    using NServiceBus.Transports;
     using NServiceBus.Unicast.Routing;
 
-    class RoutingFeature:Feature
+    class RoutingFeature : Feature
     {
         public RoutingFeature()
         {
@@ -21,6 +23,13 @@
 
             context.Container.ConfigureComponent(b => new DetermineRoutingForMessageBehavior(context.Settings.LocalAddress(),
                 new RoutingAdapter(router)), DependencyLifecycle.InstancePerCall);
+
+            if (!context.Settings.Get<TransportDefinition>().HasNativePubSubSupport)
+            {
+                context.MainPipeline.Register("EnableStorageDrivenPublishing", typeof(EnableStorageDrivenPublishingBehavior), "Overrides to default dispatcher to handle transport that doesn't support native pub/sub");
+
+                context.Container.ConfigureComponent<StorageDrivenDispatcher>(DependencyLifecycle.SingleInstance);
+            }
         }
 
         static StaticMessageRouter SetupStaticRouter(FeatureConfigurationContext context)
@@ -63,7 +72,7 @@
             return router;
         }
     }
-    
+
     //just until we can kill the static router
     class RoutingAdapter : MessageRouter
     {

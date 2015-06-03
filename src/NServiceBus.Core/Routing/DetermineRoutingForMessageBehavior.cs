@@ -9,7 +9,7 @@ namespace NServiceBus
     {
         readonly string localAddress;
         readonly MessageRouter messageRouter;
-
+  
         public DetermineRoutingForMessageBehavior(string localAddress,MessageRouter messageRouter)
         {
             this.localAddress = localAddress;
@@ -43,35 +43,13 @@ namespace NServiceBus
                     }
                 }
 
-                routingStrategy = new DirectRoutingStrategy(destination);
+                routingStrategy = new DirectToTargetDestination(destination);
                 intent = MessageIntentEnum.Send;
   
             }
             if (context.IsPublish())
             {
-
-                //string destination = "x";
-
-                //var strategy = new DirectRoutingStrategy(destination, definition.GetSender());
-
-
-                //var destination = options.Destination;
-
-                //if (string.IsNullOrEmpty(destination))
-                //{
-                //    destination = GetDestinationForSend(messageType);
-                //}
-
-                //          void ValidateDestination(OutgoingContext context)
-                //{
-                //    var sendOptions = context.DeliveryMessageOptions as SendMessageOptions;
-
-                //    if (sendOptions != null && string.IsNullOrWhiteSpace(sendOptions.Destination))
-                //    {
-                //        throw new InvalidOperationException("No destination specified for message: " + context.MessageType);
-                //    }
-                //}
-
+                routingStrategy = new ToAllSubscribers(context.MessageType);
                 intent = MessageIntentEnum.Publish;
             }
 

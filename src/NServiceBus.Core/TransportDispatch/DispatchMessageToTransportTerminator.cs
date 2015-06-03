@@ -5,6 +5,7 @@
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
 
     class DispatchMessageToTransportTerminator : PipelineTerminator<PhysicalOutgoingContextStageBehavior.Context>
@@ -33,10 +34,10 @@
 
             if(!context.TryGet(out dispatchStrategy))
             {
-                dispatchStrategy = new DefaultDispatchStrategy(messageSender);
+                dispatchStrategy = new DefaultDispatchStrategy();
             }
 
-            dispatchStrategy.Dispatch(message, routingStrategy, requiredGuarantee, deliveryConstraints, context);
+            dispatchStrategy.Dispatch(messageSender,message, routingStrategy, requiredGuarantee, deliveryConstraints, context);
         }
      
         public class State
@@ -53,25 +54,27 @@
 
     class DefaultDispatchStrategy : DispatchStrategy
     {
-        readonly ISendMessages messageSender;
-
-        public DefaultDispatchStrategy(ISendMessages messageSender)
+        
+        public override void Dispatch(ISendMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
         {
-            this.messageSender = messageSender;
-        }
-
-        public override void Dispatch(OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
-        {
-            messageSender.Send(message, new TransportSendOptions(((DirectRoutingStrategy)routingStrategy).Destination,minimumConsistencyGuarantee,constraints,currentContext));
+            dispatcher.Send(message, new TransportSendOptions(routingStrategy, minimumConsistencyGuarantee, constraints, currentContext));
         }
     }
 
     abstract class DispatchStrategy
     {
-        public abstract void Dispatch(OutgoingMessage message,
+        public abstract void Dispatch(ISendMessages dispatcher,OutgoingMessage message,
             RoutingStrategy routingStrategy,
             ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,
             BehaviorContext currentContext);
+    }
+
+    static class DispatchContextExtensions
+    {
+        public static void OverrideDispatchStrategy(this OutgoingContext context, DispatchStrategy strategy)
+        {
+            context.Set(strategy);
+        }
     }
 }

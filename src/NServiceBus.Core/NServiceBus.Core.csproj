@@ -150,7 +150,9 @@
     <Compile Include="Performance\TimeToBeReceived\DiscardIfNotReceivedBefore.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraint.cs" />
     <Compile Include="Routing\DelayedDelivery.cs" />
-    <Compile Include="Routing\DirectRoutingStrategy.cs" />
+    <Compile Include="Routing\DirectToTargetDestination.cs" />
+    <Compile Include="Routing\EnableStorageDrivenPublishingBehavior.cs" />
+    <Compile Include="Routing\MessageDrivenSubscriptions.cs" />
     <Compile Include="Routing\MessageRouter.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Routing\RoutingOptionExtensions.cs" />
     <Compile Include="Routing\RoutingStrategy.cs" />
     <Compile Include="Routing\RoutingStrategyFactory.cs" />
+    <Compile Include="Routing\ToAllSubscribers.cs" />
     <Compile Include="Satellites\SatelliteBehavior.cs" />
     <Compile Include="SendLocalOptions.cs" />
     <Compile Include="SendOptions.cs" />
@@ -507,7 +510,6 @@
     <Compile Include="Transports\ICreateQueues.cs" />
     <Compile Include="Transports\IDequeueMessages.cs" />
     <Compile Include="Transports\IManageSubscriptions.cs" />
-    <Compile Include="Transports\IPublishMessages.cs" />
     <Compile Include="Transports\ISendMessages.cs" />
     <Compile Include="Transports\TransportDefinition.cs" />
     <Compile Include="Transports\Msmq\Config\Msmq.cs" />
@@ -605,8 +607,6 @@
     <Compile Include="Timeout\Core\TimeoutManagerDeferrer.cs" />
     <Compile Include="Unicast\MessagesEventArgs.cs" />
     <Compile Include="Unicast\Queuing\Installers\ForwardReceivedMessagesToQueueCreator.cs" />
-    <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\StorageDrivenPublishing.cs" />
-    <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\MessageDrivenSubscriptions.cs" />
     <Compile Include="Routing\AutomaticSubscriptions\AutoSubscriptionStrategy.cs" />
     <Compile Include="Unicast\MessageContext.cs" />
     <Compile Include="Unicast\MessageEventArgs.cs" />
@@ -616,7 +616,7 @@
     <Compile Include="Monitoring\CriticalTime\CriticalTimeCalculator.cs" />
     <Compile Include="Monitoring\SLA\EstimatedTimeToSLABreachCalculator.cs" />
     <Compile Include="Audit\AttachCausationHeadersBehavior.cs" />
-    <Compile Include="Routing\Publishing\StorageDrivenPublisher.cs" />
+    <Compile Include="Routing\Publishing\StorageDrivenDispatcher.cs" />
     <Compile Include="Unicast\Queuing\Installers\EndpointInputQueueCreator.cs" />
     <Compile Include="Unicast\Queuing\Installers\AuditQueueCreator.cs" />
     <Compile Include="Unicast\Queuing\IWantQueueCreated.cs" />

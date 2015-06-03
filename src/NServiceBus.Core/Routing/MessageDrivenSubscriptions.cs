@@ -1,16 +1,18 @@
-﻿namespace NServiceBus.Features
+namespace NServiceBus.Features
 {
     using NServiceBus.Transports;
-    using Unicast.Subscriptions.MessageDrivenSubscriptions;
+    using NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions;
 
     /// <summary>
-    /// Used to configure Message Driven Subscriptions
+    /// Allows subscribers to register by sending a subscription message to this endpoint
     /// </summary>
     public class MessageDrivenSubscriptions : Feature
     {
 
         internal MessageDrivenSubscriptions()
         {
+            EnableByDefault();
+            Prerequisite(c=>!c.Settings.Get<TransportDefinition>().HasNativePubSubSupport,"The transport supports native pub sub");
         }
 
         /// <summary>

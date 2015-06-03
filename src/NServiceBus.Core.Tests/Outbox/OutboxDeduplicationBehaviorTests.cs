@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Transactions;
+    using NServiceBus.Core.Tests.Timeout;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
@@ -46,7 +47,7 @@
             fakeOutbox = new FakeOutboxStorage();
             var transactionSettings = new TransactionSettings(true, TimeSpan.FromSeconds(30), IsolationLevel.ReadCommitted, false, false);
 
-            behavior = new OutboxDeduplicationBehavior(fakeOutbox, transactionSettings,new RoutingStrategyFactory());
+            behavior = new OutboxDeduplicationBehavior(fakeOutbox, transactionSettings,new RoutingStrategyFactory(),new FakeMessageSender());
         }
 
         void Invoke(PhysicalMessageProcessingStageBehavior.Context context, bool shouldAbort = false)

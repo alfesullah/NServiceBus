@@ -6,6 +6,7 @@ namespace NServiceBus
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
 
     class OutboxRoutingStrategy : DispatchStrategy
@@ -19,7 +20,7 @@ namespace NServiceBus
             this.options = options;
         }
 
-        public override void Dispatch(OutgoingMessage message,
+        public override void Dispatch(ISendMessages dispatcher,OutgoingMessage message,
             RoutingStrategy routingStrategy,
             ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,

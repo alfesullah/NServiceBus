@@ -80,9 +80,11 @@ The reason you need to do this is because we need to ensure that you have read a
             context.MainPipeline.Register("OutboxSendBehavior", typeof(OutboxSendBehavior), "Makes sure that the outgoing message is stored in the outbox instead of beeing dispatched to the transport");
 
             context.Container.ConfigureComponent(
-                b => new OutboxDeduplicationBehavior(b.Build<IOutboxStorage>(),
+                b => new OutboxDeduplicationBehavior(
+                    b.Build<IOutboxStorage>(),
                     new TransactionSettings(context.Settings),
-                    b.Build<RoutingStrategyFactory>()), 
+                    b.Build<RoutingStrategyFactory>(),
+                    b.Build<ISendMessages>()), 
                 DependencyLifecycle.InstancePerCall);
 
             //make the audit use the outbox as well

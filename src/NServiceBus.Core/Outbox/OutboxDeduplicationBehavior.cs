@@ -13,11 +13,12 @@
 
     class OutboxDeduplicationBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory)
+        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory, ISendMessages dispatcher)
         {
             this.outboxStorage = outboxStorage;
             this.transactionSettings = transactionSettings;
             this.routingStrategyFactory = routingStrategyFactory;
+            this.dispatcher = dispatcher;
         }
 
         public override void Invoke(Context context, Action next)
@@ -62,10 +63,11 @@
                 //todo: deliveryConstraint.Hydrate(transportOperation.Options);
 
                 context.Get<DispatchStrategy>()
-                    .Dispatch(message, routingStrategy, new NoConsistencyRequired(), new List<DeliveryConstraint>(), context);
+                    .Dispatch(dispatcher,message, routingStrategy, new NoConsistencyRequired(), new List<DeliveryConstraint>(), context);
             }
         }
 
+        ISendMessages dispatcher;
         IOutboxStorage outboxStorage;
         TransactionSettings transactionSettings;
         RoutingStrategyFactory routingStrategyFactory;

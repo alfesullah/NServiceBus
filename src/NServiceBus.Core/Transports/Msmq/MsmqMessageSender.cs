@@ -5,6 +5,7 @@ namespace NServiceBus.Transports.Msmq
     using System.Messaging;
     using System.Transactions;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.Routing;
     using NServiceBus.Transports.Msmq.Config;
     using NServiceBus.Unicast.Queuing;
 
@@ -36,7 +37,7 @@ namespace NServiceBus.Transports.Msmq
             Guard.AgainstNull(message, "message");
             Guard.AgainstNull(sendOptions, "sendOptions");
             
-            var routingStrategy = sendOptions.RoutingStrategy as DirectRoutingStrategy;
+            var routingStrategy = sendOptions.RoutingStrategy as DirectToTargetDestination;
 
             if (routingStrategy == null)
             {

@@ -20,7 +20,7 @@
 
             behavior.Invoke(context, () => { });
 
-            var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
+            var routingStrategy = (DirectToTargetDestination)context.Get<RoutingStrategy>();
 
             Assert.AreEqual("destination endpoint", routingStrategy.Destination);
         }
@@ -37,7 +37,7 @@
 
             behavior.Invoke(context, () => { });
 
-            var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
+            var routingStrategy = (DirectToTargetDestination)context.Get<RoutingStrategy>();
 
 
             Assert.AreEqual("MyLocalAddress", routingStrategy.Destination);
@@ -55,9 +55,24 @@
 
             behavior.Invoke(context, () => { });
 
-            var routingStrategy = (DirectRoutingStrategy)context.Get<RoutingStrategy>();
+            var routingStrategy = (DirectToTargetDestination)context.Get<RoutingStrategy>();
 
             Assert.AreEqual("MappedDestination", routingStrategy.Destination);
+        }
+
+        [Test]
+        public void Should_use_to_all_subscribers_strategy_for_events()
+        {
+            var behavior = InitializeBehavior();
+            var options = new PublishOptions();
+
+            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+
+            behavior.Invoke(context, () => { });
+
+            var routingStrategy = (ToAllSubscribers)context.Get<RoutingStrategy>();
+
+            Assert.AreEqual(typeof(MyMessage), routingStrategy.EventType);
         }
 
         static DetermineRoutingForMessageBehavior InitializeBehavior(string localAddress = null, MessageRouter router = null)
@@ -83,6 +98,4 @@
             }
         }
     }
-
-
 }

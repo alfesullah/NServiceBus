@@ -7,6 +7,7 @@ namespace NServiceBus.Core.Tests
     using NServiceBus.Faults;
     using NServiceBus.Hosting;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
     using NUnit.Framework;
@@ -144,7 +145,7 @@ namespace NServiceBus.Core.Tests
             public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
             {
                 MessageSent = message;
-                Destination = ((DirectRoutingStrategy)sendOptions.RoutingStrategy).Destination;
+                Destination = ((DirectToTargetDestination)sendOptions.RoutingStrategy).Destination;
 
                 if (ThrowOnSend)
                 {

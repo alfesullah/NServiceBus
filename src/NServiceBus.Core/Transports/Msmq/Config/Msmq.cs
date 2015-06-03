@@ -33,10 +33,8 @@ namespace NServiceBus
                 .SetDefault("EndpointInstanceDiscriminator", String.Empty);
                
             config.EnableFeature<MsmqTransportConfigurator>();
-            config.EnableFeature<MessageDrivenSubscriptions>();
             config.EnableFeature<TimeoutManagerBasedDeferral>();
 
-            config.Settings.EnableFeatureByDefault<StorageDrivenPublishing>();
             config.Settings.EnableFeatureByDefault<TimeoutManager>();
         }
 
