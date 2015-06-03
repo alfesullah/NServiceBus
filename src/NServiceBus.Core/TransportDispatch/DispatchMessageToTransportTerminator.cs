@@ -10,11 +10,13 @@
 
     class DispatchMessageToTransportTerminator : PipelineTerminator<PhysicalOutgoingContextStageBehavior.Context>
     {
-        readonly IDispatchMessages messageSender;
+        readonly DispatchStrategy strategy;
+        readonly IDispatchMessages dispatcher;
 
-        public DispatchMessageToTransportTerminator(IDispatchMessages messageSender)
+        public DispatchMessageToTransportTerminator(DispatchStrategy strategy, IDispatchMessages dispatcher)
         {
-            this.messageSender = messageSender;
+            this.strategy = strategy;
+            this.dispatcher = dispatcher;
         }
 
         public override void Terminate(PhysicalOutgoingContextStageBehavior.Context context)
@@ -30,14 +32,8 @@
 
             var routingStrategy = context.Get<RoutingStrategy>();
 
-            DispatchStrategy dispatchStrategy;
 
-            if(!context.TryGet(out dispatchStrategy))
-            {
-                dispatchStrategy = new DefaultDispatchStrategy();
-            }
-
-            dispatchStrategy.Dispatch(messageSender,message, routingStrategy, requiredGuarantee, deliveryConstraints, context);
+            strategy.Dispatch(dispatcher, message, routingStrategy, requiredGuarantee, deliveryConstraints, context);
         }
      
         public class State
@@ -52,7 +48,7 @@
         }
     }
 
-    class DefaultDispatchStrategy : DispatchStrategy
+    class DefaultDispatcher : DispatchStrategy
     {
         
         public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
@@ -68,13 +64,5 @@
             ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,
             BehaviorContext currentContext);
-    }
-
-    static class DispatchContextExtensions
-    {
-        public static void OverrideDispatchStrategy(this OutgoingContext context, DispatchStrategy strategy)
-        {
-            context.Set(strategy);
-        }
     }
 }

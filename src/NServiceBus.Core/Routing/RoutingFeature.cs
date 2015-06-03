@@ -6,7 +6,9 @@
     using NServiceBus.Routing;
     using NServiceBus.Routing.Publishing;
     using NServiceBus.Transports;
+    using NServiceBus.Unicast.Messages;
     using NServiceBus.Unicast.Routing;
+    using NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions;
 
     class RoutingFeature : Feature
     {
@@ -26,9 +28,11 @@
 
             if (!context.Settings.Get<TransportDefinition>().HasNativePubSubSupport)
             {
-                context.MainPipeline.Register("EnableStorageDrivenPublishing", typeof(EnableStorageDrivenPublishingBehavior), "Overrides to default dispatcher to handle transport that doesn't support native pub/sub");
-
-                context.Container.ConfigureComponent<StorageDrivenDispatcher>(DependencyLifecycle.SingleInstance);
+                context.Container.ConfigureComponent<DispatchStrategy>(b=>new StorageDrivenDispatcher(b.Build<ISubscriptionStorage>(),b.Build<MessageMetadataRegistry>()), DependencyLifecycle.SingleInstance);
+            }
+            else
+            {
+                context.Container.ConfigureComponent<DispatchStrategy>(b=>new DefaultDispatcher(),  DependencyLifecycle.SingleInstance);
             }
         }
 

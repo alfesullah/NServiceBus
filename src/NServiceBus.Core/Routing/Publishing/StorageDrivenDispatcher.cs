@@ -19,9 +19,24 @@
         }
 
 
-        public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
+        public override void Dispatch(IDispatchMessages dispatcher, OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)
         {
-            var eventType = ((ToAllSubscribers)routingStrategy).EventType;
+            var currentConstraints = constraints.ToList();
+
+            var toAllSubscribersStrategy = routingStrategy as ToAllSubscribers;
+
+            if (toAllSubscribersStrategy == null)
+            {
+                dispatcher.Dispatch(message, new DispatchOptions(routingStrategy,
+                    minimumConsistencyGuarantee,
+                   currentConstraints,
+                    currentContext));
+
+                return;
+            }
+
+
+            var eventType = toAllSubscribersStrategy.EventType;
 
             var eventTypesToPublish = messageMetadataRegistry.GetMessageMetadata(eventType)
                 .MessageHierarchy
@@ -38,7 +53,6 @@
 
             currentContext.Set("SubscribersForEvent", subscribers);
 
-            var currentConstraints = constraints.ToList();
 
             foreach (var subscriber in subscribers)
             {

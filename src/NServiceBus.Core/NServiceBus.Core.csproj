@@ -151,7 +151,6 @@
     <Compile Include="DeliveryConstraints\DeliveryConstraint.cs" />
     <Compile Include="Routing\DelayedDelivery.cs" />
     <Compile Include="Routing\DirectToTargetDestination.cs" />
-    <Compile Include="Routing\EnableStorageDrivenPublishingBehavior.cs" />
     <Compile Include="Routing\MessageDrivenSubscriptions.cs" />
     <Compile Include="Routing\MessageRouter.cs" />
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
