@@ -158,7 +158,7 @@
        
         public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
         {
-            MessageRoutedTo = sendOptions.Destination;
+            MessageRoutedTo = ((DirectRoutingStrategy)sendOptions.RoutingStrategy).Destination;
             DeferredMessage = message;
           
             var constraint = sendOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;

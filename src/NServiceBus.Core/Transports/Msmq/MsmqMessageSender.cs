@@ -35,7 +35,16 @@ namespace NServiceBus.Transports.Msmq
         {
             Guard.AgainstNull(message, "message");
             Guard.AgainstNull(sendOptions, "sendOptions");
-            var destination = sendOptions.Destination;
+            
+            var routingStrategy = sendOptions.RoutingStrategy as DirectRoutingStrategy;
+
+            if (routingStrategy == null)
+            {
+                throw new Exception("The MSMQ transport only supports the `DirectRoutingStrategy`, strategy required " + sendOptions.RoutingStrategy.GetType().Name);
+            }
+
+            var destination = routingStrategy.Destination;
+            
             var destinationAddress = MsmqAddress.Parse(destination);
             var queuePath = MsmqUtilities.GetFullPath(destinationAddress);
             try

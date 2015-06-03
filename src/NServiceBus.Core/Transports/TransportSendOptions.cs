@@ -12,15 +12,15 @@ namespace NServiceBus.Transports
     public class TransportSendOptions
     {
         /// <summary>
-        /// Creates the send options with the given address
+        /// Creates the send options with the given routing strategy
         /// </summary>
-        /// <param name="destination">The native address where to sent this message</param>
+        /// <param name="routingStrategy">The strategy to use when routing this message</param>
         /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
         /// <param name="context">The pipeline context if present</param>
-        public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints,BehaviorContext context = null)
+        public TransportSendOptions(RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
         {
-            Destination = destination;
+            RoutingStrategy = routingStrategy;
             MinimumConsistencyGuarantee = minimumConsistencyGuarantee;
             DeliveryConstraints = deliveryConstraints;
             Context = context;
@@ -32,15 +32,27 @@ namespace NServiceBus.Transports
         }
 
         /// <summary>
-        /// The address where this message should be sent to
+        /// Creates the send options with the given address
         /// </summary>
-        public string Destination { get; private set; }
+        /// <param name="destination">The destination when the message should go to</param>
+        /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
+        /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
+        /// <param name="context">The pipeline context if present</param>
+        public TransportSendOptions(string destination, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> deliveryConstraints, BehaviorContext context = null)
+            : this(new DirectRoutingStrategy(destination), minimumConsistencyGuarantee,deliveryConstraints,context)
+        {
+          
+        }
+        /// <summary>
+        /// The strategy to use when routing this message
+        /// </summary>
+        public RoutingStrategy RoutingStrategy { get; set; }
 
         /// <summary>
         /// The level of consistency that's required for this operation
         /// </summary>
         public ConsistencyGuarantee MinimumConsistencyGuarantee { get; private set; }
-        
+
         /// <summary>
         /// The delivery constraints that must be honored by the transport
         /// </summary>

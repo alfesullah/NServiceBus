@@ -34,7 +34,7 @@ namespace NServiceBus.Core.Tests
                 throw new Exception("testex");
             });
 
-            Assert.AreEqual(errorQueueAddress, sender.OptionsUsed.Destination);
+            Assert.AreEqual(errorQueueAddress, sender.Destination);
 
             Assert.AreEqual("someid", sender.MessageSent.Headers[Headers.MessageId]);
         }
@@ -138,13 +138,13 @@ namespace NServiceBus.Core.Tests
         {
             public OutgoingMessage MessageSent { get; set; }
 
-            public TransportSendOptions OptionsUsed { get; set; }
+            public string  Destination { get; set; }
             public bool ThrowOnSend { get; set; }
 
             public void Send(OutgoingMessage message, TransportSendOptions sendOptions)
             {
                 MessageSent = message;
-                OptionsUsed = sendOptions;
+                Destination = ((DirectRoutingStrategy)sendOptions.RoutingStrategy).Destination;
 
                 if (ThrowOnSend)
                 {

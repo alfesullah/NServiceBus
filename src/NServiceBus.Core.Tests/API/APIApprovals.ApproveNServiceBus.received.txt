@@ -23,10 +23,6 @@ namespace NServiceBus
     {
         public AllAssemblies() { }
     }
-    public class AtomicWithReceiveOperation : NServiceBus.ConsistencyGuarantee
-    {
-        public AtomicWithReceiveOperation() { }
-    }
     public class static AutoSubscribeSettingsExtensions
     {
         public static NServiceBus.AutomaticSubscriptions.Config.AutoSubscribeSettings AutoSubscribe(this NServiceBus.BusConfiguration config) { }
@@ -170,10 +166,6 @@ namespace NServiceBus
     {
         public static string TransportConnectionString(this NServiceBus.Configure config) { }
     }
-    public abstract class ConsistencyGuarantee
-    {
-        protected ConsistencyGuarantee() { }
-    }
     public class static ContentTypes
     {
         public const string Binary = "application/binary";
@@ -185,6 +177,7 @@ namespace NServiceBus
     {
         public Conventions() { }
         public void AddSystemMessagesConventions(System.Func<System.Type, bool> definesMessageType) { }
+        [System.ObsoleteAttribute("No longer an extension point. Will be removed in version 7.0.0.", true)]
         public System.TimeSpan GetTimeToBeReceived(System.Type messageType) { }
         public bool IsCommandType(System.Type t) { }
         public bool IsDataBusProperty(System.Reflection.PropertyInfo property) { }
@@ -194,16 +187,14 @@ namespace NServiceBus
         public bool IsInSystemConventionList(System.Type t) { }
         public bool IsMessageType(System.Type t) { }
     }
-    public class ConventionsBuilder
+    public class ConventionsBuilder : NServiceBus.Configuration.AdvanceExtensibility.ExposeSettings
     {
-        public ConventionsBuilder() { }
         public NServiceBus.ConventionsBuilder DefiningCommandsAs(System.Func<System.Type, bool> definesCommandType) { }
         public NServiceBus.ConventionsBuilder DefiningDataBusPropertiesAs(System.Func<System.Reflection.PropertyInfo, bool> definesDataBusProperty) { }
         public NServiceBus.ConventionsBuilder DefiningEncryptedPropertiesAs(System.Func<System.Reflection.PropertyInfo, bool> definesEncryptedProperty) { }
         public NServiceBus.ConventionsBuilder DefiningEventsAs(System.Func<System.Type, bool> definesEventType) { }
         public NServiceBus.ConventionsBuilder DefiningExpressMessagesAs(System.Func<System.Type, bool> definesExpressMessageType) { }
         public NServiceBus.ConventionsBuilder DefiningMessagesAs(System.Func<System.Type, bool> definesMessageType) { }
-        public NServiceBus.ConventionsBuilder DefiningTimeToBeReceivedAs(System.Func<System.Type, System.TimeSpan> retrieveTimeToBeReceived) { }
     }
     public class static CorrelationContextExtensions
     {
@@ -236,27 +227,18 @@ namespace NServiceBus
         public static System.DateTime ToUtcDateTime(string wireFormattedString) { }
         public static string ToWireFormattedString(System.DateTime dateTime) { }
     }
-    public class DelayedDelivery : NServiceBus.DeliveryConstraint
+    public class DelayedDelivery : NServiceBus.DeliveryConstraints.DeliveryConstraint
     {
         public DelayedDelivery(System.TimeSpan delay) { }
         public DelayedDelivery(System.DateTime doNotDeliverBefore) { }
         public System.Nullable<System.TimeSpan> DelayDeliveryWith { get; }
         public System.Nullable<System.DateTime> DoNotDeliverBefore { get; }
     }
-    public abstract class DeliveryConstraint
-    {
-        protected DeliveryConstraint() { }
-    }
     public enum DependencyLifecycle
     {
         SingleInstance = 0,
         InstancePerUnitOfWork = 1,
         InstancePerCall = 2,
-    }
-    public class DiscardIfNotReceivedBefore : NServiceBus.DeliveryConstraint
-    {
-        public DiscardIfNotReceivedBefore(System.TimeSpan maxTime) { }
-        public System.TimeSpan MaxTime { get; }
     }
     public class static DurableMessagesConfig
     {
@@ -557,12 +539,9 @@ namespace NServiceBus
         public MsmqTransport() { }
         protected internal override void Configure(NServiceBus.BusConfiguration config) { }
         public override string GetSubScope(string address, string qualifier) { }
+        public override System.Collections.Generic.IEnumerable<System.Type> GetSupportedDeliveryConstraints() { }
     }
-    public class NoConsistencyRequired : NServiceBus.ConsistencyGuarantee
-    {
-        public NoConsistencyRequired() { }
-    }
-    public class NonDurableDelivery : NServiceBus.DeliveryConstraint
+    public class NonDurableDelivery : NServiceBus.DeliveryConstraints.DeliveryConstraint
     {
         public NonDurableDelivery() { }
     }
@@ -634,19 +613,15 @@ namespace NServiceBus
     {
         public ReplyOptions() { }
     }
-    public class static RoutingContextExtensions
-    {
-        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
-        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
-        public static bool IsReply(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
-        public static bool IsReply(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
-        public static bool IsSend(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
-    }
     public class static RoutingOptionExtensions
     {
         public static void OverrideReplyToAddressOfIncomingMessage(this NServiceBus.ReplyOptions option, string destination) { }
         public static void RouteToLocalEndpointInstance(this NServiceBus.SendOptions option) { }
         public static void SetDestination(this NServiceBus.SendOptions option, string destination) { }
+    }
+    public abstract class RoutingStrategy
+    {
+        protected RoutingStrategy() { }
     }
     public abstract class SatelliteBehavior : NServiceBus.PhysicalMessageProcessingStageBehavior
     {
@@ -712,6 +687,10 @@ namespace NServiceBus
     {
         public TimeToBeReceivedAttribute(string timeSpan) { }
         public System.TimeSpan TimeToBeReceived { get; }
+    }
+    public class static TimeToBeReceivedConventionExtensions
+    {
+        public static NServiceBus.ConventionsBuilder DefiningTimeToBeReceivedAs(this NServiceBus.ConventionsBuilder builder, System.Func<System.Type, System.TimeSpan> retrieveTimeToBeReceived) { }
     }
     public class static TransactionSettingsExtentions
     {
@@ -983,6 +962,21 @@ namespace NServiceBus.Configuration.AdvanceExtensibility
         protected ExposeSettings(NServiceBus.Settings.SettingsHolder settings) { }
     }
 }
+namespace NServiceBus.ConsistencyGuarantees
+{
+    public class AtomicWithReceiveOperation : NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee
+    {
+        public AtomicWithReceiveOperation() { }
+    }
+    public abstract class ConsistencyGuarantee
+    {
+        protected ConsistencyGuarantee() { }
+    }
+    public class NoConsistencyRequired : NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee
+    {
+        public NoConsistencyRequired() { }
+    }
+}
 namespace NServiceBus.Container
 {
     public class ContainerCustomizations
@@ -1021,6 +1015,13 @@ namespace NServiceBus.DataBus
     {
         object Deserialize(System.IO.Stream stream);
         void Serialize(object databusProperty, System.IO.Stream stream);
+    }
+}
+namespace NServiceBus.DeliveryConstraints
+{
+    public abstract class DeliveryConstraint
+    {
+        protected DeliveryConstraint() { }
     }
 }
 namespace NServiceBus.Encryption
@@ -1523,6 +1524,14 @@ namespace NServiceBus.Outbox
         public System.Collections.Generic.Dictionary<string, string> Options { get; }
     }
 }
+namespace NServiceBus.Performance.TimeToBeReceived
+{
+    public class DiscardIfNotReceivedBefore : NServiceBus.DeliveryConstraints.DeliveryConstraint
+    {
+        public DiscardIfNotReceivedBefore(System.TimeSpan maxTime) { }
+        public System.TimeSpan MaxTime { get; }
+    }
+}
 namespace NServiceBus.Persistence.Legacy
 {
     public class MsmqPersistence : NServiceBus.Persistence.PersistenceDefinition { }
@@ -1625,6 +1634,7 @@ namespace NServiceBus.Pipeline
         void Start(string[] pipelineIds);
         void Stop();
     }
+    public interface IPipelineTerminator { }
     public interface IStageConnector { }
     public class PipelineNotifications : System.IDisposable
     {
@@ -1644,6 +1654,18 @@ namespace NServiceBus.Pipeline
         public void Remove(NServiceBus.Pipeline.WellKnownStep wellKnownStep) { }
         public void Replace(string stepId, System.Type newBehavior, string description = null) { }
         public void Replace(NServiceBus.Pipeline.WellKnownStep wellKnownStep, System.Type newBehavior, string description = null) { }
+    }
+    public abstract class PipelineTerminator<T> : NServiceBus.Pipeline.StageConnector<T, NServiceBus.Pipeline.PipelineTerminator<T>.TerminatingContext>, NServiceBus.Pipeline.IPipelineTerminator
+        where T : NServiceBus.Pipeline.BehaviorContext
+    {
+        protected PipelineTerminator() { }
+        public override void Invoke(T context, System.Action<NServiceBus.Pipeline.PipelineTerminator<T>.TerminatingContext> next) { }
+        public abstract void Terminate(T context);
+        public class TerminatingContext<T> : NServiceBus.Pipeline.BehaviorContext
+            where T : NServiceBus.Pipeline.BehaviorContext
+        {
+            public TerminatingContext(NServiceBus.Pipeline.BehaviorContext parentContext) { }
+        }
     }
     [System.Diagnostics.DebuggerDisplayAttribute("{StepId}({BehaviorType.FullName}) - {Description}")]
     public abstract class RegisterStep
@@ -1778,6 +1800,17 @@ namespace NServiceBus.Pipeline.Contexts
     {
         protected TransportReceiveContext(NServiceBus.Pipeline.BehaviorContext parentContext) { }
         public NServiceBus.TransportMessage PhysicalMessage { get; }
+    }
+}
+namespace NServiceBus.Routing
+{
+    public class static RoutingPipelineContextExtensions
+    {
+        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
+        public static bool IsPublish(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
+        public static bool IsReply(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
+        public static bool IsReply(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context) { }
+        public static bool IsSend(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
     }
 }
 namespace NServiceBus.Saga
@@ -2272,20 +2305,24 @@ namespace NServiceBus.Transports
         public bool RequireOutboxConsent { get; set; }
         protected internal void Configure(NServiceBus.BusConfiguration config) { }
         public abstract string GetSubScope(string address, string qualifier);
+        public abstract System.Collections.Generic.IEnumerable<System.Type> GetSupportedDeliveryConstraints();
     }
     public class TransportPublishOptions
     {
-        public TransportPublishOptions(System.Type eventType, NServiceBus.ConsistencyGuarantee mimimumConsistencyGuarantee, System.Collections.Generic.List<NServiceBus.DeliveryConstraint> deliveryConstraints) { }
-        public System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraint> DeliveryConstraints { get; }
+        public TransportPublishOptions(System.Type eventType, NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee minimumConsistencyGuarantee, System.Collections.Generic.List<NServiceBus.DeliveryConstraints.DeliveryConstraint> deliveryConstraints, NServiceBus.Pipeline.BehaviorContext context) { }
+        public NServiceBus.Pipeline.BehaviorContext Context { get; }
+        public System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraints.DeliveryConstraint> DeliveryConstraints { get; }
         public System.Type EventType { get; }
-        public NServiceBus.ConsistencyGuarantee MimimumConsistencyGuarantee { get; }
+        public NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee MinimumConsistencyGuarantee { get; }
     }
     public class TransportSendOptions
     {
-        public TransportSendOptions(string destination, NServiceBus.ConsistencyGuarantee mimimumConsistencyGuarantee, System.Collections.Generic.List<NServiceBus.DeliveryConstraint> deliveryConstraints) { }
-        public System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraint> DeliveryConstraints { get; }
-        public string Destination { get; }
-        public NServiceBus.ConsistencyGuarantee MimimumConsistencyGuarantee { get; }
+        public TransportSendOptions(NServiceBus.RoutingStrategy routingStrategy, NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee minimumConsistencyGuarantee, System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraints.DeliveryConstraint> deliveryConstraints, NServiceBus.Pipeline.BehaviorContext context = null) { }
+        public TransportSendOptions(string destination, NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee minimumConsistencyGuarantee, System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraints.DeliveryConstraint> deliveryConstraints, NServiceBus.Pipeline.BehaviorContext context = null) { }
+        public NServiceBus.Pipeline.BehaviorContext Context { get; }
+        public System.Collections.Generic.IEnumerable<NServiceBus.DeliveryConstraints.DeliveryConstraint> DeliveryConstraints { get; }
+        public NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee MinimumConsistencyGuarantee { get; }
+        public NServiceBus.RoutingStrategy RoutingStrategy { get; set; }
     }
 }
 namespace NServiceBus.Transports.Msmq.Config
@@ -2310,11 +2347,11 @@ namespace NServiceBus.Transports.Msmq
     }
     public class MsmqMessageSender : NServiceBus.Transports.ISendMessages
     {
-        public MsmqMessageSender(NServiceBus.Pipeline.BehaviorContext context) { }
-        public NServiceBus.Transports.Msmq.Config.MsmqSettings Settings { get; set; }
-        public bool SuppressDistributedTransactions { get; set; }
+        public MsmqMessageSender(NServiceBus.Transports.Msmq.Config.MsmqSettings settings) { }
         public void Send(NServiceBus.Transports.OutgoingMessage message, NServiceBus.Transports.TransportSendOptions sendOptions) { }
     }
+    [System.ObsoleteAttribute("The msmq transaction is now available via the pipeline context. Will be removed i" +
+        "n version 7.0.0.", true)]
     public class MsmqUnitOfWork : System.IDisposable
     {
         public MsmqUnitOfWork() { }
@@ -2497,6 +2534,8 @@ namespace NServiceBus.Unicast.Messages
         public System.Collections.Generic.IEnumerable<System.Type> MessageHierarchy { get; }
         public System.Type MessageType { get; }
         public bool Recoverable { get; }
+        [System.ObsoleteAttribute("You can access TTBR via the DeliveryConstraints collection on the outgoing contex" +
+            "t. Will be removed in version 7.0.0.", true)]
         public System.TimeSpan TimeToBeReceived { get; }
         public override string ToString() { }
     }

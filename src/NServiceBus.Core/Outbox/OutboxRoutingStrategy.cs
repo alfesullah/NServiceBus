@@ -26,7 +26,7 @@ namespace NServiceBus
             BehaviorContext currentContext)
         {
           
-            routingStrategy.Deserialize(options);
+            //routingStrategy.Deserialize(options);
 
 
             constraints.ToList().ForEach(c => c.Serialize(options));
