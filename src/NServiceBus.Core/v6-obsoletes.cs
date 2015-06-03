@@ -218,7 +218,7 @@ namespace NServiceBus.Timeout.Core
             Message = "Use new SendOptions() instead",
             RemoveInVersion = "7.0",
             TreatAsErrorFromVersion = "6.0")]
-        public SendMessageOptions ToSendOptions(Address replyToAddress)
+        public SendOptions ToSendOptions(Address replyToAddress)
         {
             throw new NotImplementedException();
         }
@@ -227,7 +227,7 @@ namespace NServiceBus.Timeout.Core
             Message = "Use new SendOptions() instead",
             RemoveInVersion = "7.0",
             TreatAsErrorFromVersion = "6.0")]
-        public SendMessageOptions ToSendOptions(string replyToAddress)
+        public SendOptions ToSendOptions(string replyToAddress)
         {
             throw new NotImplementedException();
         }
@@ -572,7 +572,7 @@ namespace NServiceBus.Features
 
 namespace NServiceBus.Transports
 {
-    using Unicast;
+    using NServiceBus.Unicast;
 
     [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
     public interface IDeferMessages
@@ -587,7 +587,7 @@ namespace NServiceBus.Transports
 
 namespace NServiceBus.Transports
 {
-    using Unicast;
+    using NServiceBus.Unicast;
 
     [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
     public interface IPublishMessages
@@ -598,11 +598,31 @@ namespace NServiceBus.Transports
 
 namespace NServiceBus.Transports
 {
-    using Unicast;
+    using NServiceBus.Unicast;
 
     [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", ReplacementTypeOrMember = "IDispatchMessages")]
     public interface ISendMessages
     {
         void Send(TransportMessage message, SendOptions sendOptions);
+    }
+}
+
+
+namespace NServiceBus.Features
+{
+    using System;
+
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer used, safe to remove")]
+    public class TimeoutManagerBasedDeferral : Feature
+    {
+        internal TimeoutManagerBasedDeferral()
+        {
+        }
+
+        protected internal override void Setup(FeatureConfigurationContext context)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

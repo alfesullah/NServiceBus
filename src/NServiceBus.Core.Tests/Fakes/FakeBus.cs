@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
 
     public class FakeBus : IBus
     {
@@ -112,12 +111,13 @@
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            if (options.Delay.HasValue)
-            {
-                Interlocked.Increment(ref _deferWasCalled);
-                deferDelay = options.Delay.Value;
-                DeferedMessage = message;
-            }
+            //todo
+            //if (options.Delay.HasValue)
+            //{
+            //    Interlocked.Increment(ref _deferWasCalled);
+            //    deferDelay = options.Delay.Value;
+            //    DeferedMessage = message;
+            //}
         }
 
         public void SendLocal<T>(Action<T> messageConstructor, SendLocalOptions options)

@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
+    using NServiceBus.DelayedDelivery;
+    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Faults;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
@@ -161,12 +162,12 @@
         {
             MessageRoutedTo = ((DirectToTargetDestination)dispatchOptions.RoutingStrategy).Destination;
             DeferredMessage = message;
-          
-            var constraint = dispatchOptions.DeliveryConstraints.SingleOrDefault(c => c is DelayedDelivery) as DelayedDelivery;
 
-            if (constraint != null && constraint.DelayDeliveryWith.HasValue)
+            DelayDeliveryWith constraint;
+
+            if (dispatchOptions.DeliveryConstraints.TryGet(out constraint))
             {
-                Delay = constraint.DelayDeliveryWith.Value;
+                Delay = constraint.Delay;
             }
         }
     }

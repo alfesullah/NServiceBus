@@ -148,7 +148,6 @@
     <Compile Include="Msmq\MsmqMessageSenderTests.cs" />
     <Compile Include="Msmq\MsmqTransportTests.cs" />
     <Compile Include="Msmq\ConnectionStringParserTests.cs" />
-    <Compile Include="Outbox\TransportOperationConverterTests.cs" />
     <Compile Include="Persistence\InMemory\InMemoryPersisterBuilder.cs" />
     <Compile Include="Persistence\InMemory\When_persisting_a_saga_with_the_same_unique_property_as_a_completed_saga.cs" />
     <Compile Include="Persistence\InMemory\When_saving_a_null_unique_property.cs" />
@@ -257,7 +256,7 @@
     <Compile Include="Serializers\XML\Using_Infer_Type_With_Non_Nested_Class.cs" />
     <Compile Include="Timeout\FakeMessageSender.cs" />
     <Compile Include="Timeout\InMemoryTimeoutPersisterTests.cs" />
-    <Compile Include="Timeout\When_deferring_a_message.cs" />
+    <Compile Include="DelayedDelivery\When_deferring_a_message.cs" />
     <Compile Include="Timeout\When_fetching_timeouts_from_storage.cs" />
     <Compile Include="Timeout\InMemoryTimeoutPersisterThreadTests.cs" />
     <Compile Include="Timeout\When_pooling_timeouts.cs" />

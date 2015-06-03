@@ -8,21 +8,33 @@
     public class When_Deferring_a_message : NServiceBusAcceptanceTest
     {
         [Test]
-        public void Message_should_be_received()
+        public void Delivery_should_be_delayed()
         {
             var context = new Context();
+            var delay = TimeSpan.FromSeconds(5);
 
             Scenario.Define(context)
-                    .WithEndpoint<Endpoint>(b => b.Given((bus, c) => bus.SendLocal(new MyMessage(), new SendLocalOptions(delayDeliveryFor: TimeSpan.FromSeconds(3)))))
+                    .WithEndpoint<Endpoint>(b => b.Given((bus, c) =>
+                    {
+                        var options = new SendLocalOptions();
+
+                        options.DelayDeliveryWith(delay);
+
+                        c.SentAt = DateTime.UtcNow;
+
+                        bus.SendLocal(new MyMessage(), options);
+                    }))
                     .Done(c => c.WasCalled)
                     .Run();
 
-            Assert.IsTrue(context.WasCalled);
+            Assert.GreaterOrEqual(context.ReceivedAt - context.SentAt, delay);
         }
 
         public class Context : ScenarioContext
         {
             public bool WasCalled { get; set; }
+            public DateTime SentAt { get; set; }
+            public DateTime ReceivedAt { get; set; }
         }
 
         public class Endpoint : EndpointConfigurationBuilder
@@ -35,10 +47,9 @@
             {
                 public Context Context { get; set; }
 
-                public IBus Bus { get; set; }
-
                 public void Handle(MyMessage message)
                 {
+                    Context.ReceivedAt = DateTime.UtcNow;
                     Context.WasCalled = true;
                 }
             }

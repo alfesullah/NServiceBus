@@ -16,7 +16,6 @@ namespace NServiceBus.Unicast
     using NServiceBus.Settings;
     using NServiceBus.Support;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast.Messages;
     using NServiceBus.Unicast.Routing;
 
     interface IContextualBus
@@ -31,7 +30,6 @@ namespace NServiceBus.Unicast
         IBuilder builder;
         Configure configure;
         IManageSubscriptions subscriptionManager;
-        MessageMetadataRegistry messageMetadataRegistry;
         TransportDefinition transportDefinition;
         IDispatchMessages messageSender;
         StaticMessageRouter messageRouter;
@@ -43,14 +41,13 @@ namespace NServiceBus.Unicast
 
 
         public ContextualBus(Func<BehaviorContext> contextGetter, IMessageMapper messageMapper, IBuilder builder, Configure configure, IManageSubscriptions subscriptionManager,
-            MessageMetadataRegistry messageMetadataRegistry, ReadOnlySettings settings, TransportDefinition transportDefinition, IDispatchMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
+            ReadOnlySettings settings, TransportDefinition transportDefinition, IDispatchMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
         {
             this.messageMapper = messageMapper;
             this.contextGetter = contextGetter;
             this.builder = builder;
             this.configure = configure;
             this.subscriptionManager = subscriptionManager;
-            this.messageMetadataRegistry = messageMetadataRegistry;
             this.transportDefinition = transportDefinition;
             this.messageSender = messageSender;
             this.messageRouter = messageRouter;
@@ -107,10 +104,6 @@ namespace NServiceBus.Unicast
         {
             var messageType = message.GetType();
 
-            var deliveryOptions = new DeliveryMessageOptions();
-
-            ApplyDefaultDeliveryOptionsIfNeeded(deliveryOptions, messageType);
-
             var headers = new Dictionary<string, string>();
 
             ApplyReplyToAddress(headers);
@@ -118,7 +111,6 @@ namespace NServiceBus.Unicast
 
             var outgoingContext = new OutgoingContext(
                 incomingContext,
-                deliveryOptions,
                 messageType,
                 message,
                 options);
@@ -215,7 +207,7 @@ namespace NServiceBus.Unicast
         /// </summary>
         public void Reply(object message,NServiceBus.ReplyOptions options)
         {
-            SendMessage(new SendMessageOptions(), message.GetType(), message, options);
+            SendMessage(message.GetType(), message, options);
         }
 
         /// <summary>
@@ -252,21 +244,7 @@ namespace NServiceBus.Unicast
         {
             var messageType = message.GetType();
    
-            TimeSpan? delayDeliveryFor = null;
-            if (options.Delay.HasValue)
-            {
-                delayDeliveryFor = options.Delay;
-            }
-
-            DateTime? deliverAt = null;
-            if (options.At.HasValue)
-            {
-                deliverAt = options.At;
-            }
-
-            var sendOptions = new SendMessageOptions(deliverAt, delayDeliveryFor);
-
-            SendMessage(sendOptions, messageType, message, options);
+            SendMessage(messageType, message, options);
         }
 
         public void SendLocal<T>(Action<T> messageConstructor, SendLocalOptions options)
@@ -276,11 +254,10 @@ namespace NServiceBus.Unicast
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            var sendOptions = new NServiceBus.SendOptions(options.At, options.Delay)
+            var sendOptions = new NServiceBus.SendOptions()
             {
                 Extensions = options.Extensions
             };
-
 
 
             sendOptions.RouteToLocalEndpointInstance();
@@ -302,20 +279,18 @@ namespace NServiceBus.Unicast
         }
 
       
-        void SendMessage(SendMessageOptions sendOptions, Type messageType, object message, ExtendableOptions options)
+        void SendMessage(Type messageType, object message, ExtendableOptions options)
         {
             var headers = new Dictionary<string, string>();
 
          
+            //todo: move to routing
             ApplyReplyToAddress(headers);
 
-            ApplyDefaultDeliveryOptionsIfNeeded(sendOptions, messageType);
-
             ApplyHostRelatedHeaders(headers);
-
+            
             var outgoingContext = new OutgoingContext(
                 incomingContext,
-                sendOptions,
                 messageType,
                 message,
                 options);
@@ -377,17 +352,6 @@ namespace NServiceBus.Unicast
                 }
 
                 return new MessageContext(current);
-            }
-        }
-
-
-        void ApplyDefaultDeliveryOptionsIfNeeded(DeliveryMessageOptions options, Type messageType)
-        {
-            var messageDefinitions = messageMetadataRegistry.GetMessageMetadata(messageType);
-
-            if (!options.NonDurable.HasValue)
-            {
-                options.NonDurable = !messageDefinitions.Recoverable;
             }
         }
 

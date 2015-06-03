@@ -3,6 +3,7 @@ namespace NServiceBus
     using System;
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
+    using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.SecondLevelRetries;
@@ -45,7 +46,7 @@ namespace NServiceBus
                     var sendOptions = new DispatchOptions(receiveAddress,new AtomicWithReceiveOperation(), 
                         new List<DeliveryConstraint>
                     {
-                        new DelayedDelivery(delay)
+                        new DelayDeliveryWith(delay)
                     });
 
                     messageSender.Dispatch(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body),sendOptions);

@@ -2,7 +2,6 @@
 {
     using System;
     using NServiceBus.Extensibility;
-    using NServiceBus.Unicast;
 
     /// <summary>
     /// 
@@ -22,7 +21,6 @@
                 : base(parentContext)
             {
                 Body = body;
-                DeliveryMessageOptions = parentContext.DeliveryMessageOptions;
                 MessageType = parentContext.MessageType;
                 Extensions = parentContext.Extensions;
             }
@@ -35,8 +33,6 @@
             /// <summary>
             /// 
             /// </summary>
-            public DeliveryMessageOptions DeliveryMessageOptions { get; private set; }
-
             /// <summary>
             /// A <see cref="byte"/> array containing the serialized contents of the outgoing message.
             /// </summary>

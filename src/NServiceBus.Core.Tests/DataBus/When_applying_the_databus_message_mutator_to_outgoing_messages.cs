@@ -6,10 +6,8 @@ namespace NServiceBus.Core.Tests.DataBus
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline.Contexts;
-    using NServiceBus.Unicast;
     using NUnit.Framework;
     using Conventions = NServiceBus.Conventions;
-    using SendOptions = NServiceBus.SendOptions;
 
     [TestFixture]
     class When_applying_the_databus_message_mutator_to_outgoing_messages
@@ -22,7 +20,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-            var context = new OutgoingContext(null, new SendMessageOptions(), null, message, new SendOptions());
+            var context = new OutgoingContext(null, null, message, new SendOptions());
             
             var fakeDatabus = new FakeDataBus();
            
@@ -45,7 +43,7 @@ namespace NServiceBus.Core.Tests.DataBus
                 DataBusProperty = new DataBusProperty<string>("test")
             };
 
-           var context = new OutgoingContext(null,null, null, message, new SendOptions());
+           var context = new OutgoingContext(null, null, message, new SendOptions());
 
             context.AddDeliveryConstraint(new DiscardIfNotReceivedBefore(TimeSpan.FromMinutes(1)));
 

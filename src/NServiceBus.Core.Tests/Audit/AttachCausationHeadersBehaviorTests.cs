@@ -67,7 +67,7 @@
 
         static PhysicalOutgoingContextStageBehavior.Context InitializeContext()
         {
-            var context = new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, null, null, null, new SendOptions()));
+            var context = new PhysicalOutgoingContextStageBehavior.Context(null, new OutgoingContext(null, null, null, new SendOptions()));
             return context;
         }
 

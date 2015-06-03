@@ -40,6 +40,17 @@ namespace NServiceBus.DeliveryConstraints
             return constraints.TryGet(out constraint);
         }
 
+        public static void RemoveDeliveryConstaint(this OutgoingContext context, DeliveryConstraint constraint)
+        {
+            List<DeliveryConstraint> constraints;
+
+            if (!context.TryGet(out constraints))
+            {
+                return;
+            }
+
+            constraints.Remove(constraint);
+        }
         public static IEnumerable<DeliveryConstraint> GetDeliveryConstraints(this PhysicalOutgoingContextStageBehavior.Context context)
         {
             List<DeliveryConstraint> constraints;
@@ -59,7 +70,7 @@ namespace NServiceBus.DeliveryConstraints
             return constraint != null;
         }
 
-        public static bool TransportSupportsRestriction<T>(this FeatureConfigurationContext context) where T:DeliveryConstraint
+        public static bool DoesTransportSupportConstraint<T>(this FeatureConfigurationContext context) where T:DeliveryConstraint
         {
             return context.Settings.Get<TransportDefinition>().GetSupportedDeliveryConstraints().Any(t => t == typeof(T));
         }

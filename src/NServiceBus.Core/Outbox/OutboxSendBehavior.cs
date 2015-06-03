@@ -11,11 +11,8 @@ namespace NServiceBus
             OutboxMessage currentOutboxMessage;
 
             if (context.TryGet(out currentOutboxMessage))
-            {
-                var options = context.DeliveryMessageOptions.ToTransportOperationOptions();
-
-               
-                context.Set<DispatchStrategy>(new OutboxRoutingStrategy(currentOutboxMessage, options));
+            {  
+                context.Set<DispatchStrategy>(new OutboxRoutingStrategy(currentOutboxMessage));
             }
 
             next();

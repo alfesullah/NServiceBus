@@ -16,7 +16,7 @@
 
             options.SetDestination("destination endpoint");
 
-            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+            var context = new OutgoingContext(null, typeof(MyMessage), null, options);
 
             behavior.Invoke(context, () => { });
 
@@ -33,7 +33,7 @@
 
             options.RouteToLocalEndpointInstance();
 
-            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+            var context = new OutgoingContext(null, typeof(MyMessage), null, options);
 
             behavior.Invoke(context, () => { });
 
@@ -51,7 +51,7 @@
             var behavior = InitializeBehavior(router: router);
             var options = new SendOptions();
 
-            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+            var context = new OutgoingContext(null, typeof(MyMessage), null, options);
 
             behavior.Invoke(context, () => { });
 
@@ -66,7 +66,7 @@
             var behavior = InitializeBehavior();
             var options = new PublishOptions();
 
-            var context = new OutgoingContext(null, null, typeof(MyMessage), null, options);
+            var context = new OutgoingContext(null, typeof(MyMessage), null, options);
 
             behavior.Invoke(context, () => { });
 

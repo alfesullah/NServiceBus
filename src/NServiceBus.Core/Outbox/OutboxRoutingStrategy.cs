@@ -12,12 +12,10 @@ namespace NServiceBus
     class OutboxRoutingStrategy : DispatchStrategy
     {
         OutboxMessage currentOutboxMessage;
-        Dictionary<string, string> options;
-
-        public OutboxRoutingStrategy(OutboxMessage currentOutboxMessage, Dictionary<string, string> options)
+      
+        public OutboxRoutingStrategy(OutboxMessage currentOutboxMessage)
         {
             this.currentOutboxMessage = currentOutboxMessage;
-            this.options = options;
         }
 
         public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message,
@@ -27,8 +25,7 @@ namespace NServiceBus
             BehaviorContext currentContext)
         {
           
-            //routingStrategy.Deserialize(options);
-
+            var options = new Dictionary<string, string>();
 
             constraints.ToList().ForEach(c => c.Serialize(options));
           

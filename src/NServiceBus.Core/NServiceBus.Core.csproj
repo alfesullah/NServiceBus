@@ -111,6 +111,10 @@
     <Compile Include="DataBus\DataBusExtentions.cs" />
     <Compile Include="DataBus\FileShareDataBus.cs" />
     <Compile Include="DataBus\UseDataBusExtensions.cs" />
+    <Compile Include="DelayedDelivery\ApplyDelayedDeliveryConstraintBehavior.cs" />
+    <Compile Include="DelayedDelivery\DelayedDeliveryConstraint.cs" />
+    <Compile Include="DelayedDelivery\DelayedDeliveryFeature.cs" />
+    <Compile Include="DelayedDelivery\DelayedDeliveryOptionExtensions.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraintContextExtensions.cs" />
     <Compile Include="Encryption\DecryptBehavior.cs" />
     <Compile Include="Encryption\EncryptBehavior.cs" />
@@ -149,7 +153,7 @@
     <Compile Include="ConsistencyGuarantees\ConsistencyGuarantee.cs" />
     <Compile Include="Performance\TimeToBeReceived\DiscardIfNotReceivedBefore.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraint.cs" />
-    <Compile Include="Routing\DelayedDelivery.cs" />
+    <Compile Include="DelayedDelivery\DelayDeliveryWith.cs" />
     <Compile Include="Routing\DirectToTargetDestination.cs" />
     <Compile Include="Routing\MessageDrivenSubscriptions.cs" />
     <Compile Include="Routing\MessageRouter.cs" />
@@ -396,7 +400,6 @@
     <Compile Include="Outbox\OutboxSendBehavior.cs" />
     <Compile Include="Outbox\OutboxSettings.cs" />
     <Compile Include="Outbox\TransportOperation.cs" />
-    <Compile Include="Outbox\TransportOperationConverter.cs" />
     <Compile Include="Persistence\InMemory\Gateway\InMemoryGatewayPersistence.cs" />
     <Compile Include="Persistence\InMemory\InMemory.cs" />
     <Compile Include="Persistence\InMemory\Outbox\InMemoryOutboxPersistence.cs" />
@@ -442,7 +445,6 @@
     <Compile Include="Settings\ScaleOutExtentions.cs" />
     <Compile Include="Settings\TransactionSettingsExtentions.cs" />
     <Compile Include="Support\RuntimeEnvironment.cs" />
-    <Compile Include="Timeout\TimeoutManagerBasedDeferral.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttribute.cs" />
     <Compile Include="Transports\ConfigureTransport.cs" />
     <Compile Include="Audit\DefaultMessageAuditer.cs" />
@@ -468,7 +470,6 @@
     <Compile Include="Sagas\ActiveSagaInstance.cs" />
     <Compile Include="Sagas\SagaPersistenceBehavior.cs" />
     <Compile Include="Unicast\Messages\LogicalMessageFactory.cs" />
-    <Compile Include="Unicast\SendMessageOptions.cs" />
     <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\SubscriptionManager.cs" />
     <Compile Include="Unicast\Subscriptions\MessageDrivenSubscriptions\StorageInitializer.cs" />
     <Compile Include="Unicast\Transport\TransportMessageExtensions.cs" />
@@ -603,7 +604,6 @@
     <Compile Include="Unicast\BackwardCompatibility\MutateMessageContentTypeOfIncomingTransportMessages.cs" />
     <Compile Include="Unicast\BuilderExtensions.cs" />
     <Compile Include="Unicast\Config\LoadMessageHandlersExtentions.cs" />
-    <Compile Include="Timeout\Core\TimeoutManagerDeferrer.cs" />
     <Compile Include="Unicast\MessagesEventArgs.cs" />
     <Compile Include="Unicast\Queuing\Installers\ForwardReceivedMessagesToQueueCreator.cs" />
     <Compile Include="Routing\AutomaticSubscriptions\AutoSubscriptionStrategy.cs" />
