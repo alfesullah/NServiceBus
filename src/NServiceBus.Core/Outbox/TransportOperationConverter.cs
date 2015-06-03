@@ -47,12 +47,6 @@ namespace NServiceBus.Outbox
                 result = new DeliveryMessageOptions();
             }
 
-            string timeToBeReceived;
-            if (options.TryGetValue("TimeToBeReceived", out timeToBeReceived))
-            {
-                result.TimeToBeReceived = TimeSpan.Parse(timeToBeReceived);
-            }
-
             string nonDurable;
             if (options.TryGetValue("NonDurable", out nonDurable))
             {

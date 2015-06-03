@@ -28,6 +28,18 @@ namespace NServiceBus.DeliveryConstraints
             constraints.Add(constraint);
         }
 
+        public static bool TryGetDeliveryConstraint<T>(this OutgoingContext context,out  T constraint) where T:DeliveryConstraint
+        {
+            List<DeliveryConstraint> constraints;
+
+            if (!context.TryGet(out constraints))
+            {
+               constraints = new List<DeliveryConstraint>();
+            }
+
+            return constraints.TryGet(out constraint);
+        }
+
         public static IEnumerable<DeliveryConstraint> GetDeliveryConstraints(this PhysicalOutgoingContextStageBehavior.Context context)
         {
             List<DeliveryConstraint> constraints;
