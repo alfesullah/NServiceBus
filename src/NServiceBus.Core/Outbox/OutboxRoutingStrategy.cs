@@ -8,7 +8,7 @@ namespace NServiceBus
     using NServiceBus.Pipeline;
     using NServiceBus.Transports;
 
-    class OutboxRoutingStrategy : RoutingStrategy
+    class OutboxRoutingStrategy : DispatchStrategy
     {
         OutboxMessage currentOutboxMessage;
         Dictionary<string, string> options;
@@ -19,13 +19,19 @@ namespace NServiceBus
             this.options = options;
         }
 
-        public override void Dispatch(OutgoingMessage message, 
-            ConsistencyGuarantee minimumConsistencyGuarantee, 
+        public override void Dispatch(OutgoingMessage message,
+            RoutingStrategy routingStrategy,
+            ConsistencyGuarantee minimumConsistencyGuarantee,
             IEnumerable<DeliveryConstraint> constraints,
             BehaviorContext currentContext)
         {
-            constraints.ToList().ForEach(c=>c.Serialize(options));
-            currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));          
+          
+            routingStrategy.Deserialize(options);
+
+
+            constraints.ToList().ForEach(c => c.Serialize(options));
+          
+            currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));                    
         }
     }
 }

@@ -6,6 +6,7 @@
     using NServiceBus.Logging;
     using NServiceBus.Outbox;
     using NServiceBus.Persistence;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
 

@@ -4,7 +4,6 @@
     using System.Linq;
     using NServiceBus.Config;
     using NServiceBus.Routing;
-    using NServiceBus.Transports;
     using NServiceBus.Unicast.Routing;
 
     class RoutingFeature:Feature
@@ -20,8 +19,7 @@
             var router = SetupStaticRouter(context);
             context.Container.RegisterSingleton(router);
 
-            context.Container.ConfigureComponent(b => new DetermineRoutingForMessageBehavior(b.Build<ISendMessages>(),
-                context.Settings.LocalAddress(),
+            context.Container.ConfigureComponent(b => new DetermineRoutingForMessageBehavior(context.Settings.LocalAddress(),
                 new RoutingAdapter(router)), DependencyLifecycle.InstancePerCall);
         }
 

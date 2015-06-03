@@ -4,17 +4,14 @@ namespace NServiceBus
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
-    using NServiceBus.Transports;
 
     class DetermineRoutingForMessageBehavior : Behavior<OutgoingContext>
     {
-        readonly ISendMessages sender;
         readonly string localAddress;
         readonly MessageRouter messageRouter;
 
-        public DetermineRoutingForMessageBehavior(ISendMessages sender,string localAddress,MessageRouter messageRouter)
+        public DetermineRoutingForMessageBehavior(string localAddress,MessageRouter messageRouter)
         {
-            this.sender = sender;
             this.localAddress = localAddress;
             this.messageRouter = messageRouter;
         }
@@ -46,7 +43,7 @@ namespace NServiceBus
                     }
                 }
 
-                routingStrategy = new DirectRoutingStrategy(sender, destination);
+                routingStrategy = new DirectRoutingStrategy(destination);
                 intent = MessageIntentEnum.Send;
   
             }

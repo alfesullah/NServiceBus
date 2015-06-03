@@ -7,6 +7,7 @@
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
 
@@ -59,7 +60,9 @@
 
            
                 //todo: deliveryConstraint.Hydrate(transportOperation.Options);
-                routingStrategy.Dispatch(message,new NoConsistencyRequired(), new List<DeliveryConstraint>(),context);
+
+                context.Get<DispatchStrategy>()
+                    .Dispatch(message, routingStrategy, new NoConsistencyRequired(), new List<DeliveryConstraint>(), context);
             }
         }
 

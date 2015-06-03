@@ -6,6 +6,7 @@
     using System.Transactions;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
     using NUnit.Framework;

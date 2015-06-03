@@ -14,11 +14,8 @@ namespace NServiceBus
             {
                 var options = context.DeliveryMessageOptions.ToTransportOperationOptions();
 
-                var routingStrategy = context.Get<RoutingStrategy>();
-
-                routingStrategy.Deserialize(options);
-
-                context.Set<RoutingStrategy>(new OutboxRoutingStrategy(currentOutboxMessage, options));
+               
+                context.Set<DispatchStrategy>(new OutboxRoutingStrategy(currentOutboxMessage, options));
             }
 
             next();

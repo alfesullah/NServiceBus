@@ -4,6 +4,7 @@
     using NServiceBus.MessagingBestPractices;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Routing;
 
     class EnforceBestPracticesBehavior : Behavior<OutgoingContext>
     {
