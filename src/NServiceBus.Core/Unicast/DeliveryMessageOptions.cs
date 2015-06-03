@@ -5,23 +5,8 @@ namespace NServiceBus.Unicast
     /// <summary>
     /// Options to deliver messages.
     /// </summary>
-    public class DeliveryMessageOptions
+    public partial class DeliveryMessageOptions
     {
-        /// <summary>
-        /// Initializes an instance of <see cref="DeliveryMessageOptions"/>.
-        /// </summary>
-        public DeliveryMessageOptions()
-        {
-            EnlistInReceiveTransaction = true;
-        }
-
-    
-        /// <summary>
-        /// Tells the transport to enlist the outgoing operation in the current receive transaction if possible.
-        /// This is enabled by default
-        /// </summary>
-        public bool EnlistInReceiveTransaction { get; set; }
-
         /// <summary>
         /// The TTBR to use for this message
         /// </summary>

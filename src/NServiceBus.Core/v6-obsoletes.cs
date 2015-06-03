@@ -455,7 +455,7 @@ namespace NServiceBus.Unicast
         }
     }
 
-    
+
 }
 
 
@@ -484,7 +484,7 @@ namespace NServiceBus
         {
             throw new NotImplementedException();
         }
-        
+
     }
 
 }
@@ -530,5 +530,18 @@ namespace NServiceBus.Transports.Msmq
         {
             throw new NotImplementedException();
         }
+    }
+}
+
+namespace NServiceBus.Unicast
+{
+    using System;
+
+    public partial class DeliveryMessageOptions
+    {
+
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Use the ConsistencyGuarantee class instead")]
+        public bool EnlistInReceiveTransaction { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
     }
 }

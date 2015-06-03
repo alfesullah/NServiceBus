@@ -59,12 +59,6 @@ namespace NServiceBus.Outbox
                 result.NonDurable = bool.Parse(nonDurable);
             }
 
-            string enlistInReceiveTransaction;
-            if (options.TryGetValue("EnlistInReceiveTransaction", out enlistInReceiveTransaction))
-            {
-                result.EnlistInReceiveTransaction = bool.Parse(enlistInReceiveTransaction);
-            }
-
             return result;
         }
     }
