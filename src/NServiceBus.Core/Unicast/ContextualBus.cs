@@ -276,7 +276,12 @@ namespace NServiceBus.Unicast
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            var sendOptions = new NServiceBus.SendOptions(options.At,options.Delay);
+            var sendOptions = new NServiceBus.SendOptions(options.At, options.Delay)
+            {
+                Extensions = options.Extensions
+            };
+
+
 
             sendOptions.RouteToLocalEndpointInstance();
 
