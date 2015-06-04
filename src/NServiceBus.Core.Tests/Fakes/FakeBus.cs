@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
+    using NServiceBus.DelayedDelivery;
+    using NServiceBus.Extensibility;
 
     public class FakeBus : IBus
     {
@@ -111,13 +114,19 @@
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            //todo
-            //if (options.Delay.HasValue)
-            //{
-            //    Interlocked.Increment(ref _deferWasCalled);
-            //    deferDelay = options.Delay.Value;
-            //    DeferedMessage = message;
-            //}
+            ApplyDelayedDeliveryConstraintBehavior.State state;
+
+            if (options.GetExtensions().TryGet(out state))
+            {
+                var delayConstraint = state.RequestedDelay as DelayDeliveryWith;
+
+                if (delayConstraint != null)
+                {
+                    Interlocked.Increment(ref _deferWasCalled);
+                    deferDelay = delayConstraint.Delay;
+                    DeferedMessage = message;   
+                }
+            }
         }
 
         public void SendLocal<T>(Action<T> messageConstructor, SendLocalOptions options)
