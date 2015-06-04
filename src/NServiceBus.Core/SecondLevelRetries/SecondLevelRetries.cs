@@ -14,13 +14,7 @@ namespace NServiceBus.Features
         {
             EnableByDefault();
 
-            Prerequisite(context => context.Container.HasComponent<IDeferMessages>(), "SLR relies on the defer capability of the transport");
-
-            //todo
-            //Prerequisite(context =>
-            //{
-            //    return context.Container.HasComponent<IDeferMessages>();
-            //}, "SLR relies on the defer capability of the transport");
+            DependsOn<DelayedDeliveryFeature>();
 
             Prerequisite(context => !context.Settings.GetOrDefault<bool>("Endpoint.SendOnly"), "Send only endpoints can't use SLR since it requires receive capabilities");
 
