@@ -73,22 +73,4 @@
 
     
     }
-
-    static class ContextAssertHelpers
-    {
-        public static void AssertHeaderWasSet(this PhysicalOutgoingContextStageBehavior.Context context, string key, Predicate<string> predicate)
-        {
-            var state = context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>();
-
-            string current;
-
-            if (state.Headers.TryGetValue(key, out current))
-            {
-                Assert.True(predicate(current),"Header {0} didn't have the expected value",key);
-                return;
-            }
-
-            Assert.Fail("Header '{0}' was not set",key);
-        } 
-    }
 }

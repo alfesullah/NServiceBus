@@ -115,6 +115,8 @@
     <Compile Include="DelayedDelivery\DelayedDeliveryConstraint.cs" />
     <Compile Include="DelayedDelivery\DelayedDeliveryFeature.cs" />
     <Compile Include="DelayedDelivery\DelayedDeliveryOptionExtensions.cs" />
+    <Compile Include="DelayedDelivery\DoNotDeliverBefore.cs" />
+    <Compile Include="DelayedDelivery\RouteDeferredMessageToTimeoutManagerBehavior.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraintContextExtensions.cs" />
     <Compile Include="Encryption\DecryptBehavior.cs" />
     <Compile Include="Encryption\EncryptBehavior.cs" />
@@ -201,7 +203,6 @@
     <Compile Include="Transports\ReceiveBehavior.cs" />
     <Compile Include="Pipeline\Contexts\PhysicalOutgoingContext.cs" />
     <Compile Include="Transports\IncomingMessage.cs" />
-    <Compile Include="Transports\TransportDeferOptions.cs" />
     <Compile Include="Transports\TransportPublishOptions.cs" />
     <Compile Include="Transports\DispatchOptions.cs" />
     <Compile Include="TransportDispatch\HeaderExtensions.cs" />
@@ -339,7 +340,7 @@
     <Compile Include="Serializers\XML\Serializer.cs" />
     <Compile Include="Serializers\XML\XmlSerializerCache.cs" />
     <Compile Include="Settings\DurableMessagesConfig.cs" />
-    <Compile Include="Timeout\ConfigurationBuilderExtensions.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\ConfigurationBuilderExtensions.cs" />
     <Compile Include="Unicast\Behaviors\InvokeSagaNotFoundBehavior.cs" />
     <Compile Include="Transports\MessageAvailable.cs" />
     <Compile Include="Transports\Msmq\MsmqReceiveWithTransactionScopeBehavior.cs" />
@@ -454,7 +455,6 @@
     <Compile Include="Unicast\Behaviors\InvokeHandlersBehavior.cs" />
     <Compile Include="Unicast\Behaviors\LoadHandlersConnector.cs" />
     <Compile Include="Unicast\Config\UnicastBus.cs" />
-    <Compile Include="Unicast\DeliveryMessageOptions.cs" />
     <Compile Include="Unicast\Messages\ExecuteLogicalMessagesConnector.cs" />
     <Compile Include="Unicast\Messages\LogicalMessage.cs" />
     <Compile Include="Unicast\Behaviors\MessageHandler.cs" />
@@ -491,7 +491,7 @@
     <Compile Include="Transports\Msmq\Config\MsmqTransportConfigurator.cs" />
     <Compile Include="Unicast\Messages\DeserializeLogicalMessagesConnector.cs" />
     <Compile Include="Licensing\ConfigureLicenseExtensions.cs" />
-    <Compile Include="Timeout\TimeoutManager.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\TimeoutManager.cs" />
     <Compile Include="ConfigureQueueCreation.cs" />
     <Compile Include="Transports\ConfigurePurging.cs" />
     <Compile Include="Features\Feature.cs" />
@@ -586,14 +586,14 @@
     <Compile Include="Serializers\XML\XmlMessageSerializer.cs" />
     <Compile Include="Serializers\XML\XmlSanitizingStream.cs" />
     <Compile Include="Settings\TransactionSettings.cs" />
-    <Compile Include="Timeout\Core\DefaultTimeoutManager.cs" />
-    <Compile Include="Timeout\Core\IPersistTimeouts.cs" />
-    <Compile Include="Timeout\Core\TimeoutData.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Core\DefaultTimeoutManager.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Core\IPersistTimeouts.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Core\TimeoutData.cs" />
     <Compile Include="Persistence\InMemory\TimeoutPersister\InMemoryTimeoutPersister.cs" />
-    <Compile Include="Timeout\Hosting\Windows\TimeoutDispatcherProcessorBehavior.cs" />
-    <Compile Include="Timeout\Hosting\Windows\TimeoutMessageProcessorBehavior.cs" />
-    <Compile Include="Timeout\Hosting\Windows\TimeoutPersisterReceiver.cs" />
-    <Compile Include="Timeout\Core\TimeoutManagerHeaders.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Hosting\Windows\TimeoutDispatcherProcessorBehavior.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Hosting\Windows\TimeoutMessageProcessorBehavior.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Hosting\Windows\TimeoutPersisterReceiver.cs" />
+    <Compile Include="DelayedDelivery\TimeoutManager\Core\TimeoutManagerHeaders.cs" />
     <Compile Include="TransportMessage.cs" />
     <Compile Include="Licensing\LicenseExpiredForm.cs">
       <SubType>Form</SubType>

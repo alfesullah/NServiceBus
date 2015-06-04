@@ -537,7 +537,7 @@ namespace NServiceBus.Unicast
 {
     using System;
 
-    public partial class DeliveryMessageOptions
+    public class DeliveryMessageOptions
     {
 
         [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Use the ConsistencyGuarantee class instead")]
@@ -545,6 +545,10 @@ namespace NServiceBus.Unicast
 
         [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Use context.TryGetDeliveryConstraint<DiscardIfNotReceivedBefore> instead")]
         public TimeSpan? TimeToBeReceived { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Use context.TryGetDeliveryConstraint<NonDurableDelivery> instead")]
+        public bool? NonDurable { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
 
     }
 }

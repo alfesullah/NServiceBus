@@ -25,9 +25,11 @@
         /// </summary>
         /// <param name="options">The options being extended</param>
         /// <param name="at">The time when this message should be made available</param>
-        public static void DoNotDeliveryBefore(this SendLocalOptions options, DateTime at)
+        public static void DoNotDeliverBefore(this SendLocalOptions options, DateTime at)
         {
-            
+            Guard.AgainstNull(at, "at");
+
+            options.GetExtensions().Set(new ApplyDelayedDeliveryConstraintBehavior.State(new DoNotDeliverBefore(at)));
         }
 
         /// <summary>
@@ -46,9 +48,11 @@
         /// </summary>
         /// <param name="options">The options being extended</param>
         /// <param name="at">The time when this message should be made available</param>
-        public static void DoNotDeliveryBefore(this SendOptions options, DateTime at)
+        public static void DoNotDeliverBefore(this SendOptions options, DateTime at)
         {
+            Guard.AgainstNull(at, "at");
 
+            options.GetExtensions().Set(new ApplyDelayedDeliveryConstraintBehavior.State(new DoNotDeliverBefore(at)));
         }
         
     }

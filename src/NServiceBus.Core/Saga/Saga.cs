@@ -85,7 +85,7 @@ namespace NServiceBus.Saga
 
             var options = new SendLocalOptions();
 
-            options.DoNotDeliveryBefore(at);
+            options.DoNotDeliverBefore(at);
 
 
             SetTimeoutHeaders(options);

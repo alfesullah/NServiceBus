@@ -4,23 +4,23 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represent a constraint that the message can't be delivered before the specified delay has elapsed
+    /// Represent a constraint that the message can't be made available for consumption before a given time
     /// </summary>
-    public class DelayDeliveryWith : DelayedDeliveryConstraint
+    public class DoNotDeliverBefore : DelayedDeliveryConstraint
     {
+        /// <summary>
+        /// The actual time when the message can be available to the recipient
+        /// </summary>
+        public DateTime At { get; private set; }
+
         /// <summary>
         /// Initializes the constraint
         /// </summary>
-        /// <param name="delay">How long to delay the delivery of the message</param>
-        public DelayDeliveryWith(TimeSpan delay)
+        /// <param name="at">The earliest time this message should be made available to its consumers</param>
+        public DoNotDeliverBefore(DateTime at)
         {
-            Delay = delay;
+            At = at;
         }
-
-        /// <summary>
-        /// The requested delay
-        /// </summary>
-        public TimeSpan Delay { get; private set; }
 
 
         internal override bool Deserialize(Dictionary<string, string> options)
