@@ -20,7 +20,7 @@ namespace NServiceBus
         {
             RoutingStrategy routingStrategy = null;
 
-            MessageIntentEnum intent = MessageIntentEnum.Send;
+            var intent = MessageIntentEnum.Send;
 
             if (context.IsSend())
             {
