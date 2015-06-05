@@ -43,8 +43,7 @@ namespace NServiceBus.Unicast
             ReadOnlySettings settings,
             TransportDefinition transportDefinition,
             IDispatchMessages messageSender,
-            StaticMessageRouter messageRouter,
-            HostInformation hostInformation)
+            StaticMessageRouter messageRouter)
         {
             this.executor = executor;
             this.criticalError = criticalError;
@@ -60,8 +59,7 @@ namespace NServiceBus.Unicast
                 settings,
                 transportDefinition,
                 messageSender,
-                messageRouter,
-                hostInformation);
+                messageRouter);
         }
 
         /// <summary>

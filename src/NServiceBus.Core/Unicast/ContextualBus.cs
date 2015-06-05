@@ -7,14 +7,12 @@ namespace NServiceBus.Unicast
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Extensibility;
-    using NServiceBus.Hosting;
     using NServiceBus.MessageInterfaces;
     using NServiceBus.MessagingBestPractices;
     using NServiceBus.ObjectBuilder;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Settings;
-    using NServiceBus.Support;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Routing;
 
@@ -33,15 +31,13 @@ namespace NServiceBus.Unicast
         TransportDefinition transportDefinition;
         IDispatchMessages messageSender;
         StaticMessageRouter messageRouter;
-        HostInformation hostInformation;
         PipelineBase<OutgoingContext> outgoingPipeline;
         bool sendOnlyMode;
         string sendLocalAddress;
-        string endpointName;
-
+      
 
         public ContextualBus(Func<BehaviorContext> contextGetter, IMessageMapper messageMapper, IBuilder builder, Configure configure, IManageSubscriptions subscriptionManager,
-            ReadOnlySettings settings, TransportDefinition transportDefinition, IDispatchMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
+            ReadOnlySettings settings, TransportDefinition transportDefinition, IDispatchMessages messageSender, StaticMessageRouter messageRouter)
         {
             this.messageMapper = messageMapper;
             this.contextGetter = contextGetter;
@@ -51,7 +47,6 @@ namespace NServiceBus.Unicast
             this.transportDefinition = transportDefinition;
             this.messageSender = messageSender;
             this.messageRouter = messageRouter;
-            this.hostInformation = hostInformation;
             var pipelinesCollection = settings.Get<PipelineConfiguration>();
             outgoingPipeline = new PipelineBase<OutgoingContext>(builder,  settings, pipelinesCollection.MainPipeline);
             sendOnlyMode = settings.Get<bool>("Endpoint.SendOnly");
@@ -64,8 +59,6 @@ namespace NServiceBus.Unicast
             {
                 sendLocalAddress = configure.LocalAddress;
             }
-
-            endpointName = settings.EndpointName();
         }
 
         BehaviorContext incomingContext
@@ -107,8 +100,7 @@ namespace NServiceBus.Unicast
             var headers = new Dictionary<string, string>();
 
             ApplyReplyToAddress(headers);
-            ApplyHostRelatedHeaders(headers);
-
+        
             var outgoingContext = new OutgoingContext(
                 incomingContext,
                 messageType,
@@ -286,8 +278,6 @@ namespace NServiceBus.Unicast
          
             //todo: move to routing
             ApplyReplyToAddress(headers);
-
-            ApplyHostRelatedHeaders(headers);
             
             var outgoingContext = new OutgoingContext(
                 incomingContext,
@@ -301,13 +291,6 @@ namespace NServiceBus.Unicast
             }
 
             outgoingPipeline.Invoke(outgoingContext);
-        }
-
-        void ApplyHostRelatedHeaders(Dictionary<string, string> headers)
-        {
-            headers.Add(Headers.OriginatingMachine, RuntimeEnvironment.MachineName);
-            headers.Add(Headers.OriginatingEndpoint, endpointName);
-            headers.Add(Headers.OriginatingHostId, hostInformation.HostId.ToString("N"));
         }
 
         void ApplyReplyToAddress(Dictionary<string, string> headers)

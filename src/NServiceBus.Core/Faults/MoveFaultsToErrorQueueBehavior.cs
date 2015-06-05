@@ -39,7 +39,7 @@ namespace NServiceBus
 
                     message.Headers.Remove(Headers.Retries);
 
-
+                    //todo: move this to a error pipeline
                     message.Headers[Headers.HostId] = hostInformation.HostId.ToString("N");
                     message.Headers[Headers.HostDisplayName] = hostInformation.DisplayName;
 

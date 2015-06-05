@@ -4,21 +4,20 @@ namespace NServiceBus.Features
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Config;
-    using Logging;
-    using NServiceBus.Hosting;
+    using NServiceBus.Config;
+    using NServiceBus.Logging;
     using NServiceBus.MessageInterfaces;
     using NServiceBus.ObjectBuilder;
+    using NServiceBus.Pipeline;
     using NServiceBus.Settings;
     using NServiceBus.Settings.Concurrency;
     using NServiceBus.Settings.Throttling;
     using NServiceBus.Support;
     using NServiceBus.Transports;
     using NServiceBus.Unicast;
+    using NServiceBus.Unicast.Messages;
+    using NServiceBus.Unicast.Routing;
     using NServiceBus.Utils;
-    using Pipeline;
-    using Unicast.Messages;
-    using Unicast.Routing;
     using TransactionSettings = NServiceBus.Unicast.Transport.TransactionSettings;
 
     class UnicastBus : Feature
@@ -52,12 +51,6 @@ namespace NServiceBus.Features
 
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            var hostInfo = new HostInformation(context.Settings.Get<Guid>(HostIdSettingsKey),
-                context.Settings.Get<string>("NServiceBus.HostInformation.DisplayName"),
-                context.Settings.Get<Dictionary<string, string>>("NServiceBus.HostInformation.Properties"));
-
-            context.Container.RegisterSingleton(hostInfo);
-        
             context.Pipeline.Register<AttachCorrelationIdBehavior.Registration>();
 
 
@@ -92,7 +85,7 @@ namespace NServiceBus.Features
             context.Container.ConfigureComponent(b => b.Build<BehaviorContextStacker>().GetCurrentOrRootContext(), DependencyLifecycle.InstancePerCall);
 
             //Hack because we can't register as IStartableBus because it would automatically register as IBus and overrode the proper IBus registration.
-            context.Container.ConfigureComponent<IRealBus>(b => CreateBus(b, hostInfo), DependencyLifecycle.SingleInstance);
+            context.Container.ConfigureComponent<IRealBus>(CreateBus, DependencyLifecycle.SingleInstance);
             context.Container.ConfigureComponent(b => (IStartableBus)b.Build<IRealBus>(), DependencyLifecycle.SingleInstance);
 
             context.Container.ConfigureComponent(b =>
@@ -100,7 +93,7 @@ namespace NServiceBus.Features
                 var stacker = b.Build<BehaviorContextStacker>();
                 if (stacker.Current != null)
                 {
-                    return CreateContextualBus(hostInfo, b, () => stacker.Current);
+                    return CreateContextualBus(b, () => stacker.Current);
                 }
                 return (IBus)b.Build<IRealBus>();
             }, DependencyLifecycle.InstancePerCall);
@@ -147,7 +140,7 @@ namespace NServiceBus.Features
             context.Pipeline.Register<EnforceMessageIdBehavior.Registration>();
         }
 
-        Unicast.UnicastBus CreateBus(IBuilder builder, HostInformation hostInfo)
+        Unicast.UnicastBus CreateBus(IBuilder builder)
         {
             var bus = new Unicast.UnicastBus(
                 builder.Build<BehaviorContextStacker>().Root,
@@ -160,14 +153,12 @@ namespace NServiceBus.Features
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
                 builder.Build<IDispatchMessages>(),
-                builder.Build<StaticMessageRouter>(), hostInfo)
-            {
-                HostInformation = hostInfo
-            };
+                builder.Build<StaticMessageRouter>());
+
             return bus;
         }
 
-        ContextualBus CreateContextualBus(HostInformation hostInfo, IBuilder builder, Func<BehaviorContext> currentContextGetter)
+        ContextualBus CreateContextualBus(IBuilder builder, Func<BehaviorContext> currentContextGetter)
         {
             return new ContextualBus(currentContextGetter,
                 builder.Build<IMessageMapper>(),
@@ -177,7 +168,7 @@ namespace NServiceBus.Features
                 builder.Build<ReadOnlySettings>(),
                 builder.Build<TransportDefinition>(),
                 builder.Build<IDispatchMessages>(),
-                builder.Build<StaticMessageRouter>(), hostInfo);
+                builder.Build<StaticMessageRouter>());
         }
 
         void ConfigureMessageRegistry(FeatureConfigurationContext context, IEnumerable<Type> knownMessages)
