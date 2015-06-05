@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
-    using NServiceBus.Hosting;
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline;
     using NServiceBus.Settings;
@@ -13,8 +12,6 @@
 
     class AuditBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public HostInformation HostInformation { get; set; }
-
         public IAuditMessages MessageAuditer { get; set; }
 
         public string AuditQueue { get; set; }
@@ -35,8 +32,6 @@
             outgoingMessage.Headers[Headers.ProcessingStarted] = DateTimeExtensions.ToWireFormattedString(context.Get<DateTime>("IncomingMessage.ProcessingStarted"));
             outgoingMessage.Headers[Headers.ProcessingEnded] = DateTimeExtensions.ToWireFormattedString(context.Get<DateTime>("IncomingMessage.ProcessingEnded"));
 
-            outgoingMessage.Headers[Headers.HostId] = HostInformation.HostId.ToString("N");
-            outgoingMessage.Headers[Headers.HostDisplayName] = HostInformation.DisplayName;
             outgoingMessage.Headers[Headers.ProcessingMachine] = RuntimeEnvironment.MachineName;
             outgoingMessage.Headers[Headers.ProcessingEndpoint] = Settings.EndpointName();
 

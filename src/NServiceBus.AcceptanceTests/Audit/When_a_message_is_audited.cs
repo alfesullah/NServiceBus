@@ -26,24 +26,6 @@
             Assert.AreEqual(context.OriginalBodyChecksum, context.AuditChecksum, "The body of the message sent to audit should be the same as the original message coming off the queue");
         }
 
-        [Test]
-        public void Should_be_stamped_with_host_id_and_host_name()
-        {
-            var context = new Context
-            {
-                RunId = Guid.NewGuid()
-            };
-
-            Scenario.Define(context)
-                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited { RunId = context.RunId })))
-                    .WithEndpoint<AuditSpyEndpoint>()
-                    .Done(c => c.Done)
-                    .Run();
-
-            Assert.IsNotNull(context.HostId);
-            Assert.IsNotNull(context.HostName);
-        }
-
         [Test, Ignore("To be fixed by Andreas")]
         public void Should_add_the_license_diagnostic_headers()
         {
@@ -68,8 +50,6 @@
             public byte OriginalBodyChecksum { get; set; }
             public byte AuditChecksum { get; set; }
             public bool HasDiagnosticLicensingHeaders { get; set; }
-            public string HostId { get; set; }
-            public string HostName { get; set; }
         }
 
         public class EndpointWithAuditOn : EndpointConfigurationBuilder
@@ -150,8 +130,6 @@
                     {
                         return;
                     }
-                    Context.HostId = Bus.CurrentMessageContext.Headers[Headers.HostId];
-                    Context.HostName = Bus.CurrentMessageContext.Headers[Headers.HostDisplayName];
                     Context.Done = true;
                 }
             }

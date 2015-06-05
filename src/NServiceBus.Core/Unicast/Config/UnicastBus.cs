@@ -57,7 +57,7 @@ namespace NServiceBus.Features
                 context.Settings.Get<Dictionary<string, string>>("NServiceBus.HostInformation.Properties"));
 
             context.Container.RegisterSingleton(hostInfo);
-            context.Pipeline.Register<HostInformationBehavior.Registration>();
+        
             context.Pipeline.Register<AttachCorrelationIdBehavior.Registration>();
 
 

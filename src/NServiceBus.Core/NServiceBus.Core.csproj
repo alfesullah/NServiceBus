@@ -89,6 +89,7 @@
     <Compile Include="App_Packages\Particular.Licensing\UserSidChecker.cs" />
     <Compile Include="Audit\AuditConfigReader.cs" />
     <Compile Include="Audit\AuditContext.cs" />
+    <Compile Include="Audit\AuditContextExtensions.cs" />
     <Compile Include="Audit\AuditerWrapper.cs" />
     <Compile Include="Audit\AuditDispatchTerminator.cs" />
     <Compile Include="Audit\ConfigureAudit.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="FirstLevelRetries\FirstLevelRetry.cs" />
     <Compile Include="Faults\ErrorQueueSettings.cs" />
     <Compile Include="Faults\StoreFaultsInErrorQueue.cs" />
+    <Compile Include="Hosting\HostInformationFeature.cs" />
     <Compile Include="IBusExtensions.cs" />
     <Compile Include="IDataBusProperty.cs" />
     <Compile Include="ISendOnlyBusExtensions.cs" />
@@ -360,7 +362,7 @@
     <Compile Include="Monitoring\ProcessingStatisticsBehavior.cs" />
     <Compile Include="Unicast\ContextualBus.cs" />
     <Compile Include="MessageDeserializationException.cs" />
-    <Compile Include="Unicast\Messages\HostInformationBehavior.cs" />
+    <Compile Include="Hosting\AuditHostInformationBehavior.cs" />
     <Compile Include="Unicast\Transport\PipelineInfo.cs" />
     <Compile Include="Utils\BaseDictionary.cs" />
     <Compile Include="Utils\PathUtilities.cs" />

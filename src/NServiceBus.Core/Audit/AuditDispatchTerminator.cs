@@ -22,6 +22,17 @@
         {
             var message = context.Get<OutgoingMessage>();
 
+            State state;
+            
+            if (context.TryGet(out state))
+            {
+                //transfer audit values to the headers of the messag to audit
+                foreach (var kvp in state.AuditValues)
+                {
+                    message.Headers[kvp.Key] = kvp.Value;
+                }
+            }
+
 
             var routingStrategy = context.Get<RoutingStrategy>();
 
@@ -39,5 +50,11 @@
         readonly DispatchStrategy strategy;
         readonly IDispatchMessages dispatcher;
         readonly TimeSpan? timeToBeReceived;
+
+
+        public class State
+        {
+            public Dictionary<string,string> AuditValues = new Dictionary<string, string>();  
+        }
     }
 }
