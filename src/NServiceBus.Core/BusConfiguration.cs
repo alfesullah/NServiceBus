@@ -47,11 +47,10 @@ namespace NServiceBus
         }
 
         /// <summary>
-        ///     Access to the pipeline configuration
+        ///     Access to the receive pipeline configuration
         /// </summary>
         public PipelineSettings Pipeline { get; private set; }
 
-     
         /// <summary>
         ///     Used to configure components in the container.
         /// </summary>

@@ -57,8 +57,8 @@ namespace NServiceBus.Features
                 context.Settings.Get<Dictionary<string, string>>("NServiceBus.HostInformation.Properties"));
 
             context.Container.RegisterSingleton(hostInfo);
-            context.MainPipeline.Register<HostInformationBehavior.Registration>();
-            context.MainPipeline.Register<AttachCorrelationIdBehavior.Registration>();
+            context.Pipeline.Register<HostInformationBehavior.Registration>();
+            context.Pipeline.Register<AttachCorrelationIdBehavior.Registration>();
 
 
             context.Container.ConfigureComponent<BusNotifications>(DependencyLifecycle.SingleInstance);
@@ -122,7 +122,7 @@ namespace NServiceBus.Features
 
             ConfigureMessageRegistry(context, knownMessages);
 
-            HardcodedPipelineSteps.RegisterOutgoingCoreBehaviors(context.MainPipeline);
+            HardcodedPipelineSteps.RegisterOutgoingCoreBehaviors(context.Pipeline);
 
             if (context.Settings.GetOrDefault<bool>("Endpoint.SendOnly"))
             {
@@ -131,20 +131,20 @@ namespace NServiceBus.Features
 
 
 
-            HardcodedPipelineSteps.RegisterIncomingCoreBehaviors(context.MainPipeline);
+            HardcodedPipelineSteps.RegisterIncomingCoreBehaviors(context.Pipeline);
 
             var transactionSettings = new TransactionSettings(context.Settings);
 
             if (transactionSettings.DoNotWrapHandlersExecutionInATransactionScope)
             {
-                context.MainPipeline.Register<SuppressAmbientTransactionBehavior.Registration>();
+                context.Pipeline.Register<SuppressAmbientTransactionBehavior.Registration>();
             }
             else
             {
-                context.MainPipeline.Register<HandlerTransactionScopeWrapperBehavior.Registration>();
+                context.Pipeline.Register<HandlerTransactionScopeWrapperBehavior.Registration>();
             }
 
-            context.MainPipeline.Register<EnforceMessageIdBehavior.Registration>();
+            context.Pipeline.Register<EnforceMessageIdBehavior.Registration>();
         }
 
         Unicast.UnicastBus CreateBus(IBuilder builder, HostInformation hostInfo)

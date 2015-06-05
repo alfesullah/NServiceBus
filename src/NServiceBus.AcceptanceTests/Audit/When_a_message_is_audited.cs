@@ -9,32 +9,37 @@
 
     public class When_a_message_is_audited : NServiceBusAcceptanceTest
     {
-        Context context;
-
-        [SetUp]
-        public new void SetUp()
+      
+        [Test]
+        public void Should_preserve_the_original_body()
         {
-            context = new Context
+            var context = new Context
             {
                 RunId = Guid.NewGuid()
             };
 
             Scenario.Define(context)
-                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited{RunId = context.RunId})))
+                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited { RunId = context.RunId })))
                     .WithEndpoint<AuditSpyEndpoint>()
                     .Done(c => c.Done)
                     .Run();
-        }
-
-        [Test]
-        public void Should_preserve_the_original_body()
-        {
             Assert.AreEqual(context.OriginalBodyChecksum, context.AuditChecksum, "The body of the message sent to audit should be the same as the original message coming off the queue");
         }
 
         [Test]
         public void Should_be_stamped_with_host_id_and_host_name()
         {
+            var context = new Context
+            {
+                RunId = Guid.NewGuid()
+            };
+
+            Scenario.Define(context)
+                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited { RunId = context.RunId })))
+                    .WithEndpoint<AuditSpyEndpoint>()
+                    .Done(c => c.Done)
+                    .Run();
+
             Assert.IsNotNull(context.HostId);
             Assert.IsNotNull(context.HostName);
         }
@@ -42,6 +47,11 @@
         [Test, Ignore("To be fixed by Andreas")]
         public void Should_add_the_license_diagnostic_headers()
         {
+            var context = new Context
+            {
+                RunId = Guid.NewGuid()
+            };
+
             Scenario.Define(context)
                     .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited())))
                     .WithEndpoint<AuditSpyEndpoint>()

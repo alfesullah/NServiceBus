@@ -88,8 +88,11 @@
     <Compile Include="App_Packages\Particular.Licensing\UniversalDateParser.cs" />
     <Compile Include="App_Packages\Particular.Licensing\UserSidChecker.cs" />
     <Compile Include="Audit\AuditConfigReader.cs" />
+    <Compile Include="Audit\AuditContext.cs" />
     <Compile Include="Audit\AuditerWrapper.cs" />
+    <Compile Include="Audit\AuditDispatchTerminator.cs" />
     <Compile Include="Audit\ConfigureAudit.cs" />
+    <Compile Include="Audit\InvokeAuditPipelineBehavior.cs" />
     <Compile Include="BufferedObservable.cs" />
     <Compile Include="Bus.cs" />
     <Compile Include="BusConfiguration.cs" />

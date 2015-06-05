@@ -18,7 +18,7 @@
         }
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            context.MainPipeline.Register("DetermineRoutingForMessage", typeof(DetermineRoutingForMessageBehavior), "Determines how the message being sent should be routed");
+            context.Pipeline.Register("DetermineRoutingForMessage", typeof(DetermineRoutingForMessageBehavior), "Determines how the message being sent should be routed");
 
             var router = SetupStaticRouter(context);
             context.Container.RegisterSingleton(router);

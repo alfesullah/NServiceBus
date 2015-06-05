@@ -20,7 +20,7 @@
                 throw new Exception("Messages with TimeToBeReceived found but the selected transport does not support this type of restriction. Please remove TTBR from your messages, disable this feature or select a transport that does support TTBR");
             }
 
-            context.MainPipeline.Register("ApplyTimeToBeReceived", typeof(ApplyTimeToBeReceivedBehavior), "Adds the `DiscardIfNotReceivedBefore` constraint to relevant messages");
+            context.Pipeline.Register("ApplyTimeToBeReceived", typeof(ApplyTimeToBeReceivedBehavior), "Adds the `DiscardIfNotReceivedBefore` constraint to relevant messages");
 
             context.Container.ConfigureComponent(b=>new ApplyTimeToBeReceivedBehavior(mappings), DependencyLifecycle.SingleInstance);
         }

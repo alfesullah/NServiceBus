@@ -75,9 +75,9 @@ The reason you need to do this is because we need to ensure that you have read a
                 throw new Exception("Selected persister doesn't have support for outbox storage. Please select another storage or disable the outbox feature using config.Features(f=>f.Disable<Outbox>())");    
             }
 
-            context.MainPipeline.Register<OutboxDeduplicationBehavior.OutboxDeduplicationRegistration>();
-            context.MainPipeline.Register<OutboxRecordBehavior.OutboxRecorderRegistration>();
-            context.MainPipeline.Register("OutboxSendBehavior", typeof(OutboxSendBehavior), "Makes sure that the outgoing message is stored in the outbox instead of beeing dispatched to the transport");
+            context.Pipeline.Register<OutboxDeduplicationBehavior.OutboxDeduplicationRegistration>();
+            context.Pipeline.Register<OutboxRecordBehavior.OutboxRecorderRegistration>();
+            context.Pipeline.Register("OutboxSendBehavior", typeof(OutboxSendBehavior), "Makes sure that the outgoing message is stored in the outbox instead of beeing dispatched to the transport");
 
             context.Container.ConfigureComponent(
                 b => new OutboxDeduplicationBehavior(

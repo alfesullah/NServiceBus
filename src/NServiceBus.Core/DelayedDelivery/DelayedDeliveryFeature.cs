@@ -17,13 +17,13 @@
             {
                 var timeoutManagerAddress = GetTimeoutManagerAddress(context);
 
-                context.MainPipeline.Register<RouteDeferredMessageToTimeoutManagerBehavior.Registration>();
+                context.Pipeline.Register<RouteDeferredMessageToTimeoutManagerBehavior.Registration>();
 
 
                 context.Container.ConfigureComponent(b => new RouteDeferredMessageToTimeoutManagerBehavior(timeoutManagerAddress), DependencyLifecycle.SingleInstance);
 
             }
-            context.MainPipeline.Register("ApplyDelayedDeliveryConstraint", typeof(ApplyDelayedDeliveryConstraintBehavior), "Applied relevant delayed delivery constraints requested by the user");
+            context.Pipeline.Register("ApplyDelayedDeliveryConstraint", typeof(ApplyDelayedDeliveryConstraintBehavior), "Applied relevant delayed delivery constraints requested by the user");
         }
 
         static string GetTimeoutManagerAddress(FeatureConfigurationContext context)
