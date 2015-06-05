@@ -141,6 +141,7 @@
     <Compile Include="FirstLevelRetries\FirstLevelRetry.cs" />
     <Compile Include="Faults\ErrorQueueSettings.cs" />
     <Compile Include="Faults\StoreFaultsInErrorQueue.cs" />
+    <Compile Include="Hosting\AddHostInfoHeadersBehavior.cs" />
     <Compile Include="Hosting\HostInformationFeature.cs" />
     <Compile Include="IBusExtensions.cs" />
     <Compile Include="IDataBusProperty.cs" />

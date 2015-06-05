@@ -1,7 +1,8 @@
-﻿namespace NServiceBus.Audit
+﻿namespace NServiceBus
 {
     using System;
     using System.Collections.Generic;
+    using NServiceBus.Audit;
     using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Performance.TimeToBeReceived;
