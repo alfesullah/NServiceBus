@@ -8,7 +8,7 @@
     public class When_a_message_is_audited : NServiceBusAcceptanceTest
     {
         [Test]
-        public void Should_be_stamped_with_host_id_and_host_name()
+        public void Should_add_host_related_headers()
         {
             var context = new Context();
 
@@ -20,6 +20,8 @@
 
             Assert.IsNotNull(context.HostId);
             Assert.IsNotNull(context.HostName);
+            Assert.IsNotNull(context.Endpoint);
+            Assert.IsNotNull(context.Machine);
         }
 
         public class Context : ScenarioContext
@@ -27,6 +29,8 @@
             public bool Done { get; set; }
             public string HostId { get; set; }
             public string HostName { get; set; }
+            public string Endpoint { get; set; }
+            public string Machine { get; set; }
         }
 
         public class EndpointWithAuditOn : EndpointConfigurationBuilder
@@ -61,6 +65,8 @@
                 {
                     Context.HostId = Bus.CurrentMessageContext.Headers[Headers.HostId];
                     Context.HostName = Bus.CurrentMessageContext.Headers[Headers.HostDisplayName];
+                    Context.Endpoint = Bus.CurrentMessageContext.Headers[Headers.ProcessingEndpoint];
+                    Context.Machine = Bus.CurrentMessageContext.Headers[Headers.ProcessingMachine];
                     Context.Done = true;
                 }
             }
