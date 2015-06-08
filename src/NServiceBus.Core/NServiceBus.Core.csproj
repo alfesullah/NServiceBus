@@ -97,6 +97,7 @@
     <Compile Include="BufferedObservable.cs" />
     <Compile Include="Bus.cs" />
     <Compile Include="BusConfiguration.cs" />
+    <Compile Include="Causation\MessageCausation.cs" />
     <Compile Include="ConfigureHandlerSettings.cs" />
     <Compile Include="Config\MsmqConnectionStringBuilder.cs" />
     <Compile Include="ConsistencyGuarantees\ConsistencyGuaranteeExtensions.cs" />
@@ -619,7 +620,7 @@
     <Compile Include="Routing\MessagingBestPractices\Validations.cs" />
     <Compile Include="Monitoring\CriticalTime\CriticalTimeCalculator.cs" />
     <Compile Include="Monitoring\SLA\EstimatedTimeToSLABreachCalculator.cs" />
-    <Compile Include="Audit\AttachCausationHeadersBehavior.cs" />
+    <Compile Include="Causation\AttachCausationHeadersBehavior.cs" />
     <Compile Include="Routing\Publishing\StorageDrivenDispatcher.cs" />
     <Compile Include="Unicast\Queuing\Installers\EndpointInputQueueCreator.cs" />
     <Compile Include="Unicast\Queuing\Installers\AuditQueueCreator.cs" />

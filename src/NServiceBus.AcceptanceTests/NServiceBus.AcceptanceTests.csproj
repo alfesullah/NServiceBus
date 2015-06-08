@@ -76,6 +76,7 @@
     <Compile Include="BestPractices\When_subscribing_to_command.cs" />
     <Compile Include="BestPractices\When_publishing_command.cs" />
     <Compile Include="BestPractices\When_sending_event.cs" />
+    <Compile Include="Causation\When_a_message_is_sent.cs" />
     <Compile Include="DeliveryOptions\When_message_with_TimeToBeReceived_fails.cs" />
     <Compile Include="DeliveryOptions\When_auditing_message_with_TimeToBeReceived.cs" />
     <Compile Include="Audit\When_ForwardReceivedMessagesTo_is_set.cs" />

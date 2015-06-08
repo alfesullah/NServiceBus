@@ -1,7 +1,6 @@
 namespace NServiceBus
 {
     using System;
-    using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
 
     class AttachCausationHeadersBehavior :PhysicalOutgoingContextStageBehavior
@@ -32,14 +31,6 @@ namespace NServiceBus
             }
 
             context.SetHeader(Headers.ConversationId,conversationId);
-        }
-
-        public class Registration : RegisterStep
-        {
-            public Registration()
-                : base("AttachCausationHeaders", typeof(AttachCausationHeadersBehavior), "Adds related to and conversation id headers to outgoing messages")
-            {
-            }
         }
     }
 }

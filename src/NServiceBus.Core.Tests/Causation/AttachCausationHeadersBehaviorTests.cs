@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Core.Tests.Audit
+﻿namespace NServiceBus.Core.Tests.Causation
 {
     using System;
     using System.Collections.Generic;

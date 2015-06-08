@@ -124,7 +124,7 @@
     <Compile Include="AssemblyScanner\When_scanning_for_dlls_only.cs" />
     <Compile Include="AssemblyScanner\When_scanning_top_level_only.cs" />
     <Compile Include="AssemblyScanner\When_told_to_scan_app_domain.cs" />
-    <Compile Include="Audit\AttachCausationHeadersBehaviorTests.cs" />
+    <Compile Include="Causation\AttachCausationHeadersBehaviorTests.cs" />
     <Compile Include="DelayedDelivery\RouteDeferredMessageToTimeoutManagerBehaviorTests.cs" />
     <Compile Include="TransportDispatch\HeaderAssertHelpers.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttributeTests.cs" />
