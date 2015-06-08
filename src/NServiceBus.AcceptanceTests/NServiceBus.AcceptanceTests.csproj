@@ -148,7 +148,7 @@
     <Compile Include="Encryption\When_using_Rijndael_with_multikey.cs" />
     <Compile Include="Encryption\When_using_Rijndael_with_custom.cs" />
     <Compile Include="Encryption\When_using_Rijndael_with_config.cs" />
-    <Compile Include="EndpointTemplates\DefaultPublisher.cs" />
+    <Compile Include="Encryption\EndpointTemplates\DefaultPublisher.cs" />
     <Compile Include="Exceptions\StackTraceAssert.cs" />
     <Compile Include="Exceptions\Handler_and_UowEnd_throws.cs">
       <SubType>Code</SubType>
@@ -196,12 +196,12 @@
     <Compile Include="Correlation\When_using_a_custom_correlation_id.cs" />
     <Compile Include="Config\When_a_config_override_is_found.cs" />
     <Compile Include="Encryption\When_using_encryption_with_custom_service.cs" />
-    <Compile Include="EndpointTemplates\ContextAppender.cs" />
+    <Compile Include="Encryption\EndpointTemplates\ContextAppender.cs" />
     <Compile Include="NonDTC\When_sending_from_a_non_dtc_endpoint.cs" />
     <Compile Include="NonDTC\When_receiving_a_message.cs" />
     <Compile Include="NServiceBusAcceptanceTest.cs" />
     <Compile Include="DataBus\When_sending_databus_properties.cs" />
-    <Compile Include="EndpointTemplates\ConfigureExtensions.cs" />
+    <Compile Include="Encryption\EndpointTemplates\ConfigureExtensions.cs" />
     <Compile Include="PubSub\SubscriptionBehavior.cs" />
     <Compile Include="PubSub\When_multi_subscribing_to_a_polymorphic_event.cs" />
     <Compile Include="PubSub\When_publishing_with_overridden_local_address.cs" />
@@ -233,7 +233,7 @@
     <Compile Include="Sagas\When_using_contain_saga_data.cs" />
     <Compile Include="ScenarioDescriptors\Builders.cs" />
     <Compile Include="ScenarioDescriptors\AllTransports.cs" />
-    <Compile Include="EndpointTemplates\DefaultServer.cs" />
+    <Compile Include="Encryption\EndpointTemplates\DefaultServer.cs" />
     <Compile Include="ScenarioDescriptors\Persistence.cs" />
     <Compile Include="Scheduling\When_scheduling_a_recurring_task.cs" />
     <Compile Include="Tx\FakePromotableResourceManager.cs" />

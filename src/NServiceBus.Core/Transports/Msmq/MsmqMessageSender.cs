@@ -18,16 +18,14 @@ namespace NServiceBus.Transports.Msmq
         /// Creates a new sender.
         /// </summary>
         /// <param name="settings">The current msmq settings</param>
-        public MsmqMessageSender(MsmqSettings settings)
+        /// <param name="messageLabelGenerator"></param>
+        public MsmqMessageSender(MsmqSettings settings, MsmqLabelGenerator messageLabelGenerator)
         {
             Guard.AgainstNull(settings, "settings");
+    
             this.settings = settings;
+            this.messageLabelGenerator = messageLabelGenerator;
         }
-
-        /// <summary>
-        /// Stores the value set by <see cref="MsmqConfigurationExtensions.ApplyLabelToMessages"/>
-        /// </summary>
-        public MsmqLabelGenerator MessageLabelConvention { get; set; }
 
         /// <summary>
         /// Sends the given <paramref name="message"/>
@@ -69,10 +67,9 @@ namespace NServiceBus.Transports.Msmq
                     dispatchOptions.Context.TryGet(out receiveTransaction);
 
 
-                   
-                    var label = GetLabel(message)
+                    var label = GetLabel(message);
 
-                    if (sendOptions.MimimumConsistencyGuarantee is AtomicWithReceiveOperation && receiveTransaction != null)
+                    if (dispatchOptions.MinimumConsistencyGuarantee is AtomicWithReceiveOperation && receiveTransaction != null)
                     {
                         q.Send(toSend, label, receiveTransaction);
                     }
@@ -105,11 +102,11 @@ namespace NServiceBus.Transports.Msmq
 
         string GetLabel(OutgoingMessage message)
         {
-            if (MessageLabelConvention == null)
+            if (messageLabelGenerator == null)
             {
                 return string.Empty;
             }
-            var messageLabel = MessageLabelConvention(new ReadOnlyDictionary<string, string>(message.Headers));
+            var messageLabel = messageLabelGenerator(new ReadOnlyDictionary<string, string>(message.Headers));
             if (messageLabel == null)
             {
                 throw new Exception("MSMQ label convention returned a null. Either return a valid value or a String.Empty to indicate 'no value'.");
@@ -143,5 +140,6 @@ namespace NServiceBus.Transports.Msmq
         }
 
         MsmqSettings settings;
+        readonly MsmqLabelGenerator messageLabelGenerator;
     }
 }
