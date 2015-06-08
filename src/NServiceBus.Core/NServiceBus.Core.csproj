@@ -90,7 +90,6 @@
     <Compile Include="Audit\AuditConfigReader.cs" />
     <Compile Include="Audit\AuditContext.cs" />
     <Compile Include="Audit\AuditContextExtensions.cs" />
-    <Compile Include="Audit\AuditerWrapper.cs" />
     <Compile Include="Audit\AuditDispatchTerminator.cs" />
     <Compile Include="Audit\ConfigureAudit.cs" />
     <Compile Include="Audit\InvokeAuditPipelineBehavior.cs" />
@@ -423,7 +422,6 @@
     <Compile Include="Pipeline\BehaviorContextStacker.cs" />
     <Compile Include="MessageMutator\ApplyIncomingMessageMutatorsBehavior.cs" />
     <Compile Include="MessageMutator\ApplyIncomingTransportMessageMutatorsBehavior.cs" />
-    <Compile Include="Audit\AuditBehavior.cs" />
     <Compile Include="Pipeline\StepRegistrationsCoordinator.cs" />
     <Compile Include="Pipeline\BehaviorTypeChecker.cs" />
     <Compile Include="Pipeline\Dependency.cs" />
@@ -455,8 +453,6 @@
     <Compile Include="Support\RuntimeEnvironment.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttribute.cs" />
     <Compile Include="Transports\ConfigureTransport.cs" />
-    <Compile Include="Audit\DefaultMessageAuditer.cs" />
-    <Compile Include="Audit\IAuditMessages.cs" />
     <Compile Include="Transports\Msmq\Config\CheckMachineNameForComplianceWithDtcLimitation.cs" />
     <Compile Include="Unicast\Behaviors\ForwardBehavior.cs" />
     <Compile Include="Unicast\Behaviors\InvokeHandlersBehavior.cs" />

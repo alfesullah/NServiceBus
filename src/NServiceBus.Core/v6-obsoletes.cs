@@ -497,10 +497,10 @@ namespace NServiceBus
     public static class ExtensionMethods
     {
         [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Headers are not 'set' only on the outgoing pipeline")]
-        public static string GetMessageHeader(this IBus bus, object msg, string key){throw new NotImplementedException();}
+        public static string GetMessageHeader(this IBus bus, object msg, string key) { throw new NotImplementedException(); }
 
         [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Headers can be set using the ``.SetHeader` method on the context object passed into your behavior or mutator")]
-        public static void SetMessageHeader(this ISendOnlyBus bus, object msg, string key, string value){throw new NotImplementedException();}
+        public static void SetMessageHeader(this ISendOnlyBus bus, object msg, string key, string value) { throw new NotImplementedException(); }
 
         [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "Use a incoming behavior to get access to the current message")]
         public static object CurrentMessageBeingHandled { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -628,5 +628,14 @@ namespace NServiceBus.Features
             throw new NotImplementedException();
         }
 
+    }
+}
+
+namespace NServiceBus.Transports
+{
+    [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer used, safe to remove")]
+    public interface IAuditMessages
+    {
+       
     }
 }

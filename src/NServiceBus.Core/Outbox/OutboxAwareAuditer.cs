@@ -1,19 +1,16 @@
 namespace NServiceBus.Outbox
 {
+    using System;
     using System.Collections.Generic;
-    using NServiceBus.ConsistencyGuarantees;
-    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
     using NServiceBus.Transports;
 
     class OutboxAwareAuditer
     {
-        DefaultMessageAuditer defaultMessageAuditer;
-        BehaviorContext behaviorContext;
+        readonly BehaviorContext behaviorContext;
 
-        public OutboxAwareAuditer(DefaultMessageAuditer defaultMessageAuditer, BehaviorContext behaviorContext)
+        public OutboxAwareAuditer(BehaviorContext behaviorContext)
         {
-            this.defaultMessageAuditer = defaultMessageAuditer;
             this.behaviorContext = behaviorContext;
         }
 
@@ -33,7 +30,7 @@ namespace NServiceBus.Outbox
             }
             else
             {
-                defaultMessageAuditer.Audit(new DispatchOptions(destination,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()), message);
+                throw new NotImplementedException("Will soon use the dispatch override instead");
             }
         }
     }

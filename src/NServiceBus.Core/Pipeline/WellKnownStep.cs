@@ -39,6 +39,7 @@ namespace NServiceBus.Pipeline
         /// Statistics analysis
         /// </summary>
         public static WellKnownStep ProcessingStatistics = new WellKnownStep("ProcessingStatistics");
+        
         /// <summary>
         /// Auditing
         /// </summary>

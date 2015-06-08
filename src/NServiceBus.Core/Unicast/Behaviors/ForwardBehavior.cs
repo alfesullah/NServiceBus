@@ -1,16 +1,10 @@
 ﻿namespace NServiceBus
 {
     using System;
-    using System.Collections.Generic;
-    using NServiceBus.ConsistencyGuarantees;
-    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
-    using NServiceBus.Transports;
 
     class ForwardBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public IAuditMessages MessageAuditer { get; set; }
-
         public string ForwardReceivedMessagesTo { get; set; }
 
 
@@ -20,8 +14,10 @@
 
             context.PhysicalMessage.RevertToOriginalBodyIfNeeded();
 
-            MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id,context.PhysicalMessage.Headers,context.PhysicalMessage.Body),
-                new DispatchOptions( ForwardReceivedMessagesTo,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+            throw new NotImplementedException("Will soon add a forwarding pipeline");
+
+        //    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id,context.PhysicalMessage.Headers,context.PhysicalMessage.Body),
+        //        new DispatchOptions( ForwardReceivedMessagesTo,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
         }
 
         public class Registration : RegisterStep

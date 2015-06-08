@@ -2,14 +2,11 @@
 namespace NServiceBus.AcceptanceTests.PipelineExt
 {
     using System;
-    using System.Collections.Generic;
     using NServiceBus.AcceptanceTesting;
     using NServiceBus.AcceptanceTests.EndpointTemplates;
-    using NServiceBus.ConsistencyGuarantees;
-    using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Audit;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
-    using NServiceBus.Transports;
     using NUnit.Framework;
 
     /// <summary>
@@ -62,19 +59,16 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
                 {
                     if (context.MessageType == typeof(MessageToBeAudited))
                     {
-                        context.Get<AuditFilterResult>().DoNotAuditMessage = true;
+                        context.Set(new AuditFilterResult
+                        {
+                            DoNotAuditMessage = true
+                        });
                     }
 
                     next();
                 }
 
-                class AuditFilteringOverride : INeedInitialization
-                {
-                    public void Customize(BusConfiguration configuration)
-                    {
-                        configuration.Pipeline.Register("SetFiltering", typeof(SetFiltering), "Filters audit entries");
-                    }
-                }
+              
             }
 
             class AuditFilterResult
@@ -82,33 +76,37 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
                 public bool DoNotAuditMessage { get; set; }
             }
 
-            class FilteringAuditBehavior : PhysicalMessageProcessingStageBehavior
+            class FilteringAuditBehavior : Behavior<AuditContext>
             {
-                public IAuditMessages MessageAuditer { get; set; }
-
-                public override void Invoke(Context context, Action next)
+                public override void Invoke(AuditContext context, Action next)
                 {
-                    var auditResult = new AuditFilterResult();
-                    context.Set(auditResult);
-                    next();
+                    AuditFilterResult result;
 
-                    //note: and rule operating on the raw TransportMessage can be applied here if needed.
-                    // Access to the message is through: context.PhysicalMessage. Eg:  context.PhysicalMessage.Headers.ContainsKey("NServiceBus.ControlMessage")
-                    if (auditResult.DoNotAuditMessage)
+                    if (context.TryGet(out result) && result.DoNotAuditMessage)
                     {
                         return;
                     }
-                    MessageAuditer.Audit(new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body),new DispatchOptions("auditspy",new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+                    next();
                 }
 
-                //here we inject our behavior
-                class AuditFilteringOverride : INeedInitialization
+
+                public class Registration : RegisterStep
                 {
-                    public void Customize(BusConfiguration configuration)
+                    public Registration()
+                        : base("FilteringAudit", typeof(FilteringAuditBehavior), "Prevents audits if needed")
                     {
-                        //we replace the default audit behavior with out own
-                        configuration.Pipeline.Replace(WellKnownStep.AuditProcessedMessage, typeof(FilteringAuditBehavior), "A new audit forwarder that has filtering");
                     }
+                }
+
+
+            }
+
+            class AuditFilteringOverride : INeedInitialization
+            {
+                public void Customize(BusConfiguration configuration)
+                {
+                    configuration.Pipeline.Register("SetFiltering", typeof(SetFiltering), "Filters audit entries");
+                    configuration.Pipeline.Register<FilteringAuditBehavior.Registration>();
                 }
             }
         }

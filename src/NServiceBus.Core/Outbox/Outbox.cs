@@ -89,7 +89,6 @@ The reason you need to do this is because we need to ensure that you have read a
 
             //make the audit use the outbox as well
             context.Container.ConfigureComponent<OutboxAwareAuditer>(DependencyLifecycle.InstancePerCall);
-            context.Container.ConfigureProperty<AuditerWrapper>(t => t.AuditerImplType, typeof(OutboxAwareAuditer));
         }
 
     }
