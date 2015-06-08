@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AcceptanceTests.Audit
+﻿namespace NServiceBus.AcceptanceTests.Recoverability
 {
     using System;
     using NServiceBus.AcceptanceTesting;
