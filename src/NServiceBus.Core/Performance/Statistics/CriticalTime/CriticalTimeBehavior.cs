@@ -17,14 +17,19 @@
         {
             next();
 
-            DateTime timeSent;
+            ProcessingStatisticsBehavior.State state;
 
-            if (!context.TryGet("IncomingMessage.TimeSent", out timeSent))
+            if (!context.TryGet(out state))
             {
                 return;
             }
 
-            criticalTimeCounter.Update(timeSent, context.Get<DateTime>("IncomingMessage.ProcessingStarted"), context.Get<DateTime>("IncomingMessage.ProcessingEnded"));
+            if (!state.TimeSent.HasValue)
+            {
+                return;
+            }
+
+            criticalTimeCounter.Update(state.TimeSent.Value, state.ProcessingStarted,state.ProcessingEnded);
         }
 
         public class Registration : RegisterStep

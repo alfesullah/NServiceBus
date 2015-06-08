@@ -1,11 +1,11 @@
-namespace NServiceBus
+namespace NServiceBus.PerformanceCounters
 {
     using System;
     using System.Diagnostics;
     using System.IO;
     using System.Security.Principal;
-    using Logging;
     using NServiceBus.Installation;
+    using NServiceBus.Logging;
 
     /// <summary>
     /// Add the identity to the 'Performance Monitor Users' local group 

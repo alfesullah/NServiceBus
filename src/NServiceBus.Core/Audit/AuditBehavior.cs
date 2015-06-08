@@ -29,9 +29,7 @@
             var outgoingMessage = new OutgoingMessage(context.PhysicalMessage.Id, context.PhysicalMessage.Headers, context.PhysicalMessage.Body);
             
             //set audit related headers
-            outgoingMessage.Headers[Headers.ProcessingStarted] = DateTimeExtensions.ToWireFormattedString(context.Get<DateTime>("IncomingMessage.ProcessingStarted"));
-            outgoingMessage.Headers[Headers.ProcessingEnded] = DateTimeExtensions.ToWireFormattedString(context.Get<DateTime>("IncomingMessage.ProcessingEnded"));
-
+      
             outgoingMessage.Headers[Headers.ProcessingMachine] = RuntimeEnvironment.MachineName;
             outgoingMessage.Headers[Headers.ProcessingEndpoint] = Settings.EndpointName();
 

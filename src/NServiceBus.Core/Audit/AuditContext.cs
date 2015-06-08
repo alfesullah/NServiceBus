@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus.Audit
 {
     using NServiceBus.Pipeline;
+    using NServiceBus.Pipeline.Contexts;
 
     /// <summary>
     /// Provide context to behaviors on the audit pipeline
@@ -11,7 +12,7 @@
         /// Initializes the context
         /// </summary>
         /// <param name="parent">The parent incoming context</param>
-        public AuditContext(PhysicalMessageProcessingStageBehavior.Context parent)
+        public AuditContext(TransportReceiveContext parent)
             : base(parent)
         {
         }

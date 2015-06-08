@@ -152,6 +152,7 @@
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
     <Compile Include="Outbox\OutboxRoutingStrategy.cs" />
+    <Compile Include="Performance\ReceiveStatisticsFeature.cs" />
     <Compile Include="Performance\TimeToBeReceived\ApplyTimeToBeReceivedBehavior.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceived.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedConventionExtensions.cs" />
@@ -169,7 +170,7 @@
     <Compile Include="Routing\MessagingBestPractices\BestPracticeEnforcement.cs" />
     <Compile Include="Routing\MessagingBestPractices\OptionExtensions.cs" />
     <Compile Include="Pipeline\Contexts\OutgoingContext.cs" />
-    <Compile Include="Monitoring\PerformanceCounterInstance.cs" />
+    <Compile Include="PerformanceCounters\PerformanceCounterInstance.cs" />
     <Compile Include="Pipeline\Contexts\PhysicalMessageProcessingStageBehavior.cs" />
     <Compile Include="Pipeline\BehaviorInvoker.cs" />
     <Compile Include="Pipeline\Contexts\IncomingContext.cs" />
@@ -259,10 +260,10 @@
     <Compile Include="Logging\DefaultFactory.cs" />
     <Compile Include="Logging\LoggingDefinition.cs" />
     <Compile Include="MessageInterfaces\MessageMapper\Reflection\ConcreteProxyCreator.cs" />
-    <Compile Include="Monitoring\PerformanceCounterHelper.cs" />
-    <Compile Include="Monitoring\CriticalTime\CriticalTimeMonitoringConfig.cs" />
-    <Compile Include="Monitoring\CriticalTime\CriticalTimeMonitoring.cs" />
-    <Compile Include="Monitoring\SLA\SLAMonitoringConfig.cs" />
+    <Compile Include="PerformanceCounters\PerformanceCounterHelper.cs" />
+    <Compile Include="Performance\Statistics\CriticalTime\CriticalTimeMonitoringConfig.cs" />
+    <Compile Include="Performance\Statistics\CriticalTime\CriticalTimeMonitoring.cs" />
+    <Compile Include="Performance\Statistics\SLA\SLAMonitoringConfig.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="AddressMode.cs" />
@@ -357,10 +358,10 @@
     <Compile Include="Pipeline\Contexts\HandlingContext.cs" />
     <Compile Include="Unicast\Behaviors\MessageProcessingAbortedException.cs" />
     <Compile Include="Unicast\Config\RegisterHandlersInOrder.cs" />
-    <Compile Include="Monitoring\SLA\SLABehavior.cs" />
-    <Compile Include="Monitoring\CriticalTime\CriticalTimeBehavior.cs" />
-    <Compile Include="Monitoring\SLA\SLAMonitoring.cs" />
-    <Compile Include="Monitoring\ProcessingStatisticsBehavior.cs" />
+    <Compile Include="Performance\Statistics\SLA\SLABehavior.cs" />
+    <Compile Include="Performance\Statistics\CriticalTime\CriticalTimeBehavior.cs" />
+    <Compile Include="Performance\Statistics\SLA\SLAMonitoring.cs" />
+    <Compile Include="Performance\Statistics\ProcessingStatisticsBehavior.cs" />
     <Compile Include="Unicast\ContextualBus.cs" />
     <Compile Include="MessageDeserializationException.cs" />
     <Compile Include="Hosting\AuditHostInformationBehavior.cs" />
@@ -372,7 +373,7 @@
     <Compile Include="Pipeline\LimitedThreadPoolExecutor.cs" />
     <Compile Include="Pipeline\ThroughputLimitExecutor.cs" />
     <Compile Include="Unicast\Transport\SuppressAmbientTransactionBehavior.cs" />
-    <Compile Include="Unicast\Transport\ReceivePerformanceDiagnosticsBehavior.cs" />
+    <Compile Include="Performance\Statistics\ReceivePerformanceDiagnosticsBehavior.cs" />
     <Compile Include="Unicast\Transport\HandlerTransactionScopeWrapperBehavior.cs" />
     <Compile Include="Unicast\UnicastBus_IBusImpl.cs" />
     <Compile Include="Utils\Guard.cs" />
@@ -414,7 +415,7 @@
     <Compile Include="Persistence\InMemory\SagaPersister\InMemorySagaPersistence.cs" />
     <Compile Include="Persistence\InMemory\SubscriptionStorage\InMemorySubscriptionPersistence.cs" />
     <Compile Include="Persistence\InMemory\TimeoutPersister\InMemoryTimeoutPersistence.cs" />
-    <Compile Include="Monitoring\PerformanceMonitorUsersInstaller.cs" />
+    <Compile Include="PerformanceCounters\PerformanceMonitorUsersInstaller.cs" />
     <Compile Include="Persistence\InMemory\Gateway\InMemoryGatewayDeduplication.cs" />
     <Compile Include="Persistence\PersistenceDefinition.cs" />
     <Compile Include="Persistence\PersistenceConfig.cs" />
@@ -544,7 +545,7 @@
     <Compile Include="Faults\FaultsQueueCreator.cs" />
     <Compile Include="Faults\IManageMessageFailures.cs" />
     <Compile Include="Hosting\Configuration\EndpointNameAttribute.cs" />
-    <Compile Include="Monitoring\SLA\EndpointSLAAttribute.cs" />
+    <Compile Include="Performance\Statistics\SLA\EndpointSLAAttribute.cs" />
     <Compile Include="Hosting\Configuration\IConfigureThisEndpoint.cs" />
     <Compile Include="Hosting\Helpers\AssemblyScanner.cs" />
     <Compile Include="Hosting\Helpers\AssemblyScannerResults.cs" />
@@ -618,8 +619,8 @@
     <Compile Include="Unicast\Messages\MessageMetadataRegistry.cs" />
     <Compile Include="Unicast\Messages\MessageMetadata.cs" />
     <Compile Include="Routing\MessagingBestPractices\Validations.cs" />
-    <Compile Include="Monitoring\CriticalTime\CriticalTimeCalculator.cs" />
-    <Compile Include="Monitoring\SLA\EstimatedTimeToSLABreachCalculator.cs" />
+    <Compile Include="Performance\Statistics\CriticalTime\CriticalTimeCalculator.cs" />
+    <Compile Include="Performance\Statistics\SLA\EstimatedTimeToSLABreachCalculator.cs" />
     <Compile Include="Causation\AttachCausationHeadersBehavior.cs" />
     <Compile Include="Routing\Publishing\StorageDrivenDispatcher.cs" />
     <Compile Include="Unicast\Queuing\Installers\EndpointInputQueueCreator.cs" />

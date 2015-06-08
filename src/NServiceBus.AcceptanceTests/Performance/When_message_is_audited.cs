@@ -1,22 +1,22 @@
-﻿namespace NServiceBus.AcceptanceTests.Audit
+﻿namespace NServiceBus.AcceptanceTests.Performance
 {
     using System;
     using System.Collections.Generic;
-    using EndpointTemplates;
-    using AcceptanceTesting;
+    using NServiceBus.AcceptanceTesting;
+    using NServiceBus.AcceptanceTests.EndpointTemplates;
     using NUnit.Framework;
 
-    public class When_using_audit_message_is_received : NServiceBusAcceptanceTest
+    public class When_message_is_audited : NServiceBusAcceptanceTest
     {
 
         [Test]
-        public void Should_contain_correct_headers()
+        public void Should_contain_processing_stats_headers()
         {
             var context = new Context();
             Scenario.Define(context)
             .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited())))
             .WithEndpoint<EndpointThatHandlesAuditMessages>()
-            .Done(c => c.IsMessageHandlingComplete && context.IsMessageHandledByTheAuditEndpoint)
+            .Done(c => context.IsMessageHandledByTheAuditEndpoint)
             .Run();
             Assert.IsTrue(context.Headers.ContainsKey(Headers.ProcessingStarted));
             Assert.IsTrue(context.Headers.ContainsKey(Headers.ProcessingEnded));
@@ -25,7 +25,6 @@
 
         public class Context : ScenarioContext
         {
-            public bool IsMessageHandlingComplete { get; set; }
             public bool IsMessageHandledByTheAuditEndpoint { get; set; }
             public IDictionary<string,string> Headers{ get; set; }
         }
@@ -50,7 +49,6 @@
 
                 public void Handle(MessageToBeAudited message)
                 {
-                    context.IsMessageHandlingComplete = true;
                 }
             }
         }
@@ -76,8 +74,8 @@
 
                 public void Handle(MessageToBeAudited message)
                 {
-                    context.IsMessageHandledByTheAuditEndpoint = true;
                     context.Headers = bus.CurrentMessageContext.Headers;
+                    context.IsMessageHandledByTheAuditEndpoint = true;
                 }
             }
         }

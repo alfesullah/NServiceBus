@@ -1,5 +1,7 @@
 namespace NServiceBus.Features
 {
+    using NServiceBus.PerformanceCounters;
+
     /// <summary>
     /// Used to configure CriticalTimeMonitoring.
     /// </summary>
