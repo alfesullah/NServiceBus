@@ -180,7 +180,6 @@
     <Compile Include="ReplyOptions.cs" />
     <Compile Include="Satellites\IAdvancedSatellite.cs" />
     <Compile Include="Satellites\ISatellite.cs" />
-    <Compile Include="Routing\RouteMessageBehavior.cs" />
     <Compile Include="Routing\DetermineRoutingForMessageBehavior.cs" />
     <Compile Include="ConsistencyGuarantees\NoConsistencyRequired.cs" />
     <Compile Include="Routing\NonDurableDelivery.cs" />
