@@ -1,8 +1,11 @@
 ﻿namespace NServiceBus.Core.Tests.Routing
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
+    using NServiceBus.Transports;
     using NUnit.Framework;
 
     [TestFixture]
@@ -73,6 +76,38 @@
             var routingStrategy = (ToAllSubscribers)context.Get<RoutingStrategy>();
 
             Assert.AreEqual(typeof(MyMessage), routingStrategy.EventType);
+        }
+
+        [Test]
+        public void Should_default_to_reply_address_of_incoming_message_for_replies()
+        {
+            var behavior = InitializeBehavior();
+            var options = new ReplyOptions();
+
+            var context = new OutgoingContext(new TransportReceiveContext(new IncomingMessage("id", new Dictionary<string, string> { { Headers.ReplyToAddress, "ReplyAddressOfIncomingMessage" } }, new MemoryStream()), null), typeof(MyMessage), null, options);
+
+            behavior.Invoke(context, () => { });
+
+            var routingStrategy = (DirectToTargetDestination)context.Get<RoutingStrategy>();
+
+            Assert.AreEqual("ReplyAddressOfIncomingMessage", routingStrategy.Destination);
+        }
+
+        [Test]
+        public void Should_use_explicit_route_for_replies_if_present()
+        {
+            var behavior = InitializeBehavior();
+            var options = new ReplyOptions();
+
+            options.OverrideReplyToAddressOfIncomingMessage("CustomReplyToAddress");
+
+            var context = new OutgoingContext(null, typeof(MyMessage), null, options);
+
+            behavior.Invoke(context, () => { });
+
+            var routingStrategy = (DirectToTargetDestination)context.Get<RoutingStrategy>();
+
+            Assert.AreEqual("CustomReplyToAddress", routingStrategy.Destination);
         }
 
         static DetermineRoutingForMessageBehavior InitializeBehavior(string localAddress = null, MessageRouter router = null)

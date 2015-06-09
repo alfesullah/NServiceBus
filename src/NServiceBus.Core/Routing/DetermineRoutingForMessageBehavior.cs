@@ -9,8 +9,8 @@ namespace NServiceBus
     {
         readonly string localAddress;
         readonly MessageRouter messageRouter;
-  
-        public DetermineRoutingForMessageBehavior(string localAddress,MessageRouter messageRouter)
+
+        public DetermineRoutingForMessageBehavior(string localAddress, MessageRouter messageRouter)
         {
             this.localAddress = localAddress;
             this.messageRouter = messageRouter;
@@ -45,7 +45,7 @@ namespace NServiceBus
 
                 routingStrategy = new DirectToTargetDestination(destination);
                 intent = MessageIntentEnum.Send;
-  
+
             }
             if (context.IsPublish())
             {
@@ -55,7 +55,17 @@ namespace NServiceBus
 
             if (context.IsReply())
             {
-                //var sendOptions = new SendMessageOptions(MessageBeingProcessed.ReplyToAddress);
+                var state = context.Extensions.GetOrCreate<State>();
+
+                var replyToAddress = state.ExplicitDestination;
+
+                if (string.IsNullOrEmpty(replyToAddress))
+                {
+                    replyToAddress = GetReplyToAddressFromIncomingMessage(context);
+                }
+
+                routingStrategy = new DirectToTargetDestination(replyToAddress);
+
                 intent = MessageIntentEnum.Reply;
             }
 
@@ -64,46 +74,30 @@ namespace NServiceBus
                 throw new Exception("No routing strategy could be determined for message");
             }
 
-            context.SetHeader(Headers.MessageIntent,intent.ToString());
+            context.SetHeader(Headers.MessageIntent, intent.ToString());
 
             context.Set(routingStrategy);
 
             next();
         }
 
+        static string GetReplyToAddressFromIncomingMessage(OutgoingContext context)
+        {
+            TransportMessage incomingMessage;
 
-        //string GetDestinationForSend(Type messageType)
-        //{
-        //    var destinations = GetAtLeastOneAddressForMessageType(messageType);
+            if (!context.TryGet(TransportReceiveContext.IncomingPhysicalMessageKey, out incomingMessage))
+            {
+                throw new Exception("No incoming message found, replies are only valid to call from a message handler");
+            }
 
-        //    if (destinations.Count > 1)
-        //    {
-        //        throw new InvalidOperationException("Sends can only target one address.");
-        //    }
+            string replyToAddress;
 
-        //    return destinations.SingleOrDefault();
-        //}
-
-
-        //var operationType = transportOperation.Options["Operation"];
-
-        //switch (operationType)
-        //{
-        //    case "Audit":
-        //        defaultAuditer.Audit(new TransportSendOptions(transportOperation.Options["Destination"],null,false,false), message);
-        //        break;
-        //    case "Send":
-        //        defaultDispatcher.NativeSendOrDefer(transportOperation.Options["Destination"],deliveryOptions, message);
-        //        break;
-        //    case "Publish":
-
-        //        var options= new TransportPublishOptions(Type.GetType(transportOperation.Options["EventType"]));
-
-        //        defaultDispatcher.NativePublish(options, message);
-        //        break;
-        //    default:
-        //        throw new InvalidOperationException("Unknown operation type: " + operationType);
-        //}
+            if (!incomingMessage.Headers.TryGetValue(Headers.ReplyToAddress, out replyToAddress))
+            {
+                throw new Exception("No `ReplyToAddress` found on the message being processed");
+            }
+            return replyToAddress;
+        }
 
         public class State
         {
