@@ -8,6 +8,7 @@
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline;
     using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
 
     class AuditDispatchTerminator : PipelineTerminator<AuditContext>

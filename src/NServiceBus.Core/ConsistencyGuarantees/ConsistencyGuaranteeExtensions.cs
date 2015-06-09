@@ -1,10 +1,10 @@
 namespace NServiceBus.ConsistencyGuarantees
 {
-    using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.TransportDispatch;
 
     static class ConsistencyGuaranteeExtensions
     {
-        public static ConsistencyGuarantee GetConsistencyGuarantee(this PhysicalOutgoingContextStageBehavior.Context context)
+        public static ConsistencyGuarantee GetConsistencyGuarantee(this DispatchContext context)
         {
             ConsistencyGuarantee guarantee;
 
@@ -13,6 +13,7 @@ namespace NServiceBus.ConsistencyGuarantees
                 return guarantee;
             }
 
+            //todo: we need to get this default from the transport
             return new AtomicWithReceiveOperation();
         }
     }

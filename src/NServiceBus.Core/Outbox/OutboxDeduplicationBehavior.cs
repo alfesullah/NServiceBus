@@ -8,6 +8,7 @@
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
     using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
 

@@ -299,11 +299,9 @@ namespace NServiceBus
         public NServiceBus.First<T> AndThen<K>() { }
         public static NServiceBus.First<T> Then<K>() { }
     }
-    public class static HeaderExtensions
+    public class static HeaderOptionExtensions
     {
-        public static void SetHeader(this NServiceBus.Pipeline.Contexts.OutgoingContext context, string key, string value) { }
         public static void SetHeader(this NServiceBus.Extensibility.ExtendableOptions context, string key, string value) { }
-        public static void SetHeader(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context, string key, string value) { }
     }
     public class static Headers
     {
@@ -2240,6 +2238,19 @@ namespace NServiceBus.Timeout.Core
         [System.ObsoleteAttribute("Use new OutgoingMessage(timeoutData.State) instead. Will be removed in version 7." +
             "0.0.", true)]
         public NServiceBus.TransportMessage ToTransportMessage() { }
+    }
+}
+namespace NServiceBus.TransportDispatch
+{
+    public class DispatchContext : NServiceBus.Pipeline.BehaviorContext
+    {
+        public DispatchContext(NServiceBus.Transports.OutgoingMessage messageToDispatch, NServiceBus.Pipeline.BehaviorContext context) { }
+    }
+    public class static HeaderContextExtensions
+    {
+        public static void SetHeader(this NServiceBus.Pipeline.Contexts.OutgoingContext context, string key, string value) { }
+        public static void SetHeader(this NServiceBus.Pipeline.Contexts.PhysicalOutgoingContextStageBehavior.Context context, string key, string value) { }
+        public static void SetHeader(this NServiceBus.TransportDispatch.DispatchContext context, string key, string value) { }
     }
 }
 namespace NServiceBus.Transports

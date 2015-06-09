@@ -13,6 +13,7 @@ namespace NServiceBus.Unicast
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Settings;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Routing;
 

@@ -2,6 +2,7 @@ namespace NServiceBus
 {
     using System;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.TransportDispatch;
 
     class AttachCausationHeadersBehavior :PhysicalOutgoingContextStageBehavior
     {

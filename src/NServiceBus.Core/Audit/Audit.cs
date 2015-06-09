@@ -2,6 +2,7 @@
 {
     using NServiceBus.Audit;
     using NServiceBus.Pipeline;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Queuing.Installers;
 

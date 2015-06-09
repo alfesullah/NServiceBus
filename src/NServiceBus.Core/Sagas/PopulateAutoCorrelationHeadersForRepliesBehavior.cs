@@ -3,6 +3,7 @@
     using System;
     using NServiceBus.Routing;
     using NServiceBus.Saga;
+    using NServiceBus.TransportDispatch;
     using Pipeline;
     using Pipeline.Contexts;
 

@@ -27,7 +27,7 @@
                 
             });
 
-            Assert.AreEqual("myContentType", context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>().Headers[Headers.ContentType]);
+            Assert.AreEqual("myContentType", context.Extensions.GetOrCreate<DispatchMessageToTransportConnector.State>().Headers[Headers.ContentType]);
         }
 
         public class FakeSerializer : IMessageSerializer

@@ -3,6 +3,8 @@
     using System;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.TransportDispatch;
+
     class AttachCorrelationIdBehavior : Behavior<OutgoingContext>
     {
         public override void Invoke(OutgoingContext context, Action next)

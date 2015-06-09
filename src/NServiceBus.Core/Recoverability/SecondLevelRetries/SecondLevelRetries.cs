@@ -2,8 +2,10 @@ namespace NServiceBus.Features
 {
     using System;
     using NServiceBus.Config;
+    using NServiceBus.Pipeline;
     using NServiceBus.SecondLevelRetries;
     using NServiceBus.Settings;
+    using NServiceBus.TransportDispatch;
 
     /// <summary>
     /// Used to configure Second Level Retries.
@@ -30,6 +32,15 @@ namespace NServiceBus.Features
 
             context.Container.RegisterSingleton(typeof(SecondLevelRetryPolicy), retryPolicy);
             context.Pipeline.Register<SecondLevelRetriesBehavior.Registration>();
+
+
+            context.Container.ConfigureComponent(b =>
+            {
+                var pipelinesCollection = context.Settings.Get<PipelineConfiguration>();
+             
+                var dispatchPipeline = new PipelineBase<DispatchContext>(b, context.Settings, pipelinesCollection.MainPipeline);
+                return new SecondLevelRetriesBehavior(dispatchPipeline,retryPolicy,b.Build<BusNotifications>());
+            }, DependencyLifecycle.InstancePerCall);
         }
 
         bool IsEnabledInConfig(FeatureConfigurationContext context)

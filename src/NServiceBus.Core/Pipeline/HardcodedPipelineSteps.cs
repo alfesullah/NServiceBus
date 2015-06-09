@@ -26,7 +26,8 @@ namespace NServiceBus.Pipeline
             pipeline.RegisterConnector<SerializeMessagesBehavior>("Converts a logical message into a physical message");
 
             //todo: move to the feature
-            pipeline.RegisterConnector<DispatchMessageToTransportTerminator>("Dispatches messages to the transport");
+            pipeline.RegisterConnector<DispatchMessageToTransportConnector>("Starts the message dispatch pipeline");
+            pipeline.RegisterConnector<DispatchTerminator>("Dispatches messages to the transport");
 
             pipeline.Register(WellKnownStep.MutateOutgoingMessages, typeof(MutateOutgoingMessageBehavior), "Executes IMutateOutgoingMessages")
                 .Register("PopulateAutoCorrelationHeadersForReplies", typeof(PopulateAutoCorrelationHeadersForRepliesBehavior), "Copies existing saga headers from incoming message to outgoing message to facilitate the auto correlation in the saga, when replying to a message that was sent by a saga.")

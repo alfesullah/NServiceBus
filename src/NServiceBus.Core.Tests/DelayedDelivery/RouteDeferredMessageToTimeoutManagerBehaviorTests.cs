@@ -1,11 +1,13 @@
 ﻿namespace NServiceBus.Core.Tests.Timeout
 {
     using System;
+    using System.Collections.Generic;
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
-    using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
     using NServiceBus.Timeout;
+    using NServiceBus.TransportDispatch;
+    using NServiceBus.Transports;
     using NUnit.Framework;
 
     class RouteDeferredMessageToTimeoutManagerBehaviorTests
@@ -15,8 +17,10 @@
         {
             var behavior = new RouteDeferredMessageToTimeoutManagerBehavior("tm");
             var delay = TimeSpan.FromDays(1);
+            var message = new OutgoingMessage("id",new Dictionary<string, string>(),new byte[0]);
 
-            var context = new OutgoingContext(null, null, null, new SendOptions());
+            var context = new DispatchContext(message,null);
+
             context.AddDeliveryConstraint(new DelayDeliveryWith(delay));
             context.Set<RoutingStrategy>(new DirectToTargetDestination("target"));
 
@@ -24,7 +28,7 @@
 
             Assert.AreEqual("tm",((DirectToTargetDestination)context.Get<RoutingStrategy>()).Destination);
 
-            context.AssertHeaderWasSet(TimeoutManagerHeaders.RouteExpiredTimeoutTo, h => h == "target");
+            Assert.AreEqual(message.Headers[TimeoutManagerHeaders.RouteExpiredTimeoutTo],"target");
         }
 
 
@@ -34,7 +38,9 @@
             var behavior = new RouteDeferredMessageToTimeoutManagerBehavior("tm");
             var delay = TimeSpan.FromDays(1);
 
-            var context = new OutgoingContext(null, null, null, new SendOptions());
+            var message = new OutgoingMessage("id", new Dictionary<string, string>(), new byte[0]);
+
+            var context = new DispatchContext(message, null);
             context.AddDeliveryConstraint(new DelayDeliveryWith(delay));
             context.Set<RoutingStrategy>(new ToAllSubscribers(null));
 
@@ -48,14 +54,16 @@
             var behavior = new RouteDeferredMessageToTimeoutManagerBehavior("tm");
             var delay = TimeSpan.FromDays(1);
 
-            var context = new OutgoingContext(null,null,null,new SendOptions());
+            var message = new OutgoingMessage("id", new Dictionary<string, string>(), new byte[0]);
+
+            var context = new DispatchContext(message, null);
             context.AddDeliveryConstraint(new DelayDeliveryWith(delay));
             context.Set<RoutingStrategy>(new DirectToTargetDestination("target"));
             
             behavior.Invoke(context,()=>{});
 
-            context.AssertHeaderWasSet(TimeoutManagerHeaders.Expire, h => DateTimeExtensions.ToUtcDateTime(h) <= DateTime.UtcNow + delay);
-        }
+            Assert.LessOrEqual(DateTimeExtensions.ToUtcDateTime(message.Headers[TimeoutManagerHeaders.Expire]), DateTime.UtcNow + delay);
+          }
 
         [Test]
         public void Should_set_the_expiry_header_to_a_absolute_utc_time()
@@ -63,13 +71,15 @@
             var behavior = new RouteDeferredMessageToTimeoutManagerBehavior("tm");
             var at = DateTime.UtcNow + TimeSpan.FromDays(1);
 
-            var context = new OutgoingContext(null, null, null, new SendOptions());
+            var message = new OutgoingMessage("id", new Dictionary<string, string>(), new byte[0]);
+
+            var context = new DispatchContext(message, null);
             context.AddDeliveryConstraint(new DoNotDeliverBefore(at));
             context.Set<RoutingStrategy>(new DirectToTargetDestination("target"));
 
             behavior.Invoke(context, () => { });
 
-            context.AssertHeaderWasSet(TimeoutManagerHeaders.Expire, h => h == DateTimeExtensions.ToWireFormattedString(at));
+            Assert.AreEqual(message.Headers[TimeoutManagerHeaders.Expire], DateTimeExtensions.ToWireFormattedString(at));
         }
     }
 }

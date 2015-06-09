@@ -7,13 +7,14 @@ namespace NServiceBus
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
     using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
 
-    class OutboxRoutingStrategy : DispatchStrategy
+    class OutboxDispatchStrategy : DispatchStrategy
     {
         OutboxMessage currentOutboxMessage;
       
-        public OutboxRoutingStrategy(OutboxMessage currentOutboxMessage)
+        public OutboxDispatchStrategy(OutboxMessage currentOutboxMessage)
         {
             this.currentOutboxMessage = currentOutboxMessage;
         }

@@ -3,6 +3,7 @@ namespace NServiceBus
     using System;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.TransportDispatch;
 
     class OutboxSendBehavior : PhysicalOutgoingContextStageBehavior
     {
@@ -12,7 +13,7 @@ namespace NServiceBus
 
             if (context.TryGet(out currentOutboxMessage))
             {  
-                context.Set<DispatchStrategy>(new OutboxRoutingStrategy(currentOutboxMessage));
+                context.Set<DispatchStrategy>(new OutboxDispatchStrategy(currentOutboxMessage));
             }
 
             next();

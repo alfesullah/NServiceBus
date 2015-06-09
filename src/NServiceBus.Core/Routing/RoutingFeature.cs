@@ -5,6 +5,7 @@
     using NServiceBus.Config;
     using NServiceBus.Routing;
     using NServiceBus.Routing.Publishing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Messages;
     using NServiceBus.Unicast.Routing;

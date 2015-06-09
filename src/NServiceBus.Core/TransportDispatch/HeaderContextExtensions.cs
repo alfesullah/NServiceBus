@@ -1,12 +1,12 @@
-﻿namespace NServiceBus
+﻿namespace NServiceBus.TransportDispatch
 {
-    using NServiceBus.Extensibility;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.Transports;
 
     /// <summary>
-    /// Extensions to the outgoing pipeline
+    /// Extensions to the the pipeline contexts to provide ways to set message headers
     /// </summary>
-    public static class HeaderExtensions
+    public static class HeaderContextExtensions
     {
         /// <summary>
         /// Allows headers to be set for the outgoing message
@@ -16,23 +16,9 @@
         /// <param name="value">The header value</param>
         public static void SetHeader(this OutgoingContext context, string key, string value)
         {
-            Guard.AgainstNullAndEmpty(key,"key");
-
-            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
-                .Headers[key] = value;
-        }
-
-        /// <summary>
-        /// Allows headers to be set for the outgoing message
-        /// </summary>
-        /// <param name="context">Context to extend</param>
-        /// <param name="key">The header key</param>
-        /// <param name="value">The header value</param>
-        public static void SetHeader(this ExtendableOptions context, string key, string value)
-        {
             Guard.AgainstNullAndEmpty(key, "key");
-            
-            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
+
+            context.Extensions.GetOrCreate<DispatchMessageToTransportConnector.State>()
                 .Headers[key] = value;
         }
 
@@ -45,9 +31,22 @@
         public static void SetHeader(this PhysicalOutgoingContextStageBehavior.Context context, string key, string value)
         {
             Guard.AgainstNullAndEmpty(key, "key");
-            
-            context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>()
+
+            context.Extensions.GetOrCreate<DispatchMessageToTransportConnector.State>()
                 .Headers[key] = value;
+        }
+
+        /// <summary>
+        /// Allows headers to be set for the outgoing message
+        /// </summary>
+        /// <param name="context">Context to extend</param>
+        /// <param name="key">The header key</param>
+        /// <param name="value">The header value</param>
+        public static void SetHeader(this DispatchContext context, string key, string value)
+        {
+            Guard.AgainstNullAndEmpty(key, "key");
+
+            context.Get<OutgoingMessage>().Headers[key] = value;
         }
     }
 }

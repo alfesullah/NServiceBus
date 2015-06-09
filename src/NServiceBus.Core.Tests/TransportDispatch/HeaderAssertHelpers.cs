@@ -7,15 +7,15 @@
     {
         public static void AssertHeaderWasSet(this PhysicalOutgoingContextStageBehavior.Context context, string key, Predicate<string> predicate)
         {
-            Assert(context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>(), key, predicate);
+            Assert(context.Extensions.GetOrCreate<DispatchMessageToTransportConnector.State>(), key, predicate);
         }
 
         public static void AssertHeaderWasSet(this OutgoingContext context, string key, Predicate<string> predicate)
         {
-            Assert(context.Extensions.GetOrCreate<DispatchMessageToTransportTerminator.State>(), key, predicate);
+            Assert(context.Extensions.GetOrCreate<DispatchMessageToTransportConnector.State>(), key, predicate);
         }
 
-        static void Assert(DispatchMessageToTransportTerminator.State state, string key, Predicate<string> predicate)
+        static void Assert(DispatchMessageToTransportConnector.State state, string key, Predicate<string> predicate)
         {
             string current;
 

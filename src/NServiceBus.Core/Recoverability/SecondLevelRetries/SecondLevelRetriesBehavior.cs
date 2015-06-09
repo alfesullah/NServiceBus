@@ -6,14 +6,16 @@ namespace NServiceBus
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
+    using NServiceBus.Routing;
     using NServiceBus.SecondLevelRetries;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
 
     class SecondLevelRetriesBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public SecondLevelRetriesBehavior(IDispatchMessages dispatcher, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
+        public SecondLevelRetriesBehavior(IPipelineBase<DispatchContext> dispatchPipeline, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
         {
-            this.dispatcher = dispatcher;
+             this.dispatchPipeline = dispatchPipeline;
             this.retryPolicy = retryPolicy;
             this.notifications = notifications;
         }
@@ -40,16 +42,23 @@ namespace NServiceBus
                 {
                     var receiveAddress = PipelineInfo.PublicAddress;
 
-                    message.Headers[Headers.Retries] = currentRetry.ToString();
-                    message.Headers[RetriesTimestamp] = DateTimeExtensions.ToWireFormattedString(DateTime.UtcNow);
+                    var messageToRetry = new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body);
 
-                    var sendOptions = new DispatchOptions(receiveAddress,new AtomicWithReceiveOperation(), 
-                        new List<DeliveryConstraint>
+                    messageToRetry.Headers[Headers.Retries] = currentRetry.ToString();
+                    messageToRetry.Headers[RetriesTimestamp] = DateTimeExtensions.ToWireFormattedString(DateTime.UtcNow);
+
+
+                    var dispatchContext = new DispatchContext(messageToRetry,context);
+
+                    context.Set<RoutingStrategy>(new DirectToTargetDestination(receiveAddress));
+                    context.Set<ConsistencyGuarantee>(new AtomicWithReceiveOperation());
+                    context.Set(new List<DeliveryConstraint>
                     {
                         new DelayDeliveryWith(delay)
                     });
 
-                    dispatcher.Dispatch(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body),sendOptions);
+                    dispatchPipeline.Invoke(dispatchContext);
+
              
                     notifications.Errors.InvokeMessageHasBeenSentToSecondLevelRetries(currentRetry,message,ex);
 
@@ -78,7 +87,7 @@ namespace NServiceBus
         }
 
 
-        readonly IDispatchMessages dispatcher;
+        readonly IPipelineBase<DispatchContext> dispatchPipeline;
         readonly SecondLevelRetryPolicy retryPolicy;
         readonly BusNotifications notifications;
 

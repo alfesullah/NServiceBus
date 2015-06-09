@@ -8,6 +8,7 @@
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
+    using NServiceBus.TransportDispatch;
 
     class DataBusSendBehavior : Behavior<OutgoingContext>
     {

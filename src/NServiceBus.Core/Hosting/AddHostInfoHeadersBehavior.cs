@@ -5,6 +5,7 @@
     using NServiceBus.Pipeline;
     using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Support;
+    using NServiceBus.TransportDispatch;
 
     class AddHostInfoHeadersBehavior : Behavior<OutgoingContext>
     {

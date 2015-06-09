@@ -150,7 +150,7 @@
     <Compile Include="MessageMutator\MutateOutgoingMessagesContext.cs" />
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
-    <Compile Include="Outbox\OutboxRoutingStrategy.cs" />
+    <Compile Include="Outbox\OutboxDispatchStrategy.cs" />
     <Compile Include="Performance\ReceiveStatisticsFeature.cs" />
     <Compile Include="Performance\TimeToBeReceived\ApplyTimeToBeReceivedBehavior.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceived.cs" />
@@ -197,6 +197,11 @@
     <Compile Include="StaticHeaders\ApplyStaticHeadersBehavior.cs" />
     <Compile Include="StaticHeaders\StaticHeadersConfigExtensions.cs" />
     <Compile Include="StaticHeaders\CurrentStaticHeaders.cs" />
+    <Compile Include="TransportDispatch\DefaultDispatcher.cs" />
+    <Compile Include="TransportDispatch\DispatchContext.cs" />
+    <Compile Include="TransportDispatch\DispatchStrategy.cs" />
+    <Compile Include="TransportDispatch\DispatchTerminator.cs" />
+    <Compile Include="TransportDispatch\HeaderContextExtensions.cs" />
     <Compile Include="Transports\DequeueInfo.cs" />
     <Compile Include="Transports\Msmq\MsmqLabelGenerator.cs" />
     <Compile Include="Transports\ICancelDeferredMessages.cs" />
@@ -211,7 +216,7 @@
     <Compile Include="Transports\IncomingMessage.cs" />
     <Compile Include="Transports\TransportPublishOptions.cs" />
     <Compile Include="Transports\DispatchOptions.cs" />
-    <Compile Include="TransportDispatch\HeaderExtensions.cs" />
+    <Compile Include="TransportDispatch\HeaderOptionExtensions.cs" />
     <Compile Include="TransportDispatch\MessageIdExtensions.cs" />
     <Compile Include="Unicast\Behaviors\SagaInvocationResult.cs" />
     <Compile Include="Unicast\Behaviors\TransportReceiveToPhysicalMessageProcessingConnector.cs" />
@@ -463,7 +468,7 @@
     <Compile Include="Unicast\Behaviors\MessageHandler.cs" />
     <Compile Include="Unicast\Behaviors\ChildContainerBehavior.cs" />
     <Compile Include="Unicast\Behaviors\SerializeMessagesBehavior.cs" />
-    <Compile Include="TransportDispatch\DispatchMessageToTransportTerminator.cs" />
+    <Compile Include="TransportDispatch\DispatchMessageToTransportConnector.cs" />
     <Compile Include="MessageMutator\MutateOutgoingMessageBehavior.cs" />
     <Compile Include="MessageMutator\MutateOutgoingPhysicalMessageBehavior.cs" />
     <Compile Include="Pipeline\Contexts\LogicalMessagesProcessingStageBehavior.cs" />

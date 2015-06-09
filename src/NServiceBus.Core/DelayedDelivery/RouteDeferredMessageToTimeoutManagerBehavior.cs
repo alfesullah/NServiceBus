@@ -4,11 +4,11 @@ namespace NServiceBus
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
-    using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Routing;
     using NServiceBus.Timeout;
+    using NServiceBus.TransportDispatch;
 
-    class RouteDeferredMessageToTimeoutManagerBehavior : Behavior<OutgoingContext>
+    class RouteDeferredMessageToTimeoutManagerBehavior : Behavior<DispatchContext>
     {
         public RouteDeferredMessageToTimeoutManagerBehavior(string timeoutManagerAddress)
         {
@@ -16,7 +16,7 @@ namespace NServiceBus
         }
 
 
-        public override void Invoke(OutgoingContext context, Action next)
+        public override void Invoke(DispatchContext context, Action next)
         {
             DelayedDeliveryConstraint constraint;
 
@@ -59,8 +59,6 @@ namespace NServiceBus
             public Registration()
                 : base("RouteDeferredMessageToTimeoutManager", typeof(RouteDeferredMessageToTimeoutManagerBehavior), "Reroutes deferred messages to the timeout manager")
             {
-                InsertAfter("ApplyDelayedDeliveryConstraint");
-                InsertAfter("DetermineRoutingForMessage");
             }
         }
     }
