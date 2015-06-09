@@ -1,7 +1,8 @@
-﻿namespace NServiceBus.Features
+﻿namespace NServiceBus
 {
     using System;
     using NServiceBus.Audit;
+    using NServiceBus.Features;
     using NServiceBus.Pipeline;
 
     class ReceiveStatisticsFeature:Feature

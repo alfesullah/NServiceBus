@@ -783,7 +783,7 @@ namespace NServiceBus.Audit
 {
     public class AuditContext : NServiceBus.Pipeline.BehaviorContext
     {
-        public AuditContext(NServiceBus.PhysicalMessageProcessingStageBehavior.Context parent) { }
+        public AuditContext(NServiceBus.Pipeline.Contexts.TransportReceiveContext parent) { }
     }
     public class static AuditContextExtensions
     {
@@ -2274,10 +2274,8 @@ namespace NServiceBus.Transports
         public NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee MinimumConsistencyGuarantee { get; }
         public NServiceBus.Routing.RoutingStrategy RoutingStrategy { get; set; }
     }
-    public interface IAuditMessages
-    {
-        void Audit(NServiceBus.Transports.OutgoingMessage message, NServiceBus.Transports.DispatchOptions sendOptions);
-    }
+    [System.ObsoleteAttribute("No longer used, safe to remove. Will be removed in version 7.0.0.", true)]
+    public interface IAuditMessages { }
     public interface ICancelDeferredMessages
     {
         void CancelDeferredMessages(string messageKey);
@@ -2395,7 +2393,7 @@ namespace NServiceBus.Transports.Msmq
     }
     public class MsmqMessageSender : NServiceBus.Transports.IDispatchMessages
     {
-        public MsmqMessageSender(NServiceBus.Transports.Msmq.Config.MsmqSettings settings) { }
+        public MsmqMessageSender(NServiceBus.Transports.Msmq.Config.MsmqSettings settings, NServiceBus.MsmqLabelGenerator messageLabelGenerator) { }
         public void Dispatch(NServiceBus.Transports.OutgoingMessage message, NServiceBus.Transports.DispatchOptions dispatchOptions) { }
     }
     [System.ObsoleteAttribute("The msmq transaction is now available via the pipeline context. Will be removed i" +
