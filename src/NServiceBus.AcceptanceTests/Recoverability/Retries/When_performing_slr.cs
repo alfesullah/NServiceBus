@@ -1,12 +1,12 @@
-﻿namespace NServiceBus.AcceptanceTests.Retries
+﻿namespace NServiceBus.AcceptanceTests.Recoverability.Retries
 {
     using System;
     using System.Linq;
-    using EndpointTemplates;
-    using AcceptanceTesting;
-    using MessageMutator;
+    using NServiceBus.AcceptanceTesting;
+    using NServiceBus.AcceptanceTests.EndpointTemplates;
     using NServiceBus.Config;
-    using Unicast.Messages;
+    using NServiceBus.MessageMutator;
+    using NServiceBus.Unicast.Messages;
 
     public class When_performing_slr : NServiceBusAcceptanceTest
     {

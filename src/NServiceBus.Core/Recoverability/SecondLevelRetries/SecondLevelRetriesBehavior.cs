@@ -11,9 +11,9 @@ namespace NServiceBus
 
     class SecondLevelRetriesBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public SecondLevelRetriesBehavior(IDispatchMessages messageSender, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
+        public SecondLevelRetriesBehavior(IDispatchMessages dispatcher, SecondLevelRetryPolicy retryPolicy, BusNotifications notifications)
         {
-            this.messageSender = messageSender;
+            this.dispatcher = dispatcher;
             this.retryPolicy = retryPolicy;
             this.notifications = notifications;
         }
@@ -49,7 +49,7 @@ namespace NServiceBus
                         new DelayDeliveryWith(delay)
                     });
 
-                    messageSender.Dispatch(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body),sendOptions);
+                    dispatcher.Dispatch(new OutgoingMessage(context.PhysicalMessage.Id, message.Headers, message.Body),sendOptions);
              
                     notifications.Errors.InvokeMessageHasBeenSentToSecondLevelRetries(currentRetry,message,ex);
 
@@ -78,7 +78,7 @@ namespace NServiceBus
         }
 
 
-        readonly IDispatchMessages messageSender;
+        readonly IDispatchMessages dispatcher;
         readonly SecondLevelRetryPolicy retryPolicy;
         readonly BusNotifications notifications;
 

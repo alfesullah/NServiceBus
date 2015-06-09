@@ -217,7 +217,7 @@
     <Compile Include="Unicast\Behaviors\TransportReceiveToPhysicalMessageProcessingConnector.cs" />
     <Compile Include="Pipeline\Contexts\LogicalMessageProcessingStageBehavior.cs" />
     <Compile Include="Pipeline\IBehaviorInvoker.cs" />
-    <Compile Include="SecondLevelRetries\SecondLevelRetry.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\SecondLevelRetry.cs" />
     <Compile Include="Features\AdvanceExtensibilityExtensions.cs" />
     <Compile Include="Features\DisplayDiagnosticsForFeatures.cs" />
     <Compile Include="Features\ExposeSettings.cs" />
@@ -245,9 +245,9 @@
     <Compile Include="Settings\Throttling\ThrottlingSettingsExtensions.cs" />
     <Compile Include="Settings\Throttling\IThrottlingConfig.cs" />
     <Compile Include="Settings\Concurrency\SharedConcurrencyConfig.cs" />
-    <Compile Include="SecondLevelRetries\CustomSecondLevelRetryPolicy.cs" />
-    <Compile Include="SecondLevelRetries\SecondLevelRetryPolicy.cs" />
-    <Compile Include="SecondLevelRetries\SecondLevelRetriesBehavior.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\CustomSecondLevelRetryPolicy.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\SecondLevelRetryPolicy.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\SecondLevelRetriesBehavior.cs" />
     <Compile Include="Transports\DequeueSettings.cs" />
     <Compile Include="Gateway\IDeduplicateMessages.cs" />
     <Compile Include="Hosting\HostInfoConfigurationExtensions.cs" />
@@ -330,7 +330,7 @@
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\TaskDefinition.cs" />
     <Compile Include="Faults\MoveFaultsToErrorQueueBehavior.cs" />
-    <Compile Include="SecondLevelRetries\DefaultSecondLevelRetryPolicy.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\DefaultSecondLevelRetryPolicy.cs" />
     <Compile Include="Serialization\CustomSerialization.cs" />
     <Compile Include="Serialization\CustomSerializer.cs" />
     <Compile Include="Serialization\SerializationConfigExtensions.cs" />
@@ -484,8 +484,8 @@
     <Compile Include="DataBus\ConfigureFileShareDataBus.cs" />
     <Compile Include="ConfigureInMemoryFaultManagement.cs" />
     <Compile Include="Features\FeatureActivator.cs" />
-    <Compile Include="SecondLevelRetries\Config\SecondLevelRetriesConfigExtensions.cs" />
-    <Compile Include="SecondLevelRetries\Config\SecondLevelRetriesSettings.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\Config\SecondLevelRetriesConfigExtensions.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\Config\SecondLevelRetriesSettings.cs" />
     <Compile Include="Serializers\Json\Config\BsonSerialization.cs" />
     <Compile Include="Serializers\Json\Config\JsonSerialization.cs" />
     <Compile Include="Serializers\Json\Config\JsonSerializerConfigurationExtensions.cs" />
@@ -524,8 +524,8 @@
     <Compile Include="Transports\Msmq\MsmqUtilities.cs" />
     <Compile Include="Config\MsmqSubscriptionStorageConfig.cs" />
     <Compile Include="Encryption\RijndaelEncryptionServiceConfig.cs" />
-    <Compile Include="SecondLevelRetries\Config\SecondLevelRetriesConfig.cs" />
-    <Compile Include="SecondLevelRetries\SecondLevelRetries.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\Config\SecondLevelRetriesConfig.cs" />
+    <Compile Include="Recoverability\SecondLevelRetries\SecondLevelRetries.cs" />
     <Compile Include="Config\TransportConfig.cs" />
     <Compile Include="Config\UnicastBusConfig.cs" />
     <Compile Include="DataBus\DataBusFileBased.cs" />
@@ -660,7 +660,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SecondLevelRetries\Helpers\" />
+    <Folder Include="Recoverability\SecondLevelRetries\Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resharper.Annotations.g.cs" />

@@ -1,10 +1,10 @@
-﻿namespace NServiceBus.AcceptanceTests.Retries
+﻿namespace NServiceBus.AcceptanceTests.Recoverability.Retries
 {
     using System;
-    using EndpointTemplates;
-    using AcceptanceTesting;
+    using NServiceBus.AcceptanceTesting;
+    using NServiceBus.AcceptanceTests.EndpointTemplates;
+    using NServiceBus.AcceptanceTests.ScenarioDescriptors;
     using NUnit.Framework;
-    using ScenarioDescriptors;
 
     public class When_doing_flr_with_default_settings : NServiceBusAcceptanceTest
     {

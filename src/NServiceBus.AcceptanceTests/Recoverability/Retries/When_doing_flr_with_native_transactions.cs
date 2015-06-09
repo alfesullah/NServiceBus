@@ -1,30 +1,25 @@
-﻿namespace NServiceBus.AcceptanceTests.Retries
+﻿namespace NServiceBus.AcceptanceTests.Recoverability.Retries
 {
     using System;
-    using EndpointTemplates;
-    using AcceptanceTesting;
-    using NServiceBus.Config;
+    using NServiceBus.AcceptanceTesting;
+    using NServiceBus.AcceptanceTests.EndpointTemplates;
+    using NServiceBus.AcceptanceTests.ScenarioDescriptors;
     using NUnit.Framework;
-    using ScenarioDescriptors;
 
-    public class When_doing_flr_with_dtc_on : NServiceBusAcceptanceTest
+    public class When_doing_flr_with_native_transactions : NServiceBusAcceptanceTest
     {
-        public const int maxretries = 5;
-            
         [Test]
-        public void Should_do_X_retries_by_default_with_dtc_on()
+        public void Should_do_5_retries_by_default_with_native_transactions()
         {
             Scenario.Define(() => new Context { Id = Guid.NewGuid() })
-                    .WithEndpoint<RetryEndpoint>(b => b.Given((bus, context) => bus.SendLocal(new MessageToBeRetried{ Id = context.Id })))
+                    .WithEndpoint<RetryEndpoint>(b => b.Given((bus, context) => bus.SendLocal(new MessageToBeRetried { Id = context.Id })))
                     .AllowExceptions()
-                    .Done(c => c.GaveUpOnRetries || c.NumberOfTimesInvoked > maxretries)
-                    .Repeat(r => r.For<AllDtcTransports>())
-                    //we add 1 since first call + X retries totals to X+1
-                    .Should(c => Assert.AreEqual(maxretries+1, c.NumberOfTimesInvoked, string.Format("The FLR should by default retry {0} times", maxretries)))
+                    .Done(c => c.ForwardedToErrorQueue || c.NumberOfTimesInvoked > 5)
+                    .Repeat(r => r.For(Transports.Default))
+                    .Should(c => Assert.AreEqual(5+1, c.NumberOfTimesInvoked, "The FLR should by default retry 5 times"))
                     .Run();
 
         }
-
 
         public class Context : ScenarioContext
         {
@@ -32,15 +27,18 @@
 
             public int NumberOfTimesInvoked { get; set; }
 
-            public bool GaveUpOnRetries { get; set; }
+            public bool ForwardedToErrorQueue { get; set; }
         }
 
         public class RetryEndpoint : EndpointConfigurationBuilder
         {
             public RetryEndpoint()
             {
-                EndpointSetup<DefaultServer>()
-                    .WithConfig<TransportConfig>(c => c.MaxRetries = maxretries);
+                EndpointSetup<DefaultServer>(b =>
+                {
+                    b.Transactions().DisableDistributedTransactions();
+                    b.DisableFeature<Features.SecondLevelRetries>();
+                });
             }
 
             class ErrorNotificationSpy : IWantToRunWhenBusStartsAndStops
@@ -53,12 +51,13 @@
                 {
                     BusNotifications.Errors.MessageSentToErrorQueue.Subscribe(e =>
                     {
-                        Context.GaveUpOnRetries = true;
+                        Context.ForwardedToErrorQueue = true;
                     });
                 }
 
                 public void Stop() { }
             }
+           
 
             class MessageToBeRetriedHandler : IHandleMessages<MessageToBeRetried>
             {
@@ -75,7 +74,6 @@
             }
         }
 
-        [Serializable]
         public class MessageToBeRetried : IMessage
         {
             public Guid Id { get; set; }
