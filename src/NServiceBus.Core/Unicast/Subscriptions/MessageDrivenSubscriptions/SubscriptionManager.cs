@@ -48,7 +48,7 @@
 
             var subscriptionMessage = CreateControlMessage(eventType,MessageIntentEnum.Unsubscribe);
    
-            messageSender.Dispatch(subscriptionMessage, new DispatchOptions(publisherAddress,new NoConsistencyRequired(),new List<DeliveryConstraint>() ));
+            messageSender.Dispatch(subscriptionMessage, new DispatchOptions(publisherAddress,new AtLeastOnce(),new List<DeliveryConstraint>() ));
         }
 
         OutgoingMessage CreateControlMessage(Type eventType,MessageIntentEnum intent)

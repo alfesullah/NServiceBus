@@ -64,7 +64,7 @@
                 //todo: deliveryConstraint.Hydrate(transportOperation.Options);
 
                 context.Get<DispatchStrategy>()
-                    .Dispatch(dispatcher,message, routingStrategy, new NoConsistencyRequired(), new List<DeliveryConstraint>(), context);
+                    .Dispatch(dispatcher,message, routingStrategy, new AtLeastOnce(), new List<DeliveryConstraint>(), context);
             }
         }
 

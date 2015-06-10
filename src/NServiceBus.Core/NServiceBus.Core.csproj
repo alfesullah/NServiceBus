@@ -182,7 +182,7 @@
     <Compile Include="Satellites\IAdvancedSatellite.cs" />
     <Compile Include="Satellites\ISatellite.cs" />
     <Compile Include="Routing\DetermineRoutingForMessageBehavior.cs" />
-    <Compile Include="ConsistencyGuarantees\NoConsistencyRequired.cs" />
+    <Compile Include="ConsistencyGuarantees\AtLeastOnce.cs" />
     <Compile Include="Routing\NonDurableDelivery.cs" />
     <Compile Include="Routing\RoutingPipelineContextExtensions.cs" />
     <Compile Include="Routing\RoutingFeature.cs" />

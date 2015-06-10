@@ -982,6 +982,10 @@ namespace NServiceBus.Configuration.AdvanceExtensibility
 }
 namespace NServiceBus.ConsistencyGuarantees
 {
+    public class AtLeastOnce : NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee
+    {
+        public AtLeastOnce() { }
+    }
     public class AtomicWithReceiveOperation : NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee
     {
         public AtomicWithReceiveOperation() { }
@@ -989,10 +993,6 @@ namespace NServiceBus.ConsistencyGuarantees
     public abstract class ConsistencyGuarantee
     {
         protected ConsistencyGuarantee() { }
-    }
-    public class NoConsistencyRequired : NServiceBus.ConsistencyGuarantees.ConsistencyGuarantee
-    {
-        public NoConsistencyRequired() { }
     }
 }
 namespace NServiceBus.Container
