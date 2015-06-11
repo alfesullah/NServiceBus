@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Core.Tests.Pipeline
+﻿namespace NServiceBus.Core.Tests.Reliability.Outbox
 {
     using System;
     using System.Collections.Generic;
@@ -7,9 +7,8 @@
     using NServiceBus.Core.Tests.Timeout;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline.Contexts;
-    using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast.Transport;
     using NUnit.Framework;
 
     [TestFixture]
@@ -45,9 +44,12 @@
         public void SetUp()
         {
             fakeOutbox = new FakeOutboxStorage();
-            var transactionSettings = new TransactionSettings(true, TimeSpan.FromSeconds(30), IsolationLevel.ReadCommitted, false, false);
-
-            behavior = new OutboxDeduplicationBehavior(fakeOutbox, transactionSettings,new RoutingStrategyFactory(),new FakeMessageSender());
+      
+            behavior = new OutboxDeduplicationBehavior(fakeOutbox, new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromSeconds(30)
+            }, new FakeMessageSender(),new DefaultDispatchStrategy());
         }
 
         void Invoke(PhysicalMessageProcessingStageBehavior.Context context, bool shouldAbort = false)

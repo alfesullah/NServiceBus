@@ -173,7 +173,6 @@
     <Compile Include="Features\FeatureTests.cs" />
     <Compile Include="Hosting\PathUtilities_Tests.cs" />
     <Compile Include="Logging\RollingLoggerTests.cs" />
-    <Compile Include="Outbox\OutboxRecordBehaviorTests.cs" />
     <Compile Include="Persistence\InMemory\AnotherSagaWithTwoUniquePropertiesData.cs" />
     <Compile Include="Persistence\InMemory\AnotherSimpleSagaEntity.cs" />
     <Compile Include="Persistence\InMemory\InMemoryOutboxPersisterTests.cs" />
@@ -224,8 +223,8 @@
     <Compile Include="MessageMapper\When_mapping_interfaces.cs" />
     <Compile Include="MessageMapper\When_mapping_usinggenerics.cs" />
     <Compile Include="Msmq\MsmqUtilitiesTests.cs" />
-    <Compile Include="Outbox\FakeOutboxStorage.cs" />
-    <Compile Include="Outbox\OutboxDeduplicationBehaviorTests.cs" />
+    <Compile Include="Reliability\Outbox\FakeOutboxStorage.cs" />
+    <Compile Include="Reliability\Outbox\OutboxDeduplicationBehaviorTests.cs" />
     <Compile Include="Routing\StaticMessageRouterTests.cs" />
     <Compile Include="Scheduler\DefaultSchedulerTests.cs" />
     <Compile Include="Scheduler\ScheduledTaskMessageHandlerTests.cs" />

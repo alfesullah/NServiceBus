@@ -1,5 +1,7 @@
 namespace NServiceBus.Routing
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a route directly to the specified destination
     /// </summary>
@@ -19,5 +21,13 @@ namespace NServiceBus.Routing
             Destination = destination;
         }
 
+        /// <summary>
+        /// Serializes the strategy to the supplied dictionary
+        /// </summary>
+        /// <param name="options">The dictionary where the serialized data should be stored</param> 
+        public override void Serialize(Dictionary<string, string> options)
+        {
+            options["Destination"] = Destination;
+        }
     }
 }

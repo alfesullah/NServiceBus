@@ -3,10 +3,11 @@
     using System;
     using System.Configuration;
     using System.ServiceProcess;
+    using System.Transactions;
     using NServiceBus.Logging;
     using NServiceBus.Outbox;
     using NServiceBus.Persistence;
-    using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
     using NServiceBus.Unicast.Transport;
 
@@ -19,7 +20,7 @@
         {
             Defaults(s => s.SetDefault(TimeToKeepDeduplicationEntries, TimeSpan.FromDays(5)));
 
-            Prerequisite(c => c.Settings.Get<bool>("Transactions.Enabled"),"Outbox isn't needed since the receive transactions has been turned off");
+            Prerequisite(c => c.Settings.Get<bool>("Transactions.Enabled"), "Outbox isn't needed since the receive transactions has been turned off");
 
             Prerequisite(c =>
             {
@@ -29,7 +30,7 @@
                 }
 
                 return RequireOutboxConsent(c);
-            },"This transport requires outbox consent");
+            }, "This transport requires outbox consent");
 
             RegisterStartupTask<DtcRunningWarning>();
         }
@@ -72,28 +73,31 @@ The reason you need to do this is because we need to ensure that you have read a
         {
             if (!PersistenceStartup.HasSupportFor<StorageType.Outbox>(context.Settings))
             {
-                throw new Exception("Selected persister doesn't have support for outbox storage. Please select another storage or disable the outbox feature using config.Features(f=>f.Disable<Outbox>())");    
+                throw new Exception("Selected persister doesn't have support for outbox storage. Please select another storage or disable the outbox feature using config.Features(f=>f.Disable<Outbox>())");
             }
 
             context.Pipeline.Register<OutboxDeduplicationBehavior.OutboxDeduplicationRegistration>();
-            context.Pipeline.Register<OutboxRecordBehavior.OutboxRecorderRegistration>();
-            context.Pipeline.Register("OutboxSendBehavior", typeof(OutboxSendBehavior), "Makes sure that the outgoing message is stored in the outbox instead of beeing dispatched to the transport");
 
+            var transactionSettings = new TransactionSettings(context.Settings);
+            var transactionOptions = new TransactionOptions
+            {
+                IsolationLevel = transactionSettings.IsolationLevel,
+                Timeout = transactionSettings.TransactionTimeout
+            };
+            
+            
             context.Container.ConfigureComponent(
                 b => new OutboxDeduplicationBehavior(
                     b.Build<IOutboxStorage>(),
-                    new TransactionSettings(context.Settings),
-                    b.Build<RoutingStrategyFactory>(),
-                    b.Build<IDispatchMessages>()), 
+                    transactionOptions,
+                    b.Build<IDispatchMessages>(),
+                    b.Build<DispatchStrategy>()),
                 DependencyLifecycle.InstancePerCall);
-
-            //make the audit use the outbox as well
-            context.Container.ConfigureComponent<OutboxAwareAuditer>(DependencyLifecycle.InstancePerCall);
         }
 
     }
 
-    class DtcRunningWarning :FeatureStartupTask
+    class DtcRunningWarning : FeatureStartupTask
     {
         protected override void OnStart()
         {
@@ -111,12 +115,12 @@ The reason you need to do this is because we need to ensure that you have read a
 Because you have configured this endpoint to run with Outbox enabled we recommend turning MSDTC off to ensure that the Outbox behavior is working as expected and no other resources are enlisting in distributed transactions.");
                 }
             }
-// ReSharper disable once EmptyGeneralCatchClause
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
                 // Ignore if we can't check it.
             }
-            
+
         }
 
         static ILog log = LogManager.GetLogger<DtcRunningWarning>();

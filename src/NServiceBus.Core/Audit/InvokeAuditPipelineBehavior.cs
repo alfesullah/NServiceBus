@@ -37,7 +37,7 @@
         public class Registration : RegisterStep
         {
             public Registration()
-                : base("InvokeAuditPipeline", typeof(InvokeAuditPipelineBehavior), "Execute the audit pipeline")
+                : base(WellKnownStep.AuditProcessedMessage, typeof(InvokeAuditPipelineBehavior), "Execute the audit pipeline")
             {
                 InsertAfterIfExists("FirstLevelRetries");
             }

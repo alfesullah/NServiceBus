@@ -29,6 +29,8 @@ namespace NServiceBus
             var options = new Dictionary<string, string>();
 
             constraints.ToList().ForEach(c => c.Serialize(options));
+
+            routingStrategy.Serialize(options);
           
             currentOutboxMessage.TransportOperations.Add(new TransportOperation(message.MessageId, options, message.Body, message.Headers));                    
         }

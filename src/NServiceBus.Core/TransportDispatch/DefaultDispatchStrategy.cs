@@ -7,7 +7,7 @@
     using NServiceBus.Routing;
     using NServiceBus.Transports;
 
-    class DefaultDispatcher : DispatchStrategy
+    class DefaultDispatchStrategy : DispatchStrategy
     {
         
         public override void Dispatch(IDispatchMessages dispatcher,OutgoingMessage message, RoutingStrategy routingStrategy, ConsistencyGuarantee minimumConsistencyGuarantee, IEnumerable<DeliveryConstraint> constraints, BehaviorContext currentContext)

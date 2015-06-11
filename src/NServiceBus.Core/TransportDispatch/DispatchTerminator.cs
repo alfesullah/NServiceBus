@@ -10,16 +10,23 @@
     class DispatchTerminator : PipelineTerminator<DispatchContext>
     {
         readonly IDispatchMessages dispatcher;
-        readonly DispatchStrategy dispatchStrategy;
+        readonly DispatchStrategy defaultDispatchStrategy;
 
-        public DispatchTerminator(IDispatchMessages dispatcher, DispatchStrategy dispatchStrategy)
+        public DispatchTerminator(IDispatchMessages dispatcher, DispatchStrategy defaultDispatchStrategy)
         {
             this.dispatcher = dispatcher;
-            this.dispatchStrategy = dispatchStrategy;
+            this.defaultDispatchStrategy = defaultDispatchStrategy;
         }
 
         public override void Terminate(DispatchContext context)
         {
+            DispatchStrategy dispatchStrategy;
+
+            if (!context.TryGet(out dispatchStrategy))
+            {
+                dispatchStrategy = defaultDispatchStrategy;
+            }
+
             dispatchStrategy.Dispatch(dispatcher, context.Get<OutgoingMessage>(), context.Get<RoutingStrategy>(), context.GetConsistencyGuarantee(), context.GetDeliveryConstraints(), context);
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Core.Tests.Pipeline
+﻿namespace NServiceBus.Core.Tests.Reliability.Outbox
 {
     using System.Collections.Generic;
     using NServiceBus.Outbox;

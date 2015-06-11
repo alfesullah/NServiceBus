@@ -1836,6 +1836,7 @@ namespace NServiceBus.Routing
     {
         public DirectToTargetDestination(string destination) { }
         public string Destination { get; }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
     public class static RoutingPipelineContextExtensions
     {
@@ -1848,11 +1849,13 @@ namespace NServiceBus.Routing
     public abstract class RoutingStrategy
     {
         protected RoutingStrategy() { }
+        public abstract void Serialize(System.Collections.Generic.Dictionary<string, string> options);
     }
     public class ToAllSubscribers : NServiceBus.Routing.RoutingStrategy
     {
         public ToAllSubscribers(System.Type eventType) { }
         public System.Type EventType { get; }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
 }
 namespace NServiceBus.Saga

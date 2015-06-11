@@ -101,7 +101,7 @@
     <Compile Include="Basic\When_Deferring_a_message.cs" />
     <Compile Include="ConfigureMsmqTransport.cs" />
     <Compile Include="Hosting\When_feature_overrides_hostid.cs" />
-    <Compile Include="NonDTC\When_dispatching_transport_operations.cs" />
+    <Compile Include="Reliability\Outbox\When_dispatching_transport_operations.cs" />
     <Compile Include="PerfMon\CriticalTime\When_deferring_a_message.cs" />
     <Compile Include="Audit\When_audit_is_overridden_in_code.cs" />
     <Compile Include="PubSub\When_publishing_from_sendonly.cs" />
@@ -185,7 +185,7 @@
     <Compile Include="Sagas\When_replies_to_message_published_by_a_saga.cs" />
     <Compile Include="Sagas\When_started_by_base_event_from_other_saga.cs" />
     <Compile Include="ScenarioDescriptors\AllOutboxCapableStorages.cs" />
-    <Compile Include="NonDTC\When_blowing_up_just_after_dispatch.cs" />
+    <Compile Include="Reliability\Outbox\When_blowing_up_just_after_dispatch.cs" />
     <Compile Include="PipelineExt\MutingHandlerExceptions.cs" />
     <Compile Include="PipelineExt\FilteringWhatGetsAudited.cs" />
     <Compile Include="Audit\When_auditing.cs" />
@@ -198,8 +198,8 @@
     <Compile Include="Config\When_a_config_override_is_found.cs" />
     <Compile Include="Encryption\When_using_encryption_with_custom_service.cs" />
     <Compile Include="Encryption\EndpointTemplates\ContextAppender.cs" />
-    <Compile Include="NonDTC\When_sending_from_a_non_dtc_endpoint.cs" />
-    <Compile Include="NonDTC\When_receiving_a_message.cs" />
+    <Compile Include="Reliability\Outbox\When_sending_from_a_non_dtc_endpoint.cs" />
+    <Compile Include="Reliability\Outbox\When_receiving_a_message.cs" />
     <Compile Include="NServiceBusAcceptanceTest.cs" />
     <Compile Include="DataBus\When_sending_databus_properties.cs" />
     <Compile Include="Encryption\EndpointTemplates\ConfigureExtensions.cs" />

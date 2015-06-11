@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AcceptanceTests.NonDTC
+﻿namespace NServiceBus.AcceptanceTests.Reliability.Outbox
 {
     using System;
     using System.Collections.Generic;

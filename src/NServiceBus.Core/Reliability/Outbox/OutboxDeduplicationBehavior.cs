@@ -10,16 +10,18 @@
     using NServiceBus.Routing;
     using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast.Transport;
 
     class OutboxDeduplicationBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,TransactionSettings transactionSettings, RoutingStrategyFactory routingStrategyFactory, IDispatchMessages dispatcher)
+        public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,
+            TransactionOptions transactionOptions, 
+            IDispatchMessages dispatcher,
+            DispatchStrategy dispatchStrategy)
         {
             this.outboxStorage = outboxStorage;
-            this.transactionSettings = transactionSettings;
-            this.routingStrategyFactory = routingStrategyFactory;
+            this.transactionOptions = transactionOptions;
             this.dispatcher = dispatcher;
+            this.dispatchStrategy = dispatchStrategy;
         }
 
         public override void Invoke(Context context, Action next)
@@ -31,10 +33,11 @@
             {
                 outboxMessage = new OutboxMessage(messageId);
 
-                context.Set(outboxMessage);
+                //override the current dispatcher with to make sure all outgoing ops gets stored in the outbox
+                context.Set<DispatchStrategy>(new OutboxDispatchStrategy(outboxMessage));
 
                 //we use this scope to make sure that we escalate to DTC if the user is talking to another resource by misstake
-                using (var checkForEscalationScope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = transactionSettings.IsolationLevel, Timeout = transactionSettings.TransactionTimeout }))
+                using (var checkForEscalationScope = new TransactionScope(TransactionScopeOption.RequiresNew, transactionOptions))
                 {
                     next();
                     checkForEscalationScope.Complete();
@@ -45,6 +48,8 @@
                 {
                     return;
                 }
+
+                outboxStorage.Store(messageId,outboxMessage.TransportOperations);
             }
 
             DispatchOperationToTransport(outboxMessage.TransportOperations,context);
@@ -63,15 +68,15 @@
            
                 //todo: deliveryConstraint.Hydrate(transportOperation.Options);
 
-                context.Get<DispatchStrategy>()
-                    .Dispatch(dispatcher,message, routingStrategy, new AtLeastOnce(), new List<DeliveryConstraint>(), context);
+                dispatchStrategy.Dispatch(dispatcher,message, routingStrategy, new AtLeastOnce(), new List<DeliveryConstraint>(), context);
             }
         }
 
         IDispatchMessages dispatcher;
+        DispatchStrategy dispatchStrategy;
         IOutboxStorage outboxStorage;
-        TransactionSettings transactionSettings;
-        RoutingStrategyFactory routingStrategyFactory;
+        TransactionOptions transactionOptions;
+        RoutingStrategyFactory routingStrategyFactory = new RoutingStrategyFactory();
 
         public class OutboxDeduplicationRegistration : RegisterStep
         {

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AcceptanceTests.NonDTC
+﻿namespace NServiceBus.AcceptanceTests.Reliability.Outbox
 {
     using System;
     using NServiceBus.AcceptanceTesting;
@@ -41,7 +41,7 @@
                     .Done(c => c.OrderAckReceived >= 2)
                     .Repeat(r => r.For<AllOutboxCapableStorages>())
                     .Should(context => Assert.AreEqual(2, context.OrderAckReceived))
-                    .Run(new RunSettings { UseSeparateAppDomains = true, TestExecutionTimeout = TimeSpan.FromSeconds(20) });
+                    .Run();
         }
 
         public class Context : ScenarioContext

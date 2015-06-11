@@ -33,7 +33,7 @@
             }
             else
             {
-                context.Container.ConfigureComponent<DispatchStrategy>(b=>new DefaultDispatcher(),  DependencyLifecycle.SingleInstance);
+                context.Container.ConfigureComponent<DispatchStrategy>(b=>new DefaultDispatchStrategy(),  DependencyLifecycle.SingleInstance);
             }
         }
 
