@@ -120,6 +120,8 @@
     <Compile Include="DelayedDelivery\DelayedDeliveryFeature.cs" />
     <Compile Include="DelayedDelivery\DelayedDeliveryOptionExtensions.cs" />
     <Compile Include="DelayedDelivery\DoNotDeliverBefore.cs" />
+    <Compile Include="DelayedDelivery\NoOpCanceling.cs" />
+    <Compile Include="DelayedDelivery\RequestCancelingOfDeferredMessagesFromTimeoutManager.cs" />
     <Compile Include="DelayedDelivery\RouteDeferredMessageToTimeoutManagerBehavior.cs" />
     <Compile Include="DeliveryConstraints\DeliveryConstraintContextExtensions.cs" />
     <Compile Include="Encryption\DecryptBehavior.cs" />

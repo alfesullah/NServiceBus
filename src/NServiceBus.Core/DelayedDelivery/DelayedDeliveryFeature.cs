@@ -22,7 +22,15 @@
 
                 context.Container.ConfigureComponent(b => new RouteDeferredMessageToTimeoutManagerBehavior(timeoutManagerAddress), DependencyLifecycle.SingleInstance);
 
+
+                context.Container.ConfigureComponent(b => new RequestCancelingOfDeferredMessagesFromTimeoutManager(timeoutManagerAddress,b.Build<IDispatchMessages>()), DependencyLifecycle.SingleInstance);
+
             }
+            else
+            {
+                context.Container.ConfigureComponent(b => new NoOpCanceling(), DependencyLifecycle.SingleInstance);
+            }
+
             context.Pipeline.Register("ApplyDelayedDeliveryConstraint", typeof(ApplyDelayedDeliveryConstraintBehavior), "Applied relevant delayed delivery constraints requested by the user");
         }
 
