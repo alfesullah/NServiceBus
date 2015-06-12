@@ -201,6 +201,7 @@
     <Compile Include="StaticHeaders\CurrentStaticHeaders.cs" />
     <Compile Include="TransportDispatch\DefaultDispatchStrategy.cs" />
     <Compile Include="TransportDispatch\DispatchContext.cs" />
+    <Compile Include="TransportDispatch\DispatchFeature.cs" />
     <Compile Include="TransportDispatch\DispatchStrategy.cs" />
     <Compile Include="TransportDispatch\DispatchTerminator.cs" />
     <Compile Include="TransportDispatch\HeaderContextExtensions.cs" />
