@@ -81,16 +81,7 @@
                 Assert.IsFalse(conventions.IsCommandType(typeof(NServiceBus.Conventions)));
             }
 
-            [Test]
-            public void IsExpressMessageType_should_return_false_for_NServiceBus_types()
-            {
-                var conventions = new NServiceBus.Conventions
-                {
-                    IsExpressMessageAction = t => t.Assembly == typeof(NServiceBus.Conventions).Assembly
-                };
-                Assert.IsFalse(conventions.IsExpressMessageType(typeof(NServiceBus.Conventions)));
-            }
-
+        
             [Test]
             public void IsMessageType_should_return_false_for_NServiceBus_types()
             {
@@ -109,17 +100,6 @@
                     IsEventTypeAction = t => t.Assembly == typeof(NServiceBus.Conventions).Assembly
                 };
                 Assert.IsFalse(conventions.IsEventType(typeof(NServiceBus.Conventions)));
-            }
-
-            [Test]
-            public void IsExpressType_should_return_true_for_matching_type()
-            {
-                var conventions = new NServiceBus.Conventions
-                {
-                    IsExpressMessageAction = t => t.Assembly == typeof(NServiceBus.Conventions).Assembly ||
-                                               t == typeof(MyConventionExpress)
-                };
-                Assert.IsTrue(conventions.IsExpressMessageType(typeof(MyConventionExpress)));
             }
 
             public class MyConventionExpress

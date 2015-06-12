@@ -60,15 +60,7 @@ namespace NServiceBus
             return this;
         }
 
-        /// <summary>
-        ///     Sets the function to be used to evaluate whether a type is an express message or not.
-        /// </summary>
-        public ConventionsBuilder DefiningExpressMessagesAs(Func<Type, bool> definesExpressMessageType)
-        {
-            Guard.AgainstNull(definesExpressMessageType, "definesExpressMessageType");
-            Conventions.IsExpressMessageAction = definesExpressMessageType;
-            return this;
-        }
+      
 
         internal Conventions Conventions = new Conventions();
 

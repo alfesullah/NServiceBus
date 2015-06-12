@@ -114,29 +114,7 @@
             }
         }
 
-        /// <summary>
-        ///     Returns true if the given type should not be written to disk when sent.
-        /// </summary>
-        public bool IsExpressMessageType(Type t)
-        {
-            Guard.AgainstNull(t, "t");
-            try
-            {
-                return ExpressConventionCache.ApplyConvention(t, typeHandle =>
-                {
-                    var type = Type.GetTypeFromHandle(typeHandle);
-                    if (type.IsFromParticularAssembly())
-                    {
-                        return false;
-                    }
-                    return IsExpressMessageAction(type);
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Failed to evaluate Express convention. See inner exception for details.", ex);
-            }
-        }
+    
 
         /// <summary>
         ///     Returns true if the given property should be encrypted
@@ -199,8 +177,7 @@
 
         ConventionCache CommandsConventionCache = new ConventionCache();
         ConventionCache EventsConventionCache = new ConventionCache();
-        ConventionCache ExpressConventionCache = new ConventionCache();
-
+        
         internal Func<Type, bool> IsCommandTypeAction = t => typeof(ICommand).IsAssignableFrom(t) && typeof(ICommand) != t;
 
         internal Func<PropertyInfo, bool> IsDataBusPropertyAction = p => typeof(IDataBusProperty).IsAssignableFrom(p.PropertyType) && typeof(IDataBusProperty) != p.PropertyType;
@@ -209,9 +186,7 @@
 
         internal Func<Type, bool> IsEventTypeAction = t => typeof(IEvent).IsAssignableFrom(t) && typeof(IEvent) != t;
 
-        internal Func<Type, bool> IsExpressMessageAction = t => t.GetCustomAttributes(typeof(ExpressAttribute), true)
-            .Any();
-
+     
         internal Func<Type, bool> IsMessageTypeAction = t => typeof(IMessage).IsAssignableFrom(t) &&
                                                              typeof(IMessage) != t &&
                                                              typeof(IEvent) != t &&

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AcceptanceTests.DeliveryOptions
+﻿namespace NServiceBus.AcceptanceTests.Performance.MessageDurability
 {
     using System;
     using NServiceBus.AcceptanceTesting;

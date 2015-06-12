@@ -3,6 +3,8 @@ namespace NServiceBus
     using System;
     using NServiceBus.Pipeline;
 
+
+    //todo: remove
     class EnforceMessageIdBehavior : PhysicalMessageProcessingStageBehavior
     {
         public override void Invoke(Context context, Action next)

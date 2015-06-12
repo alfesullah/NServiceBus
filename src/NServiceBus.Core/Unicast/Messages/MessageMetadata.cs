@@ -9,15 +9,12 @@
     /// </summary>
     public partial class MessageMetadata
     {
-        readonly Type messageType;
-        readonly bool recoverable;
-        readonly IEnumerable<Type> messageHierarchy;
         
         internal MessageMetadata(Type messageType = null, bool recoverable = false, IEnumerable<Type> messageHierarchy = null)
         {
-            this.messageType = messageType;
-            this.recoverable = recoverable;
-            this.messageHierarchy = (messageHierarchy == null ? new List<Type>() : new List<Type>(messageHierarchy)).AsReadOnly();
+            MessageType = messageType;
+            Recoverable = recoverable;
+            MessageHierarchy = (messageHierarchy == null ? new List<Type>() : new List<Type>(messageHierarchy)).AsReadOnly();
         }
 
         /// <summary>

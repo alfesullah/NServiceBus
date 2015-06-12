@@ -186,7 +186,8 @@ namespace NServiceBus
         public bool IsDataBusProperty(System.Reflection.PropertyInfo property) { }
         public bool IsEncryptedProperty(System.Reflection.PropertyInfo property) { }
         public bool IsEventType(System.Type t) { }
-        public bool IsExpressMessageType(System.Type t) { }
+        [System.ObsoleteAttribute("No longer an extension point. Will be removed in version 7.0.0.", true)]
+        public static bool IsExpressMessageType(System.Type t) { }
         public bool IsInSystemConventionList(System.Type t) { }
         public bool IsMessageType(System.Type t) { }
     }
@@ -196,7 +197,6 @@ namespace NServiceBus
         public NServiceBus.ConventionsBuilder DefiningDataBusPropertiesAs(System.Func<System.Reflection.PropertyInfo, bool> definesDataBusProperty) { }
         public NServiceBus.ConventionsBuilder DefiningEncryptedPropertiesAs(System.Func<System.Reflection.PropertyInfo, bool> definesEncryptedProperty) { }
         public NServiceBus.ConventionsBuilder DefiningEventsAs(System.Func<System.Type, bool> definesEventType) { }
-        public NServiceBus.ConventionsBuilder DefiningExpressMessagesAs(System.Func<System.Type, bool> definesExpressMessageType) { }
         public NServiceBus.ConventionsBuilder DefiningMessagesAs(System.Func<System.Type, bool> definesMessageType) { }
     }
     public class static CorrelationContextExtensions
@@ -250,6 +250,10 @@ namespace NServiceBus
         public static void DisableDurableMessages(this NServiceBus.BusConfiguration config) { }
         public static bool DurableMessagesEnabled(this NServiceBus.Configure config) { }
         public static void EnableDurableMessages(this NServiceBus.BusConfiguration config) { }
+    }
+    public class static DurableMessagesConventionExtensions
+    {
+        public static NServiceBus.ConventionsBuilder DefiningExpressMessagesAs(this NServiceBus.ConventionsBuilder builder, System.Func<System.Type, bool> definesExpressMessageType) { }
     }
     public class EncryptedValue
     {

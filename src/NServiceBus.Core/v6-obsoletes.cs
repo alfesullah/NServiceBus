@@ -485,6 +485,12 @@ namespace NServiceBus
             throw new NotImplementedException();
         }
 
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer an extension point")]
+        public static bool IsExpressMessageType(Type t)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
 }
@@ -636,6 +642,6 @@ namespace NServiceBus.Transports
     [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer used, safe to remove")]
     public interface IAuditMessages
     {
-       
+
     }
 }

@@ -84,8 +84,7 @@
                 .OrderByDescending(PlaceInMessageHierarchy)
                 .ToList();
 
-            var isExpressMessageType = conventions.IsExpressMessageType(messageType);
-            var recoverable = !isExpressMessageType && !defaultToNonPersistentMessages;
+            var recoverable =  !defaultToNonPersistentMessages;
             var metadata = new MessageMetadata(messageType, recoverable, new[]
             {
                 messageType

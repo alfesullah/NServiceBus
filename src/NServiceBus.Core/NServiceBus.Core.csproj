@@ -152,6 +152,9 @@
     <Compile Include="MessageMutator\MutateOutgoingMessagesContext.cs" />
     <Compile Include="MessageMutator\MutateOutgoingTransportMessagesContext.cs" />
     <Compile Include="Extensibility\OptionExtensionContext.cs" />
+    <Compile Include="Performance\MessageDurability\DetermineMessageDurabilityBehavior.cs" />
+    <Compile Include="Performance\MessageDurability\DurableMessagesConventionExtensions.cs" />
+    <Compile Include="Performance\MessageDurability\MessageDurabilityFeature.cs" />
     <Compile Include="Reliability\Outbox\OutboxDispatchStrategy.cs" />
     <Compile Include="Performance\ReceiveStatisticsFeature.cs" />
     <Compile Include="Performance\TimeToBeReceived\ApplyTimeToBeReceivedBehavior.cs" />
@@ -353,7 +356,7 @@
     <Compile Include="Serializers\XML\Deserializer.cs" />
     <Compile Include="Serializers\XML\Serializer.cs" />
     <Compile Include="Serializers\XML\XmlSerializerCache.cs" />
-    <Compile Include="Settings\DurableMessagesConfig.cs" />
+    <Compile Include="Performance\MessageDurability\DurableMessagesConfig.cs" />
     <Compile Include="DelayedDelivery\TimeoutManager\ConfigurationBuilderExtensions.cs" />
     <Compile Include="Unicast\Behaviors\InvokeSagaNotFoundBehavior.cs" />
     <Compile Include="Transports\MessageAvailable.cs" />
