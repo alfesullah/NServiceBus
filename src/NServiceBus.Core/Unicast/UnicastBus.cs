@@ -34,7 +34,7 @@ namespace NServiceBus.Unicast
         /// Initializes a new instance of <see cref="UnicastBus"/>.
         /// </summary>
         public UnicastBus(
-            BehaviorContext rootContext,
+            BehaviorContextStacker contextStacker,
             IExecutor executor,
             CriticalError criticalError,
             IMessageMapper messageMapper, 
@@ -54,7 +54,7 @@ namespace NServiceBus.Unicast
             this.builder = builder;
 
             busImpl = new ContextualBus( 
-                () => rootContext,
+                contextStacker,
                 messageMapper, 
                 builder, 
                 configure,

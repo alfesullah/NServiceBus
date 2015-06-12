@@ -25,7 +25,7 @@ namespace NServiceBus.Unicast
     partial class ContextualBus : IBus, IContextualBus
     {
         readonly IMessageMapper messageMapper;
-        readonly Func<BehaviorContext> contextGetter;
+        readonly BehaviorContextStacker contextStacker;
         readonly IBuilder builder;
         readonly Configure configure;
         readonly IManageSubscriptions subscriptionManager;
@@ -40,11 +40,11 @@ namespace NServiceBus.Unicast
         readonly string endpointName;
 
 
-        public ContextualBus(Func<BehaviorContext> contextGetter, IMessageMapper messageMapper, IBuilder builder, Configure configure, IManageSubscriptions subscriptionManager,
+        public ContextualBus(BehaviorContextStacker contextStacker, IMessageMapper messageMapper, IBuilder builder, Configure configure, IManageSubscriptions subscriptionManager,
             MessageMetadataRegistry messageMetadataRegistry, ReadOnlySettings settings, TransportDefinition transportDefinition, ISendMessages messageSender, StaticMessageRouter messageRouter, HostInformation hostInformation)
         {
             this.messageMapper = messageMapper;
-            this.contextGetter = contextGetter;
+            this.contextStacker = contextStacker;
             this.builder = builder;
             this.configure = configure;
             this.subscriptionManager = subscriptionManager;
@@ -71,7 +71,7 @@ namespace NServiceBus.Unicast
 
         BehaviorContext incomingContext
         {
-            get { return contextGetter(); }
+            get { return contextStacker.GetCurrentOrRootContext(); }
         }
 
         /// <summary>

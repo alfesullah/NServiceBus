@@ -9,6 +9,7 @@ namespace NServiceBus.Features
     using NServiceBus.Hosting;
     using NServiceBus.MessageInterfaces;
     using NServiceBus.ObjectBuilder;
+    using NServiceBus.Pipeline.Contexts;
     using NServiceBus.Settings;
     using NServiceBus.Settings.Concurrency;
     using NServiceBus.Settings.Throttling;
@@ -94,16 +95,7 @@ namespace NServiceBus.Features
             //Hack because we can't register as IStartableBus because it would automatically register as IBus and overrode the proper IBus registration.
             context.Container.ConfigureComponent<IRealBus>(b => CreateBus(b, hostInfo), DependencyLifecycle.SingleInstance);
             context.Container.ConfigureComponent(b => (IStartableBus)b.Build<IRealBus>(), DependencyLifecycle.SingleInstance);
-
-            context.Container.ConfigureComponent(b =>
-            {
-                var stacker = b.Build<BehaviorContextStacker>();
-                if (stacker.Current != null)
-                {
-                    return CreateContextualBus(hostInfo,b, () => stacker.Current);
-                }
-                return (IBus)b.Build<IRealBus>();
-            }, DependencyLifecycle.InstancePerCall);
+            context.Container.ConfigureComponent(b => (IBus)b.Build<IRealBus>(), DependencyLifecycle.InstancePerCall);
 
             var knownMessages = context.Settings.GetAvailableTypes()
                 .Where(context.Settings.Get<Conventions>().IsMessageType)
@@ -141,7 +133,7 @@ namespace NServiceBus.Features
         Unicast.UnicastBus CreateBus(IBuilder builder, HostInformation hostInfo)
         {
             var bus = new Unicast.UnicastBus(
-                builder.Build<BehaviorContextStacker>().Root,
+                builder.Build<BehaviorContextStacker>(), 
                 builder.Build<IExecutor>(),
                 builder.Build<CriticalError>(),
                 builder.Build<IMessageMapper>(),
@@ -157,20 +149,6 @@ namespace NServiceBus.Features
                 HostInformation = hostInfo
             };
             return bus;
-        }
-
-        ContextualBus CreateContextualBus(HostInformation hostInfo, IBuilder builder, Func<BehaviorContext> currentContextGetter)
-        {
-            return new ContextualBus(currentContextGetter,
-                builder.Build<IMessageMapper>(),
-                builder,
-                builder.Build<Configure>(),
-                builder.Build<IManageSubscriptions>(),
-                builder.Build<MessageMetadataRegistry>(), 
-                builder.Build<ReadOnlySettings>(),
-                builder.Build<TransportDefinition>(),
-                builder.Build<ISendMessages>(),
-                builder.Build<StaticMessageRouter>(),hostInfo);
         }
 
         void RegisterMessageOwnersAndBusAddress(FeatureConfigurationContext context, IEnumerable<Type> knownMessages)
