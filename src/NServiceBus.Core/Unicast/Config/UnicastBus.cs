@@ -52,9 +52,6 @@ namespace NServiceBus.Features
 
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            context.Pipeline.Register<AttachCorrelationIdBehavior.Registration>();
-
-
             context.Container.ConfigureComponent<BusNotifications>(DependencyLifecycle.SingleInstance);
 
 

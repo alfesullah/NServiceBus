@@ -26,18 +26,5 @@
         /// The message instance hierarchy.
         /// </summary>
         public IEnumerable<Type> MessageHierarchy { get; private set; }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString()
-        {
-            return string.Format("MessageType: {0}, Recoverable: {1}, Parent types: {2}", MessageType, Recoverable,
-                string.Join(";", MessageHierarchy.Select(pt => pt.FullName)));
-        }
     }
 }
