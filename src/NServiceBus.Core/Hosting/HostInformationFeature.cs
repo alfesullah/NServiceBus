@@ -2,15 +2,36 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using NServiceBus.Hosting;
+    using NServiceBus.Support;
+    using NServiceBus.Utils;
 
     class HostInformationFeature : Feature
     {
-        const string HostIdSettingsKey = "NServiceBus.HostInformation.HostId";
+        internal const string HostIdSettingsKey = "NServiceBus.HostInformation.HostId";
 
         public HostInformationFeature()
         {
             EnableByDefault();
+            Defaults(s =>
+            {
+                //todo: move to host feature
+                var fullPathToStartingExe = PathUtilities.SanitizedPath(Environment.CommandLine);
+
+                if (!s.HasExplicitValue(HostIdSettingsKey))
+                {
+                    s.SetDefault(HostIdSettingsKey, DeterministicGuid.Create(fullPathToStartingExe, RuntimeEnvironment.MachineName));
+                }
+                s.SetDefault("NServiceBus.HostInformation.DisplayName", RuntimeEnvironment.MachineName);
+                s.SetDefault("NServiceBus.HostInformation.Properties", new Dictionary<string, string>
+                {
+                    {"Machine", RuntimeEnvironment.MachineName},
+                    {"ProcessID", Process.GetCurrentProcess().Id.ToString()},
+                    {"UserName", Environment.UserName},
+                    {"PathToExecutable", fullPathToStartingExe}
+                });
+            });
         }
         protected internal override void Setup(FeatureConfigurationContext context)
         {

@@ -2,7 +2,6 @@ namespace NServiceBus.Features
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using NServiceBus.Config;
     using NServiceBus.Logging;
@@ -12,39 +11,20 @@ namespace NServiceBus.Features
     using NServiceBus.Settings;
     using NServiceBus.Settings.Concurrency;
     using NServiceBus.Settings.Throttling;
-    using NServiceBus.Support;
     using NServiceBus.Transports;
     using NServiceBus.Unicast;
     using NServiceBus.Unicast.Messages;
     using NServiceBus.Unicast.Routing;
-    using NServiceBus.Utils;
     using TransactionSettings = NServiceBus.Unicast.Transport.TransactionSettings;
 
     class UnicastBus : Feature
     {
-        internal const string HostIdSettingsKey = "NServiceBus.HostInformation.HostId";
-
         internal UnicastBus()
         {
             EnableByDefault();
 
             Defaults(s =>
             {
-                //todo: move to host feature
-                var fullPathToStartingExe = PathUtilities.SanitizedPath(Environment.CommandLine);
-
-                if (!s.HasExplicitValue(HostIdSettingsKey))
-                {
-                    s.SetDefault(HostIdSettingsKey, DeterministicGuid.Create(fullPathToStartingExe, RuntimeEnvironment.MachineName));
-                }
-                s.SetDefault("NServiceBus.HostInformation.DisplayName", RuntimeEnvironment.MachineName);
-                s.SetDefault("NServiceBus.HostInformation.Properties", new Dictionary<string, string>
-                {
-                    {"Machine", RuntimeEnvironment.MachineName},
-                    {"ProcessID", Process.GetCurrentProcess().Id.ToString()},
-                    {"UserName", Environment.UserName},
-                    {"PathToExecutable", fullPathToStartingExe}
-                });
                 s.SetDefault<IConcurrencyConfig>(new SharedConcurrencyConfig(null));
                 s.SetDefault<IThrottlingConfig>(new NoLimitThrottlingConfig());
             });

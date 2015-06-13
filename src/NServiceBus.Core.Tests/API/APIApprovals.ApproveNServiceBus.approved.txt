@@ -2596,11 +2596,13 @@ namespace NServiceBus.Unicast.Messages
     {
         public System.Collections.Generic.IEnumerable<System.Type> MessageHierarchy { get; }
         public System.Type MessageType { get; }
+        [System.ObsoleteAttribute("You can access Recoverable via the DeliveryConstraints collection on the outgoing" +
+            " context, the new constraint is called NonDurableDelivery. Will be removed in ve" +
+            "rsion 7.0.0.", true)]
         public bool Recoverable { get; }
         [System.ObsoleteAttribute("You can access TTBR via the DeliveryConstraints collection on the outgoing contex" +
             "t. Will be removed in version 7.0.0.", true)]
         public System.TimeSpan TimeToBeReceived { get; }
-        public override string ToString() { }
     }
     public class MessageMetadataRegistry
     {
