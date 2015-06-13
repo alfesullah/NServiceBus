@@ -10,10 +10,9 @@
     public partial class MessageMetadata
     {
         
-        internal MessageMetadata(Type messageType = null, bool recoverable = false, IEnumerable<Type> messageHierarchy = null)
+        internal MessageMetadata(Type messageType = null, IEnumerable<Type> messageHierarchy = null)
         {
             MessageType = messageType;
-            Recoverable = recoverable;
             MessageHierarchy = (messageHierarchy == null ? new List<Type>() : new List<Type>(messageHierarchy)).AsReadOnly();
         }
 
@@ -22,11 +21,7 @@
         /// </summary>
         public Type MessageType { get; private set; }
 
-        /// <summary>
-        ///     Gets whether or not the message is supposed to be guaranteed deliverable.
-        /// </summary>
-        public bool Recoverable { get; private set; }
-
+     
         /// <summary>
         /// The message instance hierarchy.
         /// </summary>

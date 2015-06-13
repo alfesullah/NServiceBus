@@ -470,6 +470,10 @@ namespace NServiceBus.Unicast.Messages
         {
             get { throw new NotImplementedException(); }
         }
+
+        [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "You can access Recoverable via the DeliveryConstraints collection on the outgoing context, the new constraint is called NonDurableDelivery")]
+        public bool Recoverable { get { throw new NotImplementedException(); } }
+
     }
 }
 

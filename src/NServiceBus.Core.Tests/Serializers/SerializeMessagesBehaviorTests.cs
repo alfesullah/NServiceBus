@@ -14,7 +14,7 @@
         [Test]
         public void Should_set_content_type_header()
         {
-            var registry = new MessageMetadataRegistry(true,new Conventions());
+            var registry = new MessageMetadataRegistry(new Conventions());
 
             registry.RegisterMessageType(typeof(MyMessage));
 

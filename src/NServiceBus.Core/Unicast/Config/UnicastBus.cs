@@ -174,7 +174,7 @@ namespace NServiceBus.Features
 
         void ConfigureMessageRegistry(FeatureConfigurationContext context, IEnumerable<Type> knownMessages)
         {
-            var messageRegistry = new MessageMetadataRegistry(!DurableMessagesConfig.GetDurableMessagesEnabled(context.Settings), context.Settings.Get<Conventions>());
+            var messageRegistry = new MessageMetadataRegistry(context.Settings.Get<Conventions>());
 
             foreach (var msg in knownMessages)
             {
