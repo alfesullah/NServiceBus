@@ -1,6 +1,8 @@
 ﻿namespace NServiceBus.Features
 {
     using NServiceBus.Config;
+    using NServiceBus.Forwarding;
+    using NServiceBus.Pipeline;
     using NServiceBus.Unicast.Queuing.Installers;
 
     /// <summary>
@@ -12,7 +14,7 @@
         {
             EnableByDefault();
             // Only enable if the configuration is defined in UnicastBus
-            Prerequisite(config => GetConfiguredForwardMessageQueue(config) != null,"No forwarding address was defined in the UnicastBus config");
+            Prerequisite(config => GetConfiguredForwardMessageQueue(config) != null, "No forwarding address was defined in the UnicastBus config");
         }
 
         /// <summary>
@@ -21,16 +23,22 @@
         /// <param name="context">The feature context</param>
         protected internal override void Setup(FeatureConfigurationContext context)
         {
-            context.Pipeline.Register<ForwardBehavior.Registration>();
-
             var forwardReceivedMessagesQueue = GetConfiguredForwardMessageQueue(context);
-     
+
             context.Container.ConfigureComponent<ForwardReceivedMessagesToQueueCreator>(DependencyLifecycle.InstancePerCall)
                 .ConfigureProperty(p => p.Enabled, true)
                 .ConfigureProperty(t => t.Address, forwardReceivedMessagesQueue);
 
-            context.Container.ConfigureComponent<ForwardBehavior>(DependencyLifecycle.InstancePerCall)
-                .ConfigureProperty(p => p.ForwardReceivedMessagesTo, forwardReceivedMessagesQueue);
+            context.Pipeline.Register<InvokeForwardingPipelineBehavior.Registration>();
+            context.Pipeline.RegisterConnector<ForwardingToDispatchConnector>("Makes sure that forwarded messages gets dispatched to the transport");
+
+            context.Container.ConfigureComponent(b =>
+            {
+                var pipelinesCollection = context.Settings.Get<PipelineConfiguration>();
+                var pipeline = new PipelineBase<ForwardingContext>(b, context.Settings, pipelinesCollection.MainPipeline);
+
+                return new InvokeForwardingPipelineBehavior(pipeline, forwardReceivedMessagesQueue);
+            }, DependencyLifecycle.InstancePerCall);
         }
 
         string GetConfiguredForwardMessageQueue(FeatureConfigurationContext context)

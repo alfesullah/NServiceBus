@@ -144,6 +144,9 @@
     <Compile Include="FirstLevelRetries\FirstLevelRetry.cs" />
     <Compile Include="Faults\ErrorQueueSettings.cs" />
     <Compile Include="Faults\StoreFaultsInErrorQueue.cs" />
+    <Compile Include="Forwarding\ForwardingContext.cs" />
+    <Compile Include="Forwarding\ForwardingToDispatchConnector.cs" />
+    <Compile Include="Forwarding\InvokeForwardingPipelineBehavior.cs" />
     <Compile Include="Hosting\AddHostInfoHeadersBehavior.cs" />
     <Compile Include="Hosting\HostInformationFeature.cs" />
     <Compile Include="IBusExtensions.cs" />
@@ -365,7 +368,7 @@
     <Compile Include="Transports\Msmq\MsmqReceiveWithTransactionScopeBehavior.cs" />
     <Compile Include="Transports\ReceiveOptions.cs" />
     <Compile Include="Unicast\Behaviors\EnforceMessageIdBehavior.cs" />
-    <Compile Include="Unicast\Behaviors\ForwardReceivedMessages.cs" />
+    <Compile Include="Forwarding\ForwardReceivedMessages.cs" />
     <Compile Include="FirstLevelRetries\FirstLevelRetriesBehavior.cs" />
     <Compile Include="Pipeline\Contexts\HandlingContext.cs" />
     <Compile Include="Unicast\Behaviors\MessageProcessingAbortedException.cs" />
@@ -464,7 +467,6 @@
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttribute.cs" />
     <Compile Include="Transports\ConfigureTransport.cs" />
     <Compile Include="Transports\Msmq\Config\CheckMachineNameForComplianceWithDtcLimitation.cs" />
-    <Compile Include="Unicast\Behaviors\ForwardBehavior.cs" />
     <Compile Include="Unicast\Behaviors\InvokeHandlersBehavior.cs" />
     <Compile Include="Unicast\Behaviors\LoadHandlersConnector.cs" />
     <Compile Include="Unicast\Config\UnicastBus.cs" />

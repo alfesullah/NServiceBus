@@ -80,17 +80,6 @@ namespace NServiceBus.Features
                 .Where(context.Settings.Get<Conventions>().IsMessageType)
                 .ToList();
 
-            var unicastConfig = context.Settings.GetConfigSection<UnicastBusConfig>();
-
-            if (unicastConfig != null)
-            {
-                if (!string.IsNullOrWhiteSpace(unicastConfig.ForwardReceivedMessagesTo))
-                {
-                    var forwardAddress = unicastConfig.ForwardReceivedMessagesTo;
-                    context.Container.ConfigureProperty<ForwardBehavior>(b => b.ForwardReceivedMessagesTo, forwardAddress);
-                }
-            }
-
             ConfigureMessageRegistry(context, knownMessages);
 
             HardcodedPipelineSteps.RegisterOutgoingCoreBehaviors(context.Pipeline);
