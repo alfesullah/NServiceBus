@@ -126,6 +126,7 @@
     <Compile Include="AssemblyScanner\When_told_to_scan_app_domain.cs" />
     <Compile Include="Causation\AttachCausationHeadersBehaviorTests.cs" />
     <Compile Include="DelayedDelivery\RouteDeferredMessageToTimeoutManagerBehaviorTests.cs" />
+    <Compile Include="Reliability\Outbox\DeliveryConstraintsFactoryTests.cs" />
     <Compile Include="TransportDispatch\HeaderAssertHelpers.cs" />
     <Compile Include="Performance\TimeToBeReceived\TimeToBeReceivedAttributeTests.cs" />
     <Compile Include="Routing\AutomaticSubscriptions\AutoSubscriptionContext.cs" />

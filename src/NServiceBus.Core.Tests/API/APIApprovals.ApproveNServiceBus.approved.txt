@@ -565,6 +565,7 @@ namespace NServiceBus
     public class NonDurableDelivery : NServiceBus.DeliveryConstraints.DeliveryConstraint
     {
         public NonDurableDelivery() { }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
     public class static OptionExtensions
     {
@@ -1045,6 +1046,7 @@ namespace NServiceBus.DelayedDelivery
     {
         public DelayDeliveryWith(System.TimeSpan delay) { }
         public System.TimeSpan Delay { get; }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
     public abstract class DelayedDeliveryConstraint : NServiceBus.DeliveryConstraints.DeliveryConstraint
     {
@@ -1054,6 +1056,7 @@ namespace NServiceBus.DelayedDelivery
     {
         public DoNotDeliverBefore(System.DateTime at) { }
         public System.DateTime At { get; }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
 }
 namespace NServiceBus.DeliveryConstraints
@@ -1061,6 +1064,7 @@ namespace NServiceBus.DeliveryConstraints
     public abstract class DeliveryConstraint
     {
         protected DeliveryConstraint() { }
+        public abstract void Serialize(System.Collections.Generic.Dictionary<string, string> options);
     }
 }
 namespace NServiceBus.Encryption
@@ -1581,6 +1585,7 @@ namespace NServiceBus.Performance.TimeToBeReceived
     {
         public DiscardIfNotReceivedBefore(System.TimeSpan maxTime) { }
         public System.TimeSpan MaxTime { get; }
+        public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
 }
 namespace NServiceBus.Persistence.Legacy

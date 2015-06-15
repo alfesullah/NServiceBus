@@ -3,12 +3,14 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// 
+    /// Base class for delivery constraints
     /// </summary>
     public abstract class DeliveryConstraint
     {
-        internal abstract bool Deserialize(Dictionary<string, string> options);
-
-        internal abstract void Serialize(Dictionary<string, string> options);
+        /// <summary>
+        /// Serializes the constraint into the passed dictionary
+        /// </summary>
+        /// <param name="options">Dictonary where to store the data</param>
+        public abstract void Serialize(Dictionary<string, string> options);
     }
 }

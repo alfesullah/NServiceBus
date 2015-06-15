@@ -156,6 +156,7 @@
     <Compile Include="Performance\MessageDurability\DetermineMessageDurabilityBehavior.cs" />
     <Compile Include="Performance\MessageDurability\DurableMessagesConventionExtensions.cs" />
     <Compile Include="Performance\MessageDurability\MessageDurabilityFeature.cs" />
+    <Compile Include="Reliability\Outbox\DeliveryConstraintsFactory.cs" />
     <Compile Include="Reliability\Outbox\OutboxDispatchStrategy.cs" />
     <Compile Include="Performance\ReceiveStatisticsFeature.cs" />
     <Compile Include="Performance\TimeToBeReceived\ApplyTimeToBeReceivedBehavior.cs" />

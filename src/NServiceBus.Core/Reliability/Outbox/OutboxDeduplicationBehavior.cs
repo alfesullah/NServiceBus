@@ -2,11 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Transactions;
     using NServiceBus.ConsistencyGuarantees;
-    using NServiceBus.DeliveryConstraints;
     using NServiceBus.Outbox;
     using NServiceBus.Pipeline;
+    using NServiceBus.Reliability.Outbox;
     using NServiceBus.Routing;
     using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
@@ -14,7 +15,7 @@
     class OutboxDeduplicationBehavior : PhysicalMessageProcessingStageBehavior
     {
         public OutboxDeduplicationBehavior(IOutboxStorage outboxStorage,
-            TransactionOptions transactionOptions, 
+            TransactionOptions transactionOptions,
             IDispatchMessages dispatcher,
             DispatchStrategy dispatchStrategy)
         {
@@ -49,10 +50,10 @@
                     return;
                 }
 
-                outboxStorage.Store(messageId,outboxMessage.TransportOperations);
+                outboxStorage.Store(messageId, outboxMessage.TransportOperations);
             }
 
-            DispatchOperationToTransport(outboxMessage.TransportOperations,context);
+            DispatchOperationToTransport(outboxMessage.TransportOperations, context);
 
             outboxStorage.SetAsDispatched(messageId);
         }
@@ -65,10 +66,10 @@
 
                 var routingStrategy = routingStrategyFactory.Create(transportOperation.Options);
 
-           
-                //todo: deliveryConstraint.Hydrate(transportOperation.Options);
-
-                dispatchStrategy.Dispatch(dispatcher,message, routingStrategy, new AtLeastOnce(), new List<DeliveryConstraint>(), context);
+                var deliveryConstraints = deliveryConstraintsFactory.DeserializeConstraints(transportOperation.Options)
+                    .ToList();
+            
+                dispatchStrategy.Dispatch(dispatcher, message, routingStrategy, new AtLeastOnce(), deliveryConstraints, context);
             }
         }
 
@@ -77,6 +78,7 @@
         IOutboxStorage outboxStorage;
         TransactionOptions transactionOptions;
         RoutingStrategyFactory routingStrategyFactory = new RoutingStrategyFactory();
+        DeliveryConstraintsFactory deliveryConstraintsFactory = new DeliveryConstraintsFactory();
 
         public class OutboxDeduplicationRegistration : RegisterStep
         {

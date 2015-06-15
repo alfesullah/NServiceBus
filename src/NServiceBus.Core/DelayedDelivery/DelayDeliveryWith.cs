@@ -22,15 +22,13 @@
         /// </summary>
         public TimeSpan Delay { get; private set; }
 
-
-        internal override bool Deserialize(Dictionary<string, string> options)
+        /// <summary>
+        /// Serializes the constraint into the passed dictionary
+        /// </summary>
+        /// <param name="options">Dictonary where to store the data</param>
+        public override void Serialize(Dictionary<string, string> options)
         {
-            throw new NotImplementedException();
-        }
-
-        internal override void Serialize(Dictionary<string, string> options)
-        {
-            throw new NotImplementedException();
+            options["DelayDeliveryFor"] = Delay.ToString();
         }
     }
 }

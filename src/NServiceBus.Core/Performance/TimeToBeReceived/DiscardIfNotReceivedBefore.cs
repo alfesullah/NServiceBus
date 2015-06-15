@@ -5,7 +5,8 @@
     using NServiceBus.DeliveryConstraints;
 
     /// <summary>
-    /// 
+    /// Instructs the transport to discard the message if it hasn't been received
+    /// withing the specified timespan
     /// </summary>
     public class DiscardIfNotReceivedBefore : DeliveryConstraint
     {
@@ -23,23 +24,13 @@
             MaxTime = maxTime;
         }
 
-        internal override bool Deserialize(Dictionary<string, string> options)
-        {
-            string value;
-
-            if (options.TryGetValue("TimeToBeReceived",out value))
-            {
-                MaxTime = TimeSpan.Parse(value);
-                return true;
-            }
-
-            return false;
-        }
-
-        internal override void Serialize(Dictionary<string, string> options)
+        /// <summary>
+        /// Serializes the constraint into the passed dictionary
+        /// </summary>
+        /// <param name="options">Dictonary where to store the data</param>
+        public override void Serialize(Dictionary<string, string> options)
         {
             options["TimeToBeReceived"] = MaxTime.ToString();
-           
         }
     }
 }

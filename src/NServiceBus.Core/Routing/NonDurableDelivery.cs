@@ -1,22 +1,20 @@
 ﻿namespace NServiceBus
 {
-    using System;
     using System.Collections.Generic;
     using NServiceBus.DeliveryConstraints;
 
     /// <summary>
-    /// 
+    /// Instructs the transport that it's allowed to transport the message with out the need to store it durable
     /// </summary>
     public class NonDurableDelivery : DeliveryConstraint
     {
-        internal override bool Deserialize(Dictionary<string, string> options)
+        /// <summary>
+        /// Serializes the constraint into the passed dictionary
+        /// </summary>
+        /// <param name="options">Dictonary where to store the data</param>
+        public override void Serialize(Dictionary<string, string> options)
         {
-            throw new NotImplementedException();
-        }
-
-        internal override void Serialize(Dictionary<string, string> options)
-        {
-            throw new NotImplementedException();
+            options["NonDurable"] = true.ToString();
         }
     }
 }
