@@ -38,7 +38,7 @@ namespace NServiceBus.AcceptanceTests.Exceptions
                 try
                 {
                     actual = stringBuilder.ToString().TrimEnd();
-                    Assert.AreEqual(actual, expected);
+                    Assert.AreEqual(expected,actual);
                 }
                 catch (Exception)
                 {
