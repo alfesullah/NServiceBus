@@ -13,11 +13,11 @@
         /// <param name="value">The value</param>
         public static void AddAuditData(this AuditContext context, string key, string value)
         {
-            AuditDispatchTerminator.State state;
+            AuditToDispatchConnector.State state;
 
             if (!context.TryGet(out state))
             {
-                state = new AuditDispatchTerminator.State();
+                state = new AuditToDispatchConnector.State();
                 context.Set(state);
             }
             state.AuditValues[key] = value;

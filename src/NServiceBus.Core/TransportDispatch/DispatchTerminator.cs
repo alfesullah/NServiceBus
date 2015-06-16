@@ -9,9 +9,6 @@
 
     class DispatchTerminator : PipelineTerminator<DispatchContext>
     {
-        readonly IDispatchMessages dispatcher;
-        readonly DispatchStrategy defaultDispatchStrategy;
-
         public DispatchTerminator(IDispatchMessages dispatcher, DispatchStrategy defaultDispatchStrategy)
         {
             this.dispatcher = dispatcher;
@@ -29,5 +26,8 @@
 
             dispatchStrategy.Dispatch(dispatcher, context.Get<OutgoingMessage>(), context.Get<RoutingStrategy>(), context.GetConsistencyGuarantee(), context.GetDeliveryConstraints(), context);
         }
+
+        IDispatchMessages dispatcher;
+        DispatchStrategy defaultDispatchStrategy;
     }
 }

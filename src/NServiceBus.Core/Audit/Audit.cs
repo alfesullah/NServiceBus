@@ -2,8 +2,6 @@
 {
     using NServiceBus.Audit;
     using NServiceBus.Pipeline;
-    using NServiceBus.TransportDispatch;
-    using NServiceBus.Transports;
     using NServiceBus.Unicast.Queuing.Installers;
 
     /// <summary>
@@ -24,8 +22,9 @@
         protected internal override void Setup(FeatureConfigurationContext context)
         {
             context.Pipeline.Register<InvokeAuditPipelineBehavior.Registration>();
-            context.Pipeline.Register("AuditDispatch", typeof(AuditDispatchTerminator), "Dispatches the audit message to the transport");
+            context.Pipeline.RegisterConnector<AuditToDispatchConnector>("Dispatches the audit message to the transport");
          
+
             context.Container.ConfigureComponent(b =>
             {
                 var pipelinesCollection = context.Settings.Get<PipelineConfiguration>();
@@ -34,11 +33,7 @@
                 return new InvokeAuditPipelineBehavior(auditPipeline,auditConfig.Address);
             }, DependencyLifecycle.InstancePerCall);
 
-
-            context.Container.ConfigureComponent(b => new AuditDispatchTerminator(b.Build<DispatchStrategy>(), b.Build<IDispatchMessages>(), auditConfig.TimeToBeReceived), DependencyLifecycle.SingleInstance);
-
-            //context.Pipeline.Register<AuditBehavior.Registration>();
-            //context.Pipeline.Register<AttachCausationHeadersBehavior.Registration>();
+            context.Container.ConfigureComponent(b => new AuditToDispatchConnector(auditConfig.TimeToBeReceived), DependencyLifecycle.SingleInstance);
 
             context.Container.ConfigureComponent<AuditQueueCreator>(DependencyLifecycle.InstancePerCall)
                 .ConfigureProperty(p => p.Enabled, true)

@@ -3,36 +3,36 @@
     using System;
     using NServiceBus.AcceptanceTesting;
     using NServiceBus.AcceptanceTests.EndpointTemplates;
-    using NServiceBus.AcceptanceTests.ScenarioDescriptors;
     using NServiceBus.Configuration.AdvanceExtensibility;
     using NServiceBus.Pipeline;
     using NUnit.Framework;
 
-    public class When_blowing_up_just_after_dispatch : NServiceBusAcceptanceTest
+    public class When_a_message_is_audited : NServiceBusAcceptanceTest
     {
+
         [Test]
-        public void Should_still_release_the_outgoing_messages_to_the_transport()
+        public void Should_audit_even_if_dispatch_blows_once()
         {
-          
-            Scenario.Define<Context>()
-                    .WithEndpoint<NonDtcReceivingEndpoint>(b => b.Given(bus => bus.SendLocal(new PlaceOrder())))
-                    .AllowExceptions()
-                    .Done(c => c.OrderAckReceived == 1)
-                    .Repeat(r=>r.For<AllOutboxCapableStorages>())
-                    .Should(context => Assert.AreEqual(1, context.OrderAckReceived, "Order ack should have been received since outbox dispatch isn't part of the receive tx"))
-                    .Run(TimeSpan.FromSeconds(20));
+            var context = new Context();
+
+            Scenario.Define(context)
+                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited())))
+                    .WithEndpoint<AuditSpyEndpoint>()
+                    .Done(c => c.Done)
+                    .Run();
+            Assert.True(context.Done);
         }
 
 
 
         public class Context : ScenarioContext
         {
-            public int OrderAckReceived { get; set; }
+            public bool Done { get; set; }
         }
 
-        public class NonDtcReceivingEndpoint : EndpointConfigurationBuilder
+        public class EndpointWithAuditOn : EndpointConfigurationBuilder
         {
-            public NonDtcReceivingEndpoint()
+            public EndpointWithAuditOn()
             {
                 EndpointSetup<DefaultServer>(
                     b =>
@@ -40,8 +40,8 @@
                         b.GetSettings().Set("DisableOutboxTransportCheck", true);
                         b.EnableOutbox();
                         b.Pipeline.Register<BlowUpAfterDispatchBehavior.Registration>();
-                        b.RegisterComponents(r => r.ConfigureComponent<BlowUpAfterDispatchBehavior>(DependencyLifecycle.InstancePerCall));
-                    });
+                    })
+                    .AuditTo<AuditSpyEndpoint>();
             }
 
             public class BlowUpAfterDispatchBehavior : PhysicalMessageProcessingStageBehavior
@@ -58,7 +58,7 @@
 
                 public override void Invoke(Context context, Action next)
                 {
-                    if (!context.PhysicalMessage.Headers[Headers.EnclosedMessageTypes].Contains(typeof(PlaceOrder).Name))
+                    if (!context.PhysicalMessage.Headers[Headers.EnclosedMessageTypes].Contains(typeof(MessageToBeAudited).Name))
                     {
                         next();
                         return;
@@ -85,32 +85,38 @@
                 static bool called;
             }
 
-            class PlaceOrderHandler : IHandleMessages<PlaceOrder>
+
+            public class MessageToBeAuditedHandler : IHandleMessages<MessageToBeAudited>
             {
-                public IBus Bus { get; set; }
-
-                public void Handle(PlaceOrder message)
+                public void Handle(MessageToBeAudited message)
                 {
-                    Bus.SendLocal(new SendOrderAcknowledgement());
-                }
-            }
-
-            class SendOrderAcknowledgementHandler : IHandleMessages<SendOrderAcknowledgement>
-            {
-                public Context Context { get; set; }
-
-                public void Handle(SendOrderAcknowledgement message)
-                {
-                    Context.OrderAckReceived++;
                 }
             }
         }
 
+        class AuditSpyEndpoint : EndpointConfigurationBuilder
+        {
+            public AuditSpyEndpoint()
+            {
+                EndpointSetup<DefaultServer>();
+            }
 
-        public class PlaceOrder : ICommand { }
+            public class MessageToBeAuditedHandler : IHandleMessages<MessageToBeAudited>
+            {
+                public Context Context { get; set; }
+                public IBus Bus { get; set; }
 
-        class SendOrderAcknowledgement : IMessage { }
+                public void Handle(MessageToBeAudited message)
+                {
+                    Context.Done = true;
+                }
+            }
+        }
+
+        [Serializable]
+        public class MessageToBeAudited : IMessage
+        {
+            public string RunId { get; set; }
+        }
     }
-
-   
 }
