@@ -53,16 +53,32 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
                 }
             }
 
+            class AddContextStorage : PhysicalMessageProcessingStageBehavior
+            {
+                public override void Invoke(Context context, Action next)
+                {
+                    context.Set(new AuditFilterResult());
+
+                    next();
+                }
+
+                public class Registration : RegisterStep
+                {
+                    public Registration()
+                        : base("AddContextStorage", typeof(AddContextStorage), "Adds state to the context so that downstream behaviors can turn audit offf")
+                    {
+                        InsertBefore(WellKnownStep.AuditProcessedMessage);
+                    }
+                }
+            }
+
             class SetFiltering : LogicalMessageProcessingStageBehavior
             {
                 public override void Invoke(Context context, Action next)
                 {
                     if (context.MessageType == typeof(MessageToBeAudited))
                     {
-                        context.Set(new AuditFilterResult
-                        {
-                            DoNotAuditMessage = true
-                        });
+                        context.Get<AuditFilterResult>().DoNotAuditMessage = true;
                     }
 
                     next();
@@ -105,6 +121,7 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
             {
                 public void Customize(BusConfiguration configuration)
                 {
+                    configuration.Pipeline.Register<AddContextStorage.Registration>();
                     configuration.Pipeline.Register("SetFiltering", typeof(SetFiltering), "Filters audit entries");
                     configuration.Pipeline.Register<FilteringAuditBehavior.Registration>();
                 }
@@ -115,7 +132,7 @@ namespace NServiceBus.AcceptanceTests.PipelineExt
         {
             public AuditSpy()
             {
-                EndpointSetup<DefaultServer>(c => c.EndpointName("auditspy"));
+                EndpointSetup<DefaultServer>();
             }
 
             class AuditMessageHandler : IHandleMessages<MessageToBeAudited>
