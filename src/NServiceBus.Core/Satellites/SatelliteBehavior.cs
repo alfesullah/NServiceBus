@@ -3,7 +3,7 @@ namespace NServiceBus
     using System;
 
     /// <summary>
-    /// A base class for setellite behaviors
+    /// A base class for satellite behaviors
     /// </summary>
     public abstract class SatelliteBehavior: PhysicalMessageProcessingStageBehavior
     {

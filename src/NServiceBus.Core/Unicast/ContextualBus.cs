@@ -247,7 +247,7 @@ namespace NServiceBus.Unicast
 
         public void SendLocal(object message, SendLocalOptions options)
         {
-            var sendOptions = new NServiceBus.SendOptions()
+            var sendOptions = new NServiceBus.SendOptions
             {
                 Extensions = options.Extensions
             };

@@ -15,7 +15,7 @@ namespace NServiceBus.Transports
         /// Creates the send options with the given address
         /// </summary>
         /// <param name="eventType">The type of event being published</param>
-        /// <param name="minimumConsistencyGuarantee">The level of consitency that's required for this operation</param>
+        /// <param name="minimumConsistencyGuarantee">The level of consistency that's required for this operation</param>
         /// <param name="deliveryConstraints">The delivery constraints that must be honored by the transport</param>
         /// <param name="context">The current pipeline context if one is present</param>
         public TransportPublishOptions(Type eventType, ConsistencyGuarantee minimumConsistencyGuarantee, List<DeliveryConstraint> deliveryConstraints,BehaviorContext context)
@@ -32,7 +32,7 @@ namespace NServiceBus.Transports
         public Type EventType { get; private set; }
 
         /// <summary>
-        /// The level of consitency that's required for this operation
+        /// The level of consistency that's required for this operation
         /// </summary>
         public ConsistencyGuarantee MinimumConsistencyGuarantee { get; private set; }
 

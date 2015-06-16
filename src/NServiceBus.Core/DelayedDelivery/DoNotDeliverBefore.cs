@@ -25,7 +25,7 @@
         /// <summary>
         /// Serializes the constraint into the passed dictionary
         /// </summary>
-        /// <param name="options">Dictonary where to store the data</param>
+        /// <param name="options">Dictionary where to store the data</param>
         public override void Serialize(Dictionary<string, string> options)
         {
             options["DeliverAt"] = DateTimeExtensions.ToWireFormattedString(At);

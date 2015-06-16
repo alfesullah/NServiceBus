@@ -15,7 +15,7 @@
     {
         public ISagaPersister SagaPersister { get; set; }
 
-        public ICancelDeferredMessages TimeoutCancelation { get; set; }
+        public ICancelDeferredMessages TimeoutCancellation { get; set; }
 
         public MessageHandlerRegistry MessageHandlerRegistry { get; set; }
 
@@ -241,7 +241,7 @@
 
         void NotifyTimeoutManagerThatSagaHasCompleted(Saga.Saga saga)
         {
-            TimeoutCancelation.CancelDeferredMessages(saga.Entity.Id.ToString());
+            TimeoutCancellation.CancelDeferredMessages(saga.Entity.Id.ToString());
         }
 
         IContainSagaData CreateNewSagaEntity(SagaMetadata metadata, Context context)
