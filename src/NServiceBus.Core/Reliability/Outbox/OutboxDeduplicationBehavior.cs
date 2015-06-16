@@ -86,6 +86,7 @@
                 : base("OutboxDeduplication", typeof(OutboxDeduplicationBehavior), "Deduplication for the outbox feature")
             {
                 InsertBeforeIfExists(WellKnownStep.AuditProcessedMessage);
+                InsertBeforeIfExists("InvokeForwardingPipeline");
             }
         }
     }
