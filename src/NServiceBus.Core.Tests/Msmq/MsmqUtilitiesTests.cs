@@ -86,7 +86,7 @@
         [Test]
         public void GetReturnAddress_for_both_with_machine_name_should_return_replyToAddress_with_reply_machine()
         {
-            var returnAddress = MsmqUtilities.GetReturnAddress("replytoaddress@replytomachine", "detinationmachine");
+            var returnAddress = MsmqUtilities.GetReturnAddress("replytoaddress@replytomachine", "destinationmachine");
             Assert.AreEqual(@"FormatName:DIRECT=OS:replytomachine\private$\replytoaddress", returnAddress);
         }
 

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AcceptanceTests.Basic
+﻿namespace NServiceBus.AcceptanceTests.DelayedDelivery
 {
     using System;
     using NServiceBus.AcceptanceTesting;

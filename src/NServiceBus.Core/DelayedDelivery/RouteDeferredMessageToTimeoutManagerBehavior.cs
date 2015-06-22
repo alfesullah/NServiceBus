@@ -3,6 +3,7 @@ namespace NServiceBus
     using System;
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Pipeline;
     using NServiceBus.Routing;
     using NServiceBus.Timeout;
@@ -29,6 +30,13 @@ namespace NServiceBus
                     throw new Exception("Delayed delivery using the timeoutmanager is only supported for messages with Direct routing");
                 }
 
+                DiscardIfNotReceivedBefore discardIfNotReceivedBefore;
+                if (context.TryGetDeliveryConstraint(out discardIfNotReceivedBefore))
+                {
+                    throw new Exception("Postponed delivery of messages with TimeToBeReceived set is not supported. Remove the TimeToBeReceived attribute to postpone messages of this type.");
+                }
+
+
                 context.Set<RoutingStrategy>(new DirectToTargetDestination(timeoutManagerAddress));
                 context.SetHeader(TimeoutManagerHeaders.RouteExpiredTimeoutTo, currentRoutingStrategy.Destination);
 
@@ -41,7 +49,7 @@ namespace NServiceBus
                 }
                 else
                 {
-                    deliverAt = ((DoNotDeliverBefore) constraint).At;
+                    deliverAt = ((DoNotDeliverBefore)constraint).At;
                 }
 
                 context.SetHeader(TimeoutManagerHeaders.Expire, DateTimeExtensions.ToWireFormattedString(deliverAt));

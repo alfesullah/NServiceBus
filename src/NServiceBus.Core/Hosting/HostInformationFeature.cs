@@ -16,7 +16,6 @@
             EnableByDefault();
             Defaults(s =>
             {
-                //todo: move to host feature
                 var fullPathToStartingExe = PathUtilities.SanitizedPath(Environment.CommandLine);
 
                 if (!s.HasExplicitValue(HostIdSettingsKey))

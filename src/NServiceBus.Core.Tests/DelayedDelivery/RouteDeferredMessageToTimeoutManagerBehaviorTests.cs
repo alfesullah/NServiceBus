@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
+    using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Routing;
     using NServiceBus.Timeout;
     using NServiceBus.TransportDispatch;
@@ -47,6 +48,24 @@
             var ex = Assert.Throws<Exception>(()=> behavior.Invoke(context, () => { }));
 
             Assert.True(ex.Message.Contains("Direct routing"));
+        }
+
+        [Test]
+        public void Delayed_delivery_cant_be_combined_with_ttbr()
+        {
+            var behavior = new RouteDeferredMessageToTimeoutManagerBehavior("tm");
+            var delay = TimeSpan.FromDays(1);
+
+            var message = new OutgoingMessage("id", new Dictionary<string, string>(), new byte[0]);
+
+            var context = new DispatchContext(message, null);
+            context.AddDeliveryConstraint(new DelayDeliveryWith(delay));
+            context.AddDeliveryConstraint(new DiscardIfNotReceivedBefore(TimeSpan.FromSeconds(30)));
+            context.Set<RoutingStrategy>(new DirectToTargetDestination("target"));
+
+            var ex = Assert.Throws<Exception>(() => behavior.Invoke(context, () => { }));
+
+            Assert.True(ex.Message.Contains("TimeToBeReceived"));
         }
         [Test]
         public void Should_set_the_expiry_header_to_a_absolute_utc_time_calculated_based_on_delay()
