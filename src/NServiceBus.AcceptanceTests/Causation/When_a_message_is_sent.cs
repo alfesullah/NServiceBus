@@ -18,7 +18,7 @@
                     .Run();
 
             Assert.AreEqual(context.FirstConversationId, context.ConversationIdReceived,"Conversation id should flow to outgoing messages");
-            Assert.AreEqual(context.MessageIdOfFirstMessage, context.RelatedToReceived, "ReleatedToId on outgoing messages should be set to the message id of the message causing it to be sent");
+            Assert.AreEqual(context.MessageIdOfFirstMessage, context.RelatedToReceived, "RelatedToId on outgoing messages should be set to the message id of the message causing it to be sent");
         }
 
 

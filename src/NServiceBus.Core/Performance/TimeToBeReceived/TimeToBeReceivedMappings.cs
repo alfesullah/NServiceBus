@@ -14,6 +14,11 @@
             {
                 var timeToBeReceived = convention(messageType);
 
+                if (timeToBeReceived <= TimeSpan.Zero)
+                {
+                    throw new Exception("TimeToBeReceived must be greater that 0");
+                }
+
                 if (timeToBeReceived < TimeSpan.MaxValue)
                 {
                     mappings[messageType] = timeToBeReceived;
