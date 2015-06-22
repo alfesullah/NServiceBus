@@ -6,15 +6,7 @@ namespace NServiceBus.ConsistencyGuarantees
     {
         public static ConsistencyGuarantee GetConsistencyGuarantee(this DispatchContext context)
         {
-            ConsistencyGuarantee guarantee;
-
-            if (context.TryGet(out guarantee))
-            {
-                return guarantee;
-            }
-
-            //todo: we need to get this default from the transport
-            return new AtomicWithReceiveOperation();
+            return context.Get<ConsistencyGuarantee>();
         }
     }
 }

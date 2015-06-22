@@ -3,6 +3,7 @@ namespace NServiceBus
     using System;
     using System.Collections.Generic;
     using NServiceBus.Configuration.AdvanceExtensibility;
+    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.Features;
     using NServiceBus.Performance.TimeToBeReceived;
     using NServiceBus.Transports;
@@ -57,6 +58,15 @@ namespace NServiceBus
             {
                 typeof(DiscardIfNotReceivedBefore)
             };
+        }
+
+        /// <summary>
+        /// Atomic with receive is the MSMQ default. 
+        /// </summary>
+        /// <returns></returns>
+        public override ConsistencyGuarantee GetDefaultConsistencyGuarantee()
+        {
+            return new AtomicWithReceiveOperation();
         }
     }
 }

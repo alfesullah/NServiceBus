@@ -649,3 +649,16 @@ namespace NServiceBus.Transports
 
     }
 }
+
+namespace NServiceBus.Unicast.Subscriptions
+{
+    using System;
+
+     [ObsoleteEx(RemoveInVersion = "7.0", TreatAsErrorFromVersion = "6.0", Message = "No longer used, safe to remove")]
+    public class SubscriptionEventArgs : EventArgs
+    {
+        public string SubscriberReturnAddress { get; set; }
+
+        public string MessageType { get; set; }
+    }
+}

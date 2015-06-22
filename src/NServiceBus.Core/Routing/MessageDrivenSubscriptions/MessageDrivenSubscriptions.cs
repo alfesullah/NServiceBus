@@ -1,7 +1,7 @@
 namespace NServiceBus.Features
 {
+    using NServiceBus.Routing.MessageDrivenSubscriptions;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions;
 
     /// <summary>
     /// Allows subscribers to register by sending a subscription message to this endpoint

@@ -1,8 +1,8 @@
-﻿namespace NServiceBus.Unicast.Tests
+﻿namespace NServiceBus.Core.Tests.Routing
 {
     using System.Threading;
+    using NServiceBus.Routing.MessageDrivenSubscriptions;
     using NServiceBus.Transports;
-    using NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions;
     using NUnit.Framework;
 
     [TestFixture]

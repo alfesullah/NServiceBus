@@ -2,6 +2,7 @@ namespace NServiceBus.Transports
 {
     using System;
     using System.Collections.Generic;
+    using NServiceBus.ConsistencyGuarantees;
 
     /// <summary>
     /// Defines a transport that can be used by NServiceBus
@@ -52,5 +53,11 @@ namespace NServiceBus.Transports
         /// </summary>
         /// <returns></returns>
         public abstract IEnumerable<Type> GetSupportedDeliveryConstraints();
+
+        /// <summary>
+        /// Returns the consistency guarantee to use if no specific guarantee is specified
+        /// </summary>
+        /// <returns></returns>
+        public abstract ConsistencyGuarantee GetDefaultConsistencyGuarantee();
     }
 }

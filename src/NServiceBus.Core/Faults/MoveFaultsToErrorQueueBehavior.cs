@@ -2,19 +2,20 @@ namespace NServiceBus
 {
     using System;
     using System.Collections.Generic;
-    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Hosting;
     using NServiceBus.Logging;
     using NServiceBus.Pipeline;
+    using NServiceBus.Routing;
+    using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
 
     class MoveFaultsToErrorQueueBehavior : PhysicalMessageProcessingStageBehavior
     {
-        public MoveFaultsToErrorQueueBehavior(CriticalError criticalError, IDispatchMessages sender, HostInformation hostInformation, BusNotifications notifications, string errorQueueAddress)
+        public MoveFaultsToErrorQueueBehavior(CriticalError criticalError, IPipelineBase<DispatchContext> dispatchPipeline, HostInformation hostInformation, BusNotifications notifications, string errorQueueAddress)
         {
             this.criticalError = criticalError;
-            this.sender = sender;
+            this.dispatchPipeline = dispatchPipeline;
             this.hostInformation = hostInformation;
             this.notifications = notifications;
             this.errorQueueAddress = errorQueueAddress;
@@ -43,7 +44,13 @@ namespace NServiceBus
                     message.Headers[Headers.HostId] = hostInformation.HostId.ToString("N");
                     message.Headers[Headers.HostDisplayName] = hostInformation.DisplayName;
 
-                    sender.Dispatch(new OutgoingMessage("msg id",message.Headers,message.Body), new DispatchOptions(errorQueueAddress,new AtomicWithReceiveOperation(), new List<DeliveryConstraint>()));
+            
+                    var dispatchContext = new DispatchContext(new OutgoingMessage(message.Id, message.Headers, message.Body), context);
+
+                    context.Set<RoutingStrategy>(new DirectToTargetDestination(errorQueueAddress));
+                    context.Set(new List<DeliveryConstraint>());
+
+                    dispatchPipeline.Invoke(dispatchContext);
 
                     notifications.Errors.InvokeMessageHasBeenSentToErrorQueue(message,exception);
                 }
@@ -56,7 +63,7 @@ namespace NServiceBus
         }
 
         CriticalError criticalError;
-        IDispatchMessages sender;
+        readonly IPipelineBase<DispatchContext> dispatchPipeline;
         HostInformation hostInformation;
         BusNotifications notifications;
         string errorQueueAddress;
@@ -65,14 +72,11 @@ namespace NServiceBus
         public class Registration : RegisterStep
         {
             public Registration()
-                : base("MoveFaultsToErrorQueue", typeof(MoveFaultsToErrorQueueBehavior), "Invokes the configured fault manager for messages that fails processing (and any retries)")
+                : base("MoveFaultsToErrorQueue", typeof(MoveFaultsToErrorQueueBehavior), "Moved failing messages to the configured error queue")
             {
                 InsertBeforeIfExists("HandlerTransactionScopeWrapper");
                 InsertBeforeIfExists("FirstLevelRetries");
                 InsertBeforeIfExists("SecondLevelRetries");
-
-                InsertBeforeIfExists("ReceivePerformanceDiagnosticsBehavior");
-
             }
         }
     }

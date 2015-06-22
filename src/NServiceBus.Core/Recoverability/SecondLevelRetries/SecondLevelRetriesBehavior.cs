@@ -2,7 +2,6 @@ namespace NServiceBus
 {
     using System;
     using System.Collections.Generic;
-    using NServiceBus.ConsistencyGuarantees;
     using NServiceBus.DelayedDelivery;
     using NServiceBus.DeliveryConstraints;
     using NServiceBus.Pipeline;
@@ -51,7 +50,6 @@ namespace NServiceBus
                     var dispatchContext = new DispatchContext(messageToRetry,context);
 
                     context.Set<RoutingStrategy>(new DirectToTargetDestination(receiveAddress));
-                    context.Set<ConsistencyGuarantee>(new AtomicWithReceiveOperation());
                     context.Set(new List<DeliveryConstraint>
                     {
                         new DelayDeliveryWith(delay)

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Unicast.Subscriptions.MessageDrivenSubscriptions
+﻿namespace NServiceBus.Routing.MessageDrivenSubscriptions
 {
     using System;
     using System.Collections.Generic;
