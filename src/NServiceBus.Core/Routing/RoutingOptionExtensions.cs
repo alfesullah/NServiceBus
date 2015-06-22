@@ -1,7 +1,7 @@
 ﻿namespace NServiceBus
 {
     /// <summary>
-    /// 
+    /// Gives users fine grained control over routing via extension methods
     /// </summary>
     public static class RoutingOptionExtensions
     {

@@ -22,7 +22,7 @@ namespace NServiceBus
 
             if (context.TryGetDeliveryConstraint(out constraint))
             {
-                var currentRoutingStrategy = context.Get<RoutingStrategy>() as DirectToTargetDestination;
+                var currentRoutingStrategy = context.GetRoutingStrategy() as DirectToTargetDestination;
 
                 if (currentRoutingStrategy == null)
                 {

@@ -26,7 +26,7 @@
 
             behavior.Invoke(context, () => { });
 
-            Assert.AreEqual("tm",((DirectToTargetDestination)context.Get<RoutingStrategy>()).Destination);
+            Assert.AreEqual("tm",((DirectToTargetDestination)context.GetRoutingStrategy()).Destination);
 
             Assert.AreEqual(message.Headers[TimeoutManagerHeaders.RouteExpiredTimeoutTo],"target");
         }

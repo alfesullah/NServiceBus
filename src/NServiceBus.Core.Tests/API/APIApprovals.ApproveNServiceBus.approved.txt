@@ -1848,6 +1848,10 @@ namespace NServiceBus.Routing
         public string Destination { get; }
         public override void Serialize(System.Collections.Generic.Dictionary<string, string> options) { }
     }
+    public class static RoutingContextExtensions
+    {
+        public static NServiceBus.Routing.RoutingStrategy GetRoutingStrategy(this NServiceBus.TransportDispatch.DispatchContext context) { }
+    }
     public class static RoutingPipelineContextExtensions
     {
         public static bool IsPublish(this NServiceBus.Pipeline.Contexts.OutgoingContext context) { }
