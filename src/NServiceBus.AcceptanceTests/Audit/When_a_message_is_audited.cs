@@ -26,30 +26,12 @@
             Assert.AreEqual(context.OriginalBodyChecksum, context.AuditChecksum, "The body of the message sent to audit should be the same as the original message coming off the queue");
         }
 
-        [Test, Ignore("To be fixed by Andreas")]
-        public void Should_add_the_license_diagnostic_headers()
-        {
-            var context = new Context
-            {
-                RunId = Guid.NewGuid()
-            };
-
-            Scenario.Define(context)
-                    .WithEndpoint<EndpointWithAuditOn>(b => b.Given(bus => bus.SendLocal(new MessageToBeAudited())))
-                    .WithEndpoint<AuditSpyEndpoint>()
-                    .Done(c => c.HasDiagnosticLicensingHeaders)
-                    .Run();
-            Assert.IsTrue(context.HasDiagnosticLicensingHeaders);
-        }
-
-
         public class Context : ScenarioContext
         {
             public Guid RunId { get; set; }
             public bool Done { get; set; }
             public byte OriginalBodyChecksum { get; set; }
             public byte AuditChecksum { get; set; }
-            public bool HasDiagnosticLicensingHeaders { get; set; }
         }
 
         public class EndpointWithAuditOn : EndpointConfigurationBuilder
@@ -109,8 +91,6 @@
                 public void MutateIncoming(TransportMessage transportMessage)
                 {
                     Context.AuditChecksum = Checksum(transportMessage.Body);
-                    string licenseExpired;
-                    Context.HasDiagnosticLicensingHeaders = transportMessage.Headers.TryGetValue(Headers.HasLicenseExpired, out licenseExpired);
                 }
 
                 public void Customize(BusConfiguration configuration)
