@@ -4,7 +4,7 @@
     using NServiceBus.Extensibility;
 
     /// <summary>
-    /// 
+    /// Represent the part of the outgoing pipeline where the message has been serialized to a byte[]
     /// </summary>
     public abstract class PhysicalOutgoingContextStageBehavior : Behavior<PhysicalOutgoingContextStageBehavior.Context>
     {
