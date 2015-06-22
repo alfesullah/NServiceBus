@@ -11,7 +11,7 @@
         [Test]
         public void Should_send_the_assemblyQualified_name_as_subscription_type()
         {
-            var sender = new FakeSender();
+            var sender = new FakeDispatcher();
 
             var subscriptionManager = new SubscriptionManager("subscriber", sender);
 
@@ -22,9 +22,9 @@
             Assert.AreEqual(typeof(TestEvent).AssemblyQualifiedName,sender.MessageSent.Headers[Headers.SubscriptionMessageType] );
         }
 
-        class FakeSender:IDispatchMessages
+        class FakeDispatcher:IDispatchMessages
         {
-            public FakeSender()
+            public FakeDispatcher()
             {
                 MessageAvailable = new AutoResetEvent(false);
             }

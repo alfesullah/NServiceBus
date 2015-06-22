@@ -30,7 +30,7 @@
             {
                 dispatcher.Dispatch(message, new DispatchOptions(routingStrategy,
                     minimumConsistencyGuarantee,
-                   currentConstraints,
+                    currentConstraints,
                     currentContext));
 
                 return;
@@ -59,7 +59,7 @@
             {
                 dispatcher.Dispatch(message, new DispatchOptions(subscriber,
                     minimumConsistencyGuarantee,
-                   currentConstraints,
+                    currentConstraints,
                     currentContext));
             }
         }

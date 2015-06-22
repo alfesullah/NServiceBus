@@ -5,7 +5,7 @@ namespace NServiceBus.DelayedDelivery
     /// <summary>
     /// Base for the 2 flavours of delayed delivery
     /// </summary>
-    public abstract class DelayedDeliveryConstraint:DeliveryConstraint
+    public abstract class DelayedDeliveryConstraint : DeliveryConstraint
     {
     }
 }

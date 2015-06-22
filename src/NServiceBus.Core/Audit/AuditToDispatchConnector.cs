@@ -9,7 +9,7 @@ namespace NServiceBus
     using NServiceBus.TransportDispatch;
     using NServiceBus.Transports;
 
-    class AuditToDispatchConnector:StageConnector<AuditContext,DispatchContext>
+    class AuditToDispatchConnector : StageConnector<AuditContext, DispatchContext>
     {
         TimeSpan? timeToBeReceived;
 

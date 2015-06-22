@@ -16,6 +16,7 @@
         /// <param name="delay">The requested delay</param>
         public static void DelayDeliveryWith(this SendLocalOptions options, TimeSpan delay)
         {
+            Guard.AgainstNull(options, "options");
             Guard.AgainstNegativeAndZero(delay,"delay");
 
             options.GetExtensions().Set(new  ApplyDelayedDeliveryConstraintBehavior.State(new DelayDeliveryWith(delay)));
@@ -27,6 +28,7 @@
         /// <param name="at">The time when this message should be made available</param>
         public static void DoNotDeliverBefore(this SendLocalOptions options, DateTime at)
         {
+            Guard.AgainstNull(options, "options");
             Guard.AgainstNull(at, "at");
 
             options.GetExtensions().Set(new ApplyDelayedDeliveryConstraintBehavior.State(new DoNotDeliverBefore(at)));
@@ -39,6 +41,7 @@
         /// <param name="delay">The requested delay</param>
         public static void DelayDeliveryWith(this SendOptions options, TimeSpan delay)
         {
+            Guard.AgainstNull(options, "options");
             Guard.AgainstNegativeAndZero(delay, "delay");
 
             options.GetExtensions().Set(new ApplyDelayedDeliveryConstraintBehavior.State(new DelayDeliveryWith(delay)));
@@ -50,29 +53,10 @@
         /// <param name="at">The time when this message should be made available</param>
         public static void DoNotDeliverBefore(this SendOptions options, DateTime at)
         {
+            Guard.AgainstNull(options, "options");
             Guard.AgainstNull(at, "at");
 
             options.GetExtensions().Set(new ApplyDelayedDeliveryConstraintBehavior.State(new DoNotDeliverBefore(at)));
-        }
-        
+        }   
     }
-
-    //if (deliverAt != null && delayDeliveryFor != null)
-      //      {
-      //          throw new ArgumentException("Ensure you either set `deliverAt` or `delayDeliveryFor`, but not both.");
-      //      }
-
-      //string delayDeliveryForString;
-      //          TimeSpan? delayDeliveryFor = null;
-      //          if (options.TryGetValue("DelayDeliveryFor", out delayDeliveryForString))
-      //          {
-      //              delayDeliveryFor = TimeSpan.Parse(delayDeliveryForString);
-      //          }
-
-      //          string deliverAtString;
-      //          DateTime? deliverAt = null;
-      //          if (options.TryGetValue("DeliverAt", out deliverAtString))
-      //          {
-      //              deliverAt = DateTimeExtensions.ToUtcDateTime(deliverAtString);
-      //          }
 }
